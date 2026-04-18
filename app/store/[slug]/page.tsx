@@ -265,12 +265,17 @@ export default function ProductPage() {
               <div className="h-px bg-[#111111]/[0.07] mb-8" />
 
               {/* Price */}
-              <div className="flex items-center gap-3 mb-6 flex-wrap">
+              <div className="flex items-center gap-3 mb-4 flex-wrap">
                 <span className="text-3xl font-bold text-[#111111] tracking-[-0.02em]"
                   style={{ fontFamily: "var(--font-playfair)" }}>{p.price}</span>
                 <span className="text-[9px] font-mono bg-[#111111]/06 text-[#111111]/40 px-2.5 py-1 rounded-full tracking-[0.15em] uppercase">
                   Sold out
                 </span>
+              </div>
+
+              {/* Notify Me — right below price */}
+              <div className="mb-8">
+                <NotifyForm color={p.color} />
               </div>
 
               <p className="text-[9px] font-mono text-[#111111]/25 tracking-[0.15em] mb-8">{p.servings}</p>
@@ -291,9 +296,6 @@ export default function ProductPage() {
               </ul>
 
               <div className="h-px bg-[#111111]/[0.07] mb-8" />
-
-              {/* Notify Me form */}
-              <NotifyForm color={p.color} />
 
               {/* Trust */}
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
