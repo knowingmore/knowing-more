@@ -286,164 +286,211 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
   const blurOut   = useTransform(scrollYProgress, [0.12, 0.48], [0, 20]);
 
   return (
-    <section
-      ref={containerRef}
-      className="relative min-h-screen flex flex-col items-center justify-center bg-white overflow-hidden"
-    >
-      {/* ── 3D Molecular network ── */}
-      <MolecularCanvas />
+    <div ref={containerRef}>
 
-      {/* Bottom fade to white */}
-      <div
-        className="absolute bottom-0 inset-x-0 h-48 pointer-events-none z-10"
-        style={{ background: "linear-gradient(to bottom, transparent, white 85%)" }}
-        aria-hidden
-      />
+      {/* ═══════════════════════════════════════════
+          MOBILE LAYOUT
+          - Full-screen animation with headline centered
+          - White section below with subtitle + CTAs
+      ════════════════════════════════════════════ */}
+      <div className="md:hidden">
 
-      {/* ── Scroll-driven content wrapper ── */}
-      <motion.div
-        style={{
-          opacity: fadeOut,
-          scale:   scaleDown,
-          filter:  `blur(${blurOut}px)` as unknown as string,
-        }}
-        className="relative z-10 w-full flex flex-col items-center text-center px-6 pt-4 pb-6 md:pt-28 md:pb-20"
-      >
-        {/* Eyebrow */}
-        <motion.p
-          initial={{ opacity: 0, letterSpacing: "0.7em" }}
-          animate={{ opacity: 1, letterSpacing: "0.42em" }}
-          transition={{ duration: 1.6, delay: 0.5, ease: "easeOut" }}
-          className="text-[10px] font-mono uppercase text-[#E8920A] mb-4 md:mb-10"
-        >
-          {tr.eyebrow}
-        </motion.p>
+        {/* Animation + headline */}
+        <section className="relative h-screen flex items-center justify-center bg-white overflow-hidden">
+          <MolecularCanvas />
 
-        {/* Top rule */}
-        <div className="w-full max-w-[560px] flex items-center gap-3 mb-4 md:mb-10">
+          {/* Bottom fade into white */}
+          <div className="absolute bottom-0 inset-x-0 h-32 pointer-events-none z-10"
+            style={{ background: "linear-gradient(to bottom, transparent, white 90%)" }}
+            aria-hidden />
+
+          {/* Centered headline only */}
           <motion.div
-            initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-            transition={{ duration: 1.3, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 h-px bg-[#E8920A]/22 origin-right"
-          />
-          <motion.div
-            animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.3, 0.8] }}
-            transition={{ duration: 2.8, repeat: Infinity, delay: 1.8 }}
-            className="w-1.5 h-1.5 rounded-full bg-[#E8920A] flex-shrink-0"
-          />
-          <motion.div
-            initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-            transition={{ duration: 1.3, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 h-px bg-[#E8920A]/22 origin-left"
-          />
-        </div>
-
-        {/* Headline */}
-        <motion.h1
-          initial={{ opacity: 0, filter: "blur(36px)", scale: 1.04 }}
-          animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-          transition={{ duration: 2.2, delay: 0.65, ease: [0.25, 0.1, 0.25, 1] }}
-          className="leading-[0.88] tracking-[-0.03em] text-[#111111]"
-          style={{
-            fontFamily: "var(--font-playfair)",
-            fontSize: "clamp(4.2rem, 12vw, 14rem)",
-          }}
-        >
-          <span className="block">
-            kno<span style={{ color: "#E8920A" }}>win</span>g
-          </span>
-          <span className="block">
-            more<span style={{ color: "#E8920A" }}>.</span>
-          </span>
-        </motion.h1>
-
-        {/* Bottom rule */}
-        <div className="w-full max-w-[480px] mt-4 mb-4 md:mt-10 md:mb-8 flex items-center gap-3">
-          <motion.div
-            initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-            transition={{ duration: 1.3, delay: 2.5, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 h-px bg-[#111111]/10 origin-right"
-          />
-          <motion.div
-            initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-            transition={{ duration: 1.3, delay: 2.5, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 h-px bg-[#111111]/10 origin-left"
-          />
-        </div>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 16, filter: "blur(10px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 1.1, delay: 2.7 }}
-          className="text-sm text-[#111111]/32 leading-[1.8] tracking-wide max-w-[340px]"
-        >
-          {tr.subtitle}
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 14, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 1.0, delay: 2.9 }}
-          className="mt-6 md:mt-10 flex items-center gap-8"
-        >
-          <a
-            href="#products"
-            className="group flex items-center gap-2.5 text-[#111111] text-sm font-medium tracking-wide border-b border-[#111111]/20 pb-0.5 hover:border-[#E8920A] hover:text-[#E8920A] transition-colors duration-300"
+            style={{ opacity: fadeOut }}
+            className="relative z-10 text-center px-6"
           >
-            {tr.cta1}
-            <span className="group-hover:translate-x-1.5 transition-transform duration-200 text-base leading-none">→</span>
-          </a>
-          <a
-            href="#science"
-            className="text-[#111111]/28 text-sm tracking-wide hover:text-[#111111]/55 transition-colors duration-200"
-          >
-            {tr.cta2}
-          </a>
-        </motion.div>
+            {/* Top rule */}
+            <div className="flex items-center gap-3 mb-6 max-w-[280px] mx-auto">
+              <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                transition={{ duration: 1.3, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="flex-1 h-px bg-[#E8920A]/22 origin-right" />
+              <motion.div animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.3, 0.8] }}
+                transition={{ duration: 2.8, repeat: Infinity, delay: 1.8 }}
+                className="w-1.5 h-1.5 rounded-full bg-[#E8920A] flex-shrink-0" />
+              <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                transition={{ duration: 1.3, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="flex-1 h-px bg-[#E8920A]/22 origin-left" />
+            </div>
 
-        {/* Metadata bar */}
+            <motion.h1
+              initial={{ opacity: 0, filter: "blur(36px)", scale: 1.04 }}
+              animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+              transition={{ duration: 2.2, delay: 0.65, ease: [0.25, 0.1, 0.25, 1] }}
+              className="leading-[0.88] tracking-[-0.03em] text-[#111111]"
+              style={{ fontFamily: "var(--font-playfair)", fontSize: "clamp(4.4rem, 22vw, 7rem)" }}
+            >
+              <span className="block">kno<span style={{ color: "#E8920A" }}>win</span>g</span>
+              <span className="block">more<span style={{ color: "#E8920A" }}>.</span></span>
+            </motion.h1>
+          </motion.div>
+
+          {/* Scroll indicator */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ delay: 3.4 }} style={{ opacity: fadeOut }}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-20" aria-hidden>
+            <motion.div animate={{ y: [0, 9, 0] }}
+              transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
+              className="w-px h-10 bg-gradient-to-b from-[#111111]/20 to-transparent" />
+          </motion.div>
+        </section>
+
+        {/* Below fold — white background */}
+        <div className="bg-white px-6 pt-10 pb-14 flex flex-col items-center text-center">
+          <motion.p
+            initial={{ opacity: 0, letterSpacing: "0.7em" }}
+            animate={{ opacity: 1, letterSpacing: "0.42em" }}
+            transition={{ duration: 1.6, delay: 0.5, ease: "easeOut" }}
+            className="text-[10px] font-mono uppercase text-[#E8920A] mb-5"
+          >
+            {tr.eyebrow}
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.1, delay: 2.7 }}
+            className="text-sm text-[#111111]/38 leading-[1.85] tracking-wide max-w-[300px] mb-8"
+          >
+            {tr.subtitle}
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, delay: 2.9 }}
+            className="flex items-center gap-8 mb-10"
+          >
+            <a href="#products"
+              className="group flex items-center gap-2 text-[#111111] text-sm font-medium tracking-wide border-b border-[#111111]/20 pb-0.5 hover:border-[#E8920A] hover:text-[#E8920A] transition-colors duration-300">
+              {tr.cta1}
+              <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
+            </a>
+            <a href="#science"
+              className="text-[#111111]/28 text-sm tracking-wide hover:text-[#111111]/55 transition-colors duration-200">
+              {tr.cta2}
+            </a>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ delay: 3.1, duration: 0.9 }}
+            className="w-full max-w-[340px] pt-5 flex items-center justify-between border-t border-[#111111]/[0.07]"
+          >
+            <span className="text-[9px] font-mono text-[#111111]/35 tracking-[0.25em] uppercase">KM — 001</span>
+            <div className="flex items-center gap-2">
+              <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}
+                className="w-1 h-1 rounded-full bg-[#E8920A]" />
+              <span className="text-[9px] font-mono text-[#111111]/35 tracking-[0.2em] uppercase">{tr.meta}</span>
+            </div>
+            <span className="text-[9px] font-mono text-[#111111]/35 tracking-[0.25em] uppercase">Est. 2024</span>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════
+          DESKTOP LAYOUT — unchanged
+      ════════════════════════════════════════════ */}
+      <section className="hidden md:flex relative min-h-screen flex-col items-center justify-center bg-white overflow-hidden">
+        <MolecularCanvas />
+
+        <div className="absolute bottom-0 inset-x-0 h-48 pointer-events-none z-10"
+          style={{ background: "linear-gradient(to bottom, transparent, white 85%)" }} aria-hidden />
+
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 3.1, duration: 0.9 }}
-          className="mt-8 md:mt-16 w-full max-w-[700px] pt-6 flex items-center justify-between border-t border-[#111111]/[0.07]"
+          style={{ opacity: fadeOut, scale: scaleDown, filter: `blur(${blurOut}px)` as unknown as string }}
+          className="relative z-10 w-full flex flex-col items-center text-center px-6 pt-28 pb-20"
         >
-          <span className="text-[9px] font-mono text-[#111111]/45 tracking-[0.25em] uppercase">
-            KM &mdash; 001
-          </span>
-          <div className="flex items-center gap-3">
-            <motion.div
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-1 h-1 rounded-full bg-[#E8920A]"
-            />
-            <span className="text-[9px] font-mono text-[#111111]/45 tracking-[0.22em] uppercase hidden sm:inline">
-              {tr.meta}
-            </span>
+          <motion.p initial={{ opacity: 0, letterSpacing: "0.7em" }} animate={{ opacity: 1, letterSpacing: "0.42em" }}
+            transition={{ duration: 1.6, delay: 0.5, ease: "easeOut" }}
+            className="text-[10px] font-mono uppercase text-[#E8920A] mb-10">
+            {tr.eyebrow}
+          </motion.p>
+
+          <div className="w-full max-w-[560px] flex items-center gap-3 mb-10">
+            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+              transition={{ duration: 1.3, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="flex-1 h-px bg-[#E8920A]/22 origin-right" />
+            <motion.div animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.3, 0.8] }}
+              transition={{ duration: 2.8, repeat: Infinity, delay: 1.8 }}
+              className="w-1.5 h-1.5 rounded-full bg-[#E8920A] flex-shrink-0" />
+            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+              transition={{ duration: 1.3, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="flex-1 h-px bg-[#E8920A]/22 origin-left" />
           </div>
-          <span className="text-[9px] font-mono text-[#111111]/45 tracking-[0.25em] uppercase">
-            Est.&nbsp;2024
-          </span>
-        </motion.div>
-      </motion.div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 3.4 }}
-        style={{ opacity: fadeOut }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-20"
-        aria-hidden
-      >
-        <motion.div
-          animate={{ y: [0, 9, 0] }}
-          transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
-          className="w-px h-12 bg-gradient-to-b from-[#111111]/20 to-transparent"
-        />
-      </motion.div>
-    </section>
+          <motion.h1
+            initial={{ opacity: 0, filter: "blur(36px)", scale: 1.04 }}
+            animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+            transition={{ duration: 2.2, delay: 0.65, ease: [0.25, 0.1, 0.25, 1] }}
+            className="leading-[0.88] tracking-[-0.03em] text-[#111111]"
+            style={{ fontFamily: "var(--font-playfair)", fontSize: "clamp(4.2rem, 12vw, 14rem)" }}
+          >
+            <span className="block">kno<span style={{ color: "#E8920A" }}>win</span>g</span>
+            <span className="block">more<span style={{ color: "#E8920A" }}>.</span></span>
+          </motion.h1>
+
+          <div className="w-full max-w-[480px] mt-10 mb-8 flex items-center gap-3">
+            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+              transition={{ duration: 1.3, delay: 2.5, ease: [0.16, 1, 0.3, 1] }}
+              className="flex-1 h-px bg-[#111111]/10 origin-right" />
+            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+              transition={{ duration: 1.3, delay: 2.5, ease: [0.16, 1, 0.3, 1] }}
+              className="flex-1 h-px bg-[#111111]/10 origin-left" />
+          </div>
+
+          <motion.p initial={{ opacity: 0, y: 16, filter: "blur(10px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 1.1, delay: 2.7 }}
+            className="text-sm text-[#111111]/32 leading-[1.8] tracking-wide max-w-[340px]">
+            {tr.subtitle}
+          </motion.p>
+
+          <motion.div initial={{ opacity: 0, y: 14, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 1.0, delay: 2.9 }}
+            className="mt-10 flex items-center gap-8">
+            <a href="#products"
+              className="group flex items-center gap-2.5 text-[#111111] text-sm font-medium tracking-wide border-b border-[#111111]/20 pb-0.5 hover:border-[#E8920A] hover:text-[#E8920A] transition-colors duration-300">
+              {tr.cta1}
+              <span className="group-hover:translate-x-1.5 transition-transform duration-200 text-base leading-none">→</span>
+            </a>
+            <a href="#science"
+              className="text-[#111111]/28 text-sm tracking-wide hover:text-[#111111]/55 transition-colors duration-200">
+              {tr.cta2}
+            </a>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ delay: 3.1, duration: 0.9 }}
+            className="mt-16 w-full max-w-[700px] pt-6 flex items-center justify-between border-t border-[#111111]/[0.07]">
+            <span className="text-[9px] font-mono text-[#111111]/45 tracking-[0.25em] uppercase">KM &mdash; 001</span>
+            <div className="flex items-center gap-3">
+              <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}
+                className="w-1 h-1 rounded-full bg-[#E8920A]" />
+              <span className="text-[9px] font-mono text-[#111111]/45 tracking-[0.22em] uppercase hidden sm:inline">{tr.meta}</span>
+            </div>
+            <span className="text-[9px] font-mono text-[#111111]/45 tracking-[0.25em] uppercase">Est.&nbsp;2024</span>
+          </motion.div>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          transition={{ delay: 3.4 }} style={{ opacity: fadeOut }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-20" aria-hidden>
+          <motion.div animate={{ y: [0, 9, 0] }}
+            transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
+            className="w-px h-12 bg-gradient-to-b from-[#111111]/20 to-transparent" />
+        </motion.div>
+      </section>
+    </div>
   );
 }
