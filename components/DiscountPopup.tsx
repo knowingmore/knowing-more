@@ -48,29 +48,22 @@ export default function DiscountPopup() {
   const locale: "en" | "pl" = pathname.startsWith("/pl") ? "pl" : "en";
   const tr = TR[locale];
 
-  // Show on all pages except blog and support
-  const excluded = ["/blog", "/support", "/contact", "/pl/blog", "/pl/support", "/pl/contact"];
-  const isExcluded = excluded.some(p => pathname === p || pathname.startsWith(p + "/"));
+  // Only show on store pages
+  const isStorePage =
+    pathname === "/store" ||
+    pathname.startsWith("/store/") ||
+    pathname === "/pl/store" ||
+    pathname.startsWith("/pl/store/");
 
   useEffect(() => {
-    if (isExcluded) return;
+    if (!isStorePage) return;
     if (localStorage.getItem(STORAGE_KEY)) return;
 
-    // Show after 8 seconds
-    const timer = setTimeout(() => setVisible(true), 8000);
+    // Show after 1.5s once user lands on any store page
+    const timer = setTimeout(() => setVisible(true), 1500);
 
-    // Or on exit intent (mouse leaves top of page)
-    const onMouseOut = (e: MouseEvent) => {
-      if (e.clientY <= 0) {
-        clearTimeout(timer);
-        if (!localStorage.getItem(STORAGE_KEY)) setVisible(true);
-      }
-    };
-
-    document.addEventListener("mouseleave", onMouseOut);
     return () => {
       clearTimeout(timer);
-      document.removeEventListener("mouseleave", onMouseOut);
     };
   }, [isExcluded, pathname]);
 
