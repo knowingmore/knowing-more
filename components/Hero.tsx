@@ -307,7 +307,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           scale:   scaleDown,
           filter:  `blur(${blurOut}px)` as unknown as string,
         }}
-        className="relative z-10 w-full flex flex-col items-center text-center px-6 pt-28 pb-20"
+        className="relative z-10 w-full flex flex-col items-center text-center px-6 pt-10 pb-10 md:pt-28 md:pb-20"
       >
         {/* Eyebrow */}
         <motion.p
