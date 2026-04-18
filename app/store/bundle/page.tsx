@@ -201,7 +201,7 @@ export default function BundlePage() {
               </div>
               <div className="mb-6">
                 <span className="text-[9px] font-mono bg-[#111111]/06 text-[#111111]/40 px-2.5 py-1 rounded-full tracking-[0.15em] uppercase">
-                  Currently sold out
+                  Sold out
                 </span>
               </div>
 

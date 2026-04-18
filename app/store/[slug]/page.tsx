@@ -269,7 +269,7 @@ export default function ProductPage() {
                 <span className="text-3xl font-bold text-[#111111] tracking-[-0.02em]"
                   style={{ fontFamily: "var(--font-playfair)" }}>{p.price}</span>
                 <span className="text-[9px] font-mono bg-[#111111]/06 text-[#111111]/40 px-2.5 py-1 rounded-full tracking-[0.15em] uppercase">
-                  Currently sold out
+                  Sold out
                 </span>
               </div>
 
