@@ -12,10 +12,14 @@ import { products } from "@/lib/products";
 function PurchaseButton({ color, slug }: { color: string; slug: string }) {
   return (
     <Link href={`/store/${slug}`}
-      className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-full text-white text-xs font-semibold tracking-wide transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
-      style={{ background: color === "#111111" ? "#111111" : color }}
+      className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-full text-xs font-semibold tracking-wide border transition-all duration-200 hover:opacity-80 active:scale-[0.98]"
+      style={{
+        borderColor: color === "#111111" ? "#11111130" : `${color}40`,
+        color: color === "#111111" ? "#111111" : color,
+        background: "transparent",
+      }}
     >
-      Purchase
+      Notify me
       <span>→</span>
     </Link>
   );

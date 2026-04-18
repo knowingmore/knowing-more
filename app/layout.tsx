@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import NewsletterPopup from "@/components/NewsletterPopup";
+import DiscountPopup from "@/components/DiscountPopup";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -38,6 +39,7 @@ export default function RootLayout({
       >
         {children}
         <NewsletterPopup />
+        <DiscountPopup />
       </body>
     </html>
   );
