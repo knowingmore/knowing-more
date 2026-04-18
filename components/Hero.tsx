@@ -307,20 +307,20 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           scale:   scaleDown,
           filter:  `blur(${blurOut}px)` as unknown as string,
         }}
-        className="relative z-10 w-full flex flex-col items-center text-center px-6 pt-10 pb-10 md:pt-28 md:pb-20"
+        className="relative z-10 w-full flex flex-col items-center text-center px-6 pt-4 pb-6 md:pt-28 md:pb-20"
       >
         {/* Eyebrow */}
         <motion.p
           initial={{ opacity: 0, letterSpacing: "0.7em" }}
           animate={{ opacity: 1, letterSpacing: "0.42em" }}
           transition={{ duration: 1.6, delay: 0.5, ease: "easeOut" }}
-          className="text-[10px] font-mono uppercase text-[#E8920A] mb-10"
+          className="text-[10px] font-mono uppercase text-[#E8920A] mb-4 md:mb-10"
         >
           {tr.eyebrow}
         </motion.p>
 
         {/* Top rule */}
-        <div className="w-full max-w-[560px] flex items-center gap-3 mb-10">
+        <div className="w-full max-w-[560px] flex items-center gap-3 mb-4 md:mb-10">
           <motion.div
             initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
             transition={{ duration: 1.3, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -358,7 +358,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
         </motion.h1>
 
         {/* Bottom rule */}
-        <div className="w-full max-w-[480px] mt-10 mb-8 flex items-center gap-3">
+        <div className="w-full max-w-[480px] mt-4 mb-4 md:mt-10 md:mb-8 flex items-center gap-3">
           <motion.div
             initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
             transition={{ duration: 1.3, delay: 2.5, ease: [0.16, 1, 0.3, 1] }}
@@ -386,7 +386,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           initial={{ opacity: 0, y: 14, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 1.0, delay: 2.9 }}
-          className="mt-10 flex items-center gap-8"
+          className="mt-6 md:mt-10 flex items-center gap-8"
         >
           <a
             href="#products"
@@ -408,7 +408,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 3.1, duration: 0.9 }}
-          className="mt-16 w-full max-w-[700px] pt-6 flex items-center justify-between border-t border-[#111111]/[0.07]"
+          className="mt-8 md:mt-16 w-full max-w-[700px] pt-6 flex items-center justify-between border-t border-[#111111]/[0.07]"
         >
           <span className="text-[9px] font-mono text-[#111111]/45 tracking-[0.25em] uppercase">
             KM &mdash; 001
