@@ -8,15 +8,10 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { productsPL } from "@/lib/productsPL";
 
-function PurchaseButton({ color, slug }: { color: string; slug: string }) {
+function PurchaseButton({ slug }: { color: string; slug: string }) {
   return (
     <Link href={`/pl/store/${slug}`}
-      className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-full text-xs font-semibold tracking-wide border transition-all duration-200 hover:opacity-80 active:scale-[0.98]"
-      style={{
-        borderColor: color === "#111111" ? "#11111130" : `${color}40`,
-        color: color === "#111111" ? "#111111" : color,
-        background: "transparent",
-      }}
+      className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-full bg-[#111111] text-white text-xs font-semibold tracking-wide transition-all duration-200 hover:bg-[#333] active:scale-[0.98]"
     >
       Powiadom mnie
       <span>→</span>
@@ -90,6 +85,7 @@ function ProductCard({ p, index }: { p: typeof productsPL[0]; index: number }) {
           </h3>
         </Link>
         <p className="mt-1 text-[9px] font-mono tracking-[0.22em] uppercase text-[#111111]/30">{p.tagline}</p>
+        <p className="mt-2 text-base font-semibold text-[#111111] tracking-[-0.01em]">{p.price}</p>
       </div>
 
       <PurchaseButton color={p.color} slug={p.slug} />
