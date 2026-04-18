@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 
 const TR = {
@@ -43,17 +43,8 @@ const TR = {
 
 export default function LifestyleStrip({ locale = "en" }: { locale?: "en" | "pl" }) {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const stripRef = useRef<HTMLDivElement>(null);
   const inView = useInView(sectionRef, { once: true, margin: "-100px" });
   const tr = TR[locale];
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  // Subtle horizontal parallax on the strip
-  const stripX = useTransform(scrollYProgress, [0, 1], ["0%", "-3%"]);
 
   return (
     <section
@@ -104,24 +95,35 @@ export default function LifestyleStrip({ locale = "en" }: { locale?: "en" | "pl"
         </div>
       </div>
 
-      {/* Image strip - parallax horizontal */}
-      <div className="overflow-hidden">
-        <motion.div
-          ref={stripRef}
-          style={{ x: stripX }}
-          className="flex gap-4 pl-6 md:pl-12 xl:pl-16 pr-[18%] pb-2"
-        >
-          {tr.images.map((img, i) => (
-            <motion.div
-              key={img.src + img.label}
-              initial={{ opacity: 0, y: 28 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.75, delay: i * 0.1 }}
-              whileHover={{ y: -6, transition: { duration: 0.35 } }}
+      {/* Image strip - infinite auto-scroll */}
+      <style>{`
+        @keyframes km-scroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .km-strip {
+          animation: km-scroll 32s linear infinite;
+        }
+        .km-strip:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="overflow-hidden"
+      >
+        <div className="km-strip flex gap-4 w-max pb-2">
+          {[...tr.images, ...tr.images].map((img, i) => (
+            <div
+              key={i}
+              aria-hidden={i >= tr.images.length}
               className="relative flex-shrink-0 rounded-xl overflow-hidden group cursor-pointer"
               style={{
-                width: "clamp(240px, 28vw, 360px)",
-                height: "clamp(300px, 36vw, 460px)",
+                width: "clamp(220px, 26vw, 340px)",
+                height: "clamp(280px, 34vw, 440px)",
               }}
             >
               <Image
@@ -129,7 +131,7 @@ export default function LifestyleStrip({ locale = "en" }: { locale?: "en" | "pl"
                 alt={img.caption}
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                sizes="360px"
+                sizes="340px"
               />
 
               {/* Dark scrim */}
@@ -142,16 +144,16 @@ export default function LifestyleStrip({ locale = "en" }: { locale?: "en" | "pl"
                 </span>
               </div>
 
-              {/* Clinical caption - bottom */}
+              {/* Caption - bottom */}
               <div className="absolute bottom-0 left-0 right-0 p-4">
                 <p className="text-[10px] font-mono text-white/45 tracking-[0.15em]">
                   {img.caption}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
 
       {/* Bottom metadata */}
       <motion.div
