@@ -65,7 +65,7 @@ export default function DiscountPopup() {
     return () => {
       clearTimeout(timer);
     };
-  }, [isExcluded, pathname]);
+  }, [isStorePage, pathname]);
 
   const dismiss = () => {
     localStorage.setItem(STORAGE_KEY, "1");
