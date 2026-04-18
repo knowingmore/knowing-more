@@ -9,12 +9,13 @@ import Footer from "@/components/Footer";
 import { products } from "@/lib/products";
 
 /* ─── Purchase button ────────────────────────────────────────────── */
-function PurchaseButton({ slug }: { color: string; slug: string }) {
+function PurchaseButton({ color, slug }: { color: string; slug: string }) {
   return (
     <Link href={`/store/${slug}`}
-      className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-full bg-[#111111] text-white text-xs font-semibold tracking-wide transition-all duration-200 hover:bg-[#333] active:scale-[0.98]"
+      className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-full text-white text-xs font-semibold tracking-wide transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
+      style={{ background: color === "#111111" ? "#111111" : color }}
     >
-      Notify me
+      Purchase
       <span>→</span>
     </Link>
   );
