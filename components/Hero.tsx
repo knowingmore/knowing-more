@@ -345,7 +345,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
         </section>
 
         {/* Below fold — white background */}
-        <div className="bg-white px-6 pt-10 pb-14 flex flex-col items-center text-center">
+        <div className="bg-white px-6 pt-4 pb-14 flex flex-col items-center text-center">
           <motion.p
             initial={{ opacity: 0, letterSpacing: "0.7em" }}
             animate={{ opacity: 1, letterSpacing: "0.42em" }}
