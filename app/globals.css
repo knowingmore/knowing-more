@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --navy: #1B2A4A;
+  --amber: #E8920A;
+  --tan: #C5A47E;
+  --terracotta: #C4682A;
+  --cream: #F8F8F8;
+  --background: #F8F8F8;
+  --foreground: #1A1A1A;
 }
 
 @theme inline {
@@ -12,15 +17,58 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+}
+
+/* ─── Blog article prose ─────────────────────────────────────────── */
+.prose-article p {
+  font-size: 0.9375rem;
+  line-height: 1.9;
+  color: rgba(17,17,17,0.58);
+  margin-bottom: 1.5rem;
+}
+
+.prose-article h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #111111;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+.prose-article strong {
+  font-weight: 600;
+  color: rgba(17,17,17,0.75);
+}
+
+.prose-article p + p {
+  margin-top: 0;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
+
+* {
+  box-sizing: border-box;
+}
+
+/* Marquee animation */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+/* Hide scrollbar */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
