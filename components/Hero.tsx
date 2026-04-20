@@ -30,9 +30,9 @@ function MolecularCanvas() {
     const NODES   = isMobile ? 52 : 72;
     const FOV     = 560;
     const CONNECT = isMobile ? 135 : 165;   // tighter network on mobile
-    const dROT_Y  = 0.00126;   // 30% slower rotation
-    const dROT_X  = 0.00042;
-    const BREATH_AMP = isMobile ? 0.026 : 0.018;   // more visible breath on small screens
+    const dROT_Y  = 0.0009;    // 50% slower rotation — meditative
+    const dROT_X  = 0.0003;
+    const BREATH_AMP = isMobile ? 0.065 : 0.048;   // clearly visible sphere breath
     let W = 0, H = 0, CX = 0, CY = 0;
     const nodes: Node3D[] = [];
 
@@ -42,10 +42,10 @@ function MolecularCanvas() {
 
     // ── Energy wave (from hero node) ─────────────────────────────
     let energyWaveEmit = -9999;
-    const ENERGY_WAVE_INTERVAL  = 540;    // ~9s at 60fps
-    const ENERGY_WAVE_SPEED     = isMobile ? 2.6 : 3.2;
-    const ENERGY_WAVE_THICKNESS = isMobile ? 34 : 42;
-    const ENERGY_WAVE_MAX_R     = isMobile ? 380 : 520;
+    const ENERGY_WAVE_INTERVAL  = 340;    // ~5.6s — noticeable cadence
+    const ENERGY_WAVE_SPEED     = isMobile ? 2.2 : 2.6;   // slower = visible longer
+    const ENERGY_WAVE_THICKNESS = isMobile ? 55 : 70;     // thicker front
+    const ENERGY_WAVE_MAX_R     = isMobile ? 420 : 580;
 
     // ── Build nodes on sphere ────────────────────────────────────
     const build = () => {
@@ -198,17 +198,17 @@ function MolecularCanvas() {
             const delta = Math.abs(distFromHero - waveR);
             if (delta < ENERGY_WAVE_THICKNESS) {
               const falloff = 1 - waveR / ENERGY_WAVE_MAX_R;
-              waveBoost = (1 - delta / ENERGY_WAVE_THICKNESS) * 0.55 * falloff;
+              waveBoost = (1 - delta / ENERGY_WAVE_THICKNESS) * 0.95 * falloff;
             }
           }
 
-          const finalAlpha = Math.min(tierAlpha + waveBoost, 0.85);
+          const finalAlpha = Math.min(tierAlpha + waveBoost, 1.0);
           ctx.beginPath();
           ctx.moveTo(ni.sx, ni.sy);
           ctx.lineTo(nj.sx, nj.sy);
           ctx.strokeStyle = `rgba(232,146,10,${finalAlpha})`;
-          ctx.lineWidth = waveBoost > 0.15
-            ? 1.0
+          ctx.lineWidth = waveBoost > 0.25
+            ? 1.8
             : (ni.tier === 0 && nj.tier === 0 ? 0.9 : 0.5);
           ctx.stroke();
         }
@@ -249,9 +249,9 @@ function MolecularCanvas() {
 
         // Hero node: slow deliberate pulse (~4s cycle), more amplitude
         const b = isHero
-          ? 0.55 + 0.45 * Math.sin(t * 0.026)
+          ? 0.6 + 0.4 * Math.sin(t * 0.026)
           : Math.max(0.08, 0.45 + 0.55 * Math.sin(n.pulse));
-        const r = Math.max(0.3, n.r * depthScale * b * (isHero ? 1.6 : 1));
+        const r = Math.max(0.3, n.r * depthScale * b * (isHero ? 2.4 : 1));
 
         const color =
           n.tier === 0 ? "232,146,10"  :
@@ -259,8 +259,8 @@ function MolecularCanvas() {
                          "196,104,42";
 
         const baseAlpha = isHero ? 1.0 : (n.tier === 0 ? 0.85 : n.tier === 1 ? 0.60 : 0.35);
-        const glowAlpha = isHero ? 0.42 : (n.tier === 0 ? 0.28 : n.tier === 1 ? 0.16 : 0.08);
-        const glowR     = r * (isHero ? 11 : n.tier === 0 ? 8 : 6);
+        const glowAlpha = isHero ? 0.65 : (n.tier === 0 ? 0.28 : n.tier === 1 ? 0.16 : 0.08);
+        const glowR     = r * (isHero ? 16 : n.tier === 0 ? 8 : 6);
 
         // Glow halo
         const g = ctx.createRadialGradient(n.sx, n.sy, 0, n.sx, n.sy, glowR);
