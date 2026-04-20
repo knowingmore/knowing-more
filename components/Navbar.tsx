@@ -22,7 +22,7 @@ const navLinksData = {
 };
 
 const ctaData = {
-  en: { label: "Shop →", href: "/store", mobile: "Odkryj kolekcję" },
+  en: { label: "Shop →", href: "/store", mobile: "Discover the collection" },
   pl: { label: "Kup →", href: "/pl/store", mobile: "Odkryj kolekcję" },
 };
 
