@@ -2,287 +2,353 @@
 
 import { useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import * as THREE from "three";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 
-/* ─── Neural-Current Heartbeat Canvas ───────────────────────────── */
-/* ─── Neural Network Canvas — synapses with electrical current ──── */
+/* ─── Neural Connectome — WebGL 3D network with scroll dolly + heartbeat ─ */
 function MolecularCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rafRef    = useRef<number>(0);
+  const canvasRef    = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rafRef       = useRef<number>(0);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const canvas    = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    const DPR      = Math.min(typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1, 2);
+    const DPR      = Math.min(window.devicePixelRatio || 1, 2);
 
-    // Network size
-    const NODES        = isMobile ? 38 : 72;
-    const NEIGHBOURS   = isMobile ? 3  : 4;   // edges per node (approx)
-    // Heartbeat: 48 bpm → 1 beat / 1.25s → 75 frames @ 60fps
-    const BEAT_PERIOD  = 75;
-    // Pulses per beat
-    const PULSES_MIN   = 2;
-    const PULSES_MAX   = 4;
+    // ── Scene / camera / renderer ──────────────────────────────────
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0xfafaf7, 90, 260);
 
-    let W = 0, H = 0;
+    let W = container.clientWidth;
+    let H = container.clientHeight;
 
-    type Node = { x: number; y: number; z: number; r: number; edges: number[] };
-    type Edge = { a: number; b: number; len: number };
-    type Pulse = {
-      edgeIdx: number;
-      from: number;       // node index we started from (a or b)
-      prog: number;       // 0..1 along edge from "from"
-      speed: number;
-      intensity: number;
-      hops: number;       // remaining node-to-node hops
-    };
+    const camera = new THREE.PerspectiveCamera(46, W / H, 0.1, 1000);
+    camera.position.set(0, 0, 180);
 
-    const nodes: Node[] = [];
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: !isMobile,
+      alpha: true,
+      powerPreference: "high-performance",
+    });
+    renderer.setPixelRatio(DPR);
+    renderer.setSize(W, H, false);
+    renderer.setClearColor(0xfafaf7, 1);
+
+    // ── Build connectome (clustered nodes) ─────────────────────────
+    const NODES           = isMobile ? 110 : 200;
+    const K               = isMobile ? 3   : 4;
+    const CLUSTER_COUNT   = isMobile ? 5   : 8;
+    const BOUNDS          = 70;
+
+    const clusterCenters: THREE.Vector3[] = [];
+    for (let i = 0; i < CLUSTER_COUNT; i++) {
+      clusterCenters.push(new THREE.Vector3(
+        (Math.random() - 0.5) * BOUNDS * 1.4,
+        (Math.random() - 0.5) * BOUNDS * 1.4,
+        (Math.random() - 0.5) * BOUNDS * 1.4,
+      ));
+    }
+
+    const positions: THREE.Vector3[] = [];
+    for (let i = 0; i < NODES; i++) {
+      if (Math.random() < 0.8) {
+        const c  = clusterCenters[Math.floor(Math.random() * clusterCenters.length)];
+        const u  = Math.random(), v = Math.random();
+        const th = u * 2 * Math.PI;
+        const ph = Math.acos(2 * v - 1);
+        const r  = (12 + Math.random() * 16) * Math.cbrt(Math.random());
+        positions.push(new THREE.Vector3(
+          c.x + r * Math.sin(ph) * Math.cos(th),
+          c.y + r * Math.sin(ph) * Math.sin(th),
+          c.z + r * Math.cos(ph),
+        ));
+      } else {
+        positions.push(new THREE.Vector3(
+          (Math.random() - 0.5) * BOUNDS * 1.8,
+          (Math.random() - 0.5) * BOUNDS * 1.8,
+          (Math.random() - 0.5) * BOUNDS * 1.8,
+        ));
+      }
+    }
+
+    // k-NN edges
+    type Edge = { a: number; b: number };
     const edges: Edge[] = [];
+    const nodeEdges: number[][] = positions.map(() => []);
+    const seen = new Set<string>();
+    for (let i = 0; i < positions.length; i++) {
+      const dists: { j: number; d: number }[] = [];
+      for (let j = 0; j < positions.length; j++) {
+        if (i !== j) dists.push({ j, d: positions[i].distanceTo(positions[j]) });
+      }
+      dists.sort((a, b) => a.d - b.d);
+      const kk = K + (Math.random() > 0.75 ? 1 : 0);
+      for (let k = 0; k < kk && k < dists.length; k++) {
+        const j = dists[k].j;
+        const key = i < j ? `${i}-${j}` : `${j}-${i}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const idx = edges.length;
+        edges.push({ a: i, b: j });
+        nodeEdges[i].push(idx);
+        nodeEdges[j].push(idx);
+      }
+    }
+
+    // ── Group so auto-rotation lifts everything ───────────────────
+    const network = new THREE.Group();
+    scene.add(network);
+
+    // Edges (LineSegments)
+    const edgeGeom = new THREE.BufferGeometry();
+    const epos = new Float32Array(edges.length * 6);
+    for (let i = 0; i < edges.length; i++) {
+      const a = positions[edges[i].a];
+      const b = positions[edges[i].b];
+      epos[i * 6 + 0] = a.x; epos[i * 6 + 1] = a.y; epos[i * 6 + 2] = a.z;
+      epos[i * 6 + 3] = b.x; epos[i * 6 + 4] = b.y; epos[i * 6 + 5] = b.z;
+    }
+    edgeGeom.setAttribute("position", new THREE.BufferAttribute(epos, 3));
+    const edgeMat = new THREE.LineBasicMaterial({
+      color: 0x5a5e68,
+      transparent: true,
+      opacity: 0.32,
+      fog: true,
+    });
+    const edgeLines = new THREE.LineSegments(edgeGeom, edgeMat);
+    network.add(edgeLines);
+
+    // Nodes (Points)
+    const nodeGeom = new THREE.BufferGeometry();
+    const npos = new Float32Array(positions.length * 3);
+    positions.forEach((p, i) => { npos[i*3]=p.x; npos[i*3+1]=p.y; npos[i*3+2]=p.z; });
+    nodeGeom.setAttribute("position", new THREE.BufferAttribute(npos, 3));
+
+    // Circular sprite for points
+    const pointCanvas = document.createElement("canvas");
+    pointCanvas.width = 32; pointCanvas.height = 32;
+    const pctx = pointCanvas.getContext("2d")!;
+    const pg = pctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+    pg.addColorStop(0,   "rgba(90,94,104,1)");
+    pg.addColorStop(0.5, "rgba(90,94,104,0.6)");
+    pg.addColorStop(1,   "rgba(90,94,104,0)");
+    pctx.fillStyle = pg;
+    pctx.fillRect(0, 0, 32, 32);
+    const pointTex = new THREE.CanvasTexture(pointCanvas);
+
+    const nodeMat = new THREE.PointsMaterial({
+      map: pointTex,
+      color: 0xffffff,
+      size: 2.6,
+      sizeAttenuation: true,
+      transparent: true,
+      opacity: 0.85,
+      fog: true,
+      depthWrite: false,
+    });
+    const nodePoints = new THREE.Points(nodeGeom, nodeMat);
+    network.add(nodePoints);
+
+    // ── Pulse sprites (pool) ───────────────────────────────────────
+    const MAX_PULSES = isMobile ? 28 : 50;
+    type Pulse = {
+      edgeIdx: number; from: number; prog: number;
+      speed: number; intensity: number; hops: number;
+      mesh: THREE.Sprite; active: boolean;
+    };
+
+    // Electric pulse sprite texture
+    const sc = document.createElement("canvas");
+    sc.width = 128; sc.height = 128;
+    const sctx = sc.getContext("2d")!;
+    const sg = sctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    sg.addColorStop(0,   "rgba(240,248,255,1)");
+    sg.addColorStop(0.25,"rgba(180,215,255,0.8)");
+    sg.addColorStop(0.6, "rgba(130,180,255,0.25)");
+    sg.addColorStop(1,   "rgba(130,180,255,0)");
+    sctx.fillStyle = sg;
+    sctx.fillRect(0, 0, 128, 128);
+    const pulseTex = new THREE.CanvasTexture(sc);
+
     const pulses: Pulse[] = [];
-    let t = 0;
-
-    // Electric current colors (cool-white with slight blueshift)
-    const PULSE_CORE = "230,240,255";
-    const PULSE_GLOW = "160,200,255";
-
-    const seedRand = (s: number) => {
-      const v = Math.sin(s) * 43758.5453;
-      return v - Math.floor(v);
-    };
-
-    const build = () => {
-      W = canvas.offsetWidth;
-      H = canvas.offsetHeight;
-      canvas.width  = W * DPR;
-      canvas.height = H * DPR;
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-
-      nodes.length = 0;
-      edges.length = 0;
-      pulses.length = 0;
-
-      // Poisson-ish distribution via blue-noise rejection
-      const margin = Math.min(W, H) * 0.06;
-      const minDist = Math.min(W, H) / (isMobile ? 7.5 : 10);
-      let attempts = 0;
-      while (nodes.length < NODES && attempts < NODES * 40) {
-        attempts++;
-        const x = margin + seedRand(attempts * 2.17 + nodes.length * 3.3) * (W - margin * 2);
-        const y = margin + seedRand(attempts * 5.91 + nodes.length * 7.7) * (H - margin * 2);
-        let ok = true;
-        for (const n of nodes) {
-          if (Math.hypot(n.x - x, n.y - y) < minDist) { ok = false; break; }
-        }
-        if (!ok) continue;
-        const z = seedRand(attempts * 11.3 + nodes.length) ; // 0..1 depth
-        nodes.push({ x, y, z, r: 0.9 + seedRand(attempts) * 1.1, edges: [] });
-      }
-
-      // Connect each node to its K nearest neighbours (undirected, dedup)
-      const key = (a: number, b: number) => a < b ? `${a}-${b}` : `${b}-${a}`;
-      const seen = new Set<string>();
-      for (let i = 0; i < nodes.length; i++) {
-        const ni = nodes[i];
-        const dists: { j: number; d: number }[] = [];
-        for (let j = 0; j < nodes.length; j++) {
-          if (i === j) continue;
-          dists.push({ j, d: Math.hypot(nodes[j].x - ni.x, nodes[j].y - ni.y) });
-        }
-        dists.sort((a, b) => a.d - b.d);
-        const k = NEIGHBOURS + (seedRand(i * 19.4) > 0.7 ? 1 : 0);
-        for (let m = 0; m < k && m < dists.length; m++) {
-          const j = dists[m].j;
-          const k2 = key(i, j);
-          if (seen.has(k2)) continue;
-          seen.add(k2);
-          const idx = edges.length;
-          edges.push({ a: i, b: j, len: dists[m].d });
-          ni.edges.push(idx);
-          nodes[j].edges.push(idx);
-        }
-      }
-    };
-
-    build();
-    window.addEventListener("resize", build, { passive: true });
-
-    // Spawn pulse travelling from node "from" along edge
-    const spawnPulse = (edgeIdx: number, from: number, intensity: number, hops: number) => {
-      pulses.push({
-        edgeIdx,
-        from,
-        prog: 0,
-        speed: 0.010 + Math.random() * 0.006,
-        intensity,
-        hops,
+    for (let i = 0; i < MAX_PULSES; i++) {
+      const mat = new THREE.SpriteMaterial({
+        map: pulseTex,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        fog: false,
+        opacity: 0,
       });
+      const s = new THREE.Sprite(mat);
+      s.scale.set(4, 4, 4);
+      s.visible = false;
+      network.add(s);
+      pulses.push({
+        edgeIdx: 0, from: 0, prog: 0, speed: 0, intensity: 0, hops: 0,
+        mesh: s, active: false,
+      });
+    }
+
+    const spawnPulse = (edgeIdx: number, from: number, intensity: number, hops: number) => {
+      const p = pulses.find((x) => !x.active);
+      if (!p) return;
+      p.edgeIdx = edgeIdx; p.from = from; p.prog = 0;
+      p.speed = 0.012 + Math.random() * 0.008;
+      p.intensity = intensity; p.hops = hops;
+      p.active = true; p.mesh.visible = true;
     };
 
-    // Emit beat: pick N random edges, launch pulses
+    // ── Bloom (desktop) ────────────────────────────────────────────
+    let composer: EffectComposer | null = null;
+    if (!isMobile) {
+      composer = new EffectComposer(renderer);
+      composer.setSize(W, H);
+      composer.addPass(new RenderPass(scene, camera));
+      const bloom = new UnrealBloomPass(
+        new THREE.Vector2(W, H),
+        0.95,  // strength
+        0.55,  // radius
+        0.18,  // threshold
+      );
+      composer.addPass(bloom);
+    }
+
+    // ── Scroll state ───────────────────────────────────────────────
+    let scrollProg = 0;
+    let scrollVel  = 0;
+    let lastScroll = typeof window !== "undefined" ? window.scrollY : 0;
+    const onScroll = () => {
+      const cur = window.scrollY;
+      const delta = Math.abs(cur - lastScroll);
+      scrollVel = scrollVel * 0.7 + delta * 0.3;
+      lastScroll = cur;
+      const heroH = window.innerHeight;
+      scrollProg = Math.min(1, Math.max(0, cur / heroH));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    // ── Resize ─────────────────────────────────────────────────────
+    const onResize = () => {
+      W = container.clientWidth;
+      H = container.clientHeight;
+      camera.aspect = W / H;
+      camera.updateProjectionMatrix();
+      renderer.setSize(W, H, false);
+      composer?.setSize(W, H);
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+
+    // ── Heartbeat state ────────────────────────────────────────────
+    let t = 0;
+    const BASE_BEAT = 75;           // 48 bpm @ 60fps
+    let nextBeat    = BASE_BEAT;
+    let nextAmbient = 30;
+
     const emitBeat = () => {
-      const n = PULSES_MIN + Math.floor(Math.random() * (PULSES_MAX - PULSES_MIN + 1));
-      const usedEdges = new Set<number>();
+      const n = 2 + Math.floor(Math.random() * 3);   // 2..4
       for (let i = 0; i < n; i++) {
-        let tries = 0;
-        while (tries < 10) {
-          const eIdx = Math.floor(Math.random() * edges.length);
-          if (!usedEdges.has(eIdx)) {
-            usedEdges.add(eIdx);
-            const e = edges[eIdx];
-            const from = Math.random() < 0.5 ? e.a : e.b;
-            spawnPulse(eIdx, from, 0.85 + Math.random() * 0.15, 2 + Math.floor(Math.random() * 2));
-            break;
-          }
-          tries++;
-        }
+        const eIdx = Math.floor(Math.random() * edges.length);
+        const e = edges[eIdx];
+        const from = Math.random() < 0.5 ? e.a : e.b;
+        spawnPulse(eIdx, from, 0.85 + Math.random() * 0.15, 2 + Math.floor(Math.random() * 2));
       }
     };
 
-    // Continuous faint ambient pulses — emit occasionally between beats
-    let nextAmbient = 25;
-
-    const draw = () => {
+    // ── Loop ───────────────────────────────────────────────────────
+    const tick = () => {
       t++;
 
-      // Trigger heartbeat: QRS spike at phase 0 of each period
-      const phase = t % BEAT_PERIOD;
-      if (phase === 0) emitBeat();
-      // Ambient drift: very subtle single pulses between beats
+      // Scroll-driven camera dolly-in
+      const zFar = 180, zNear = 28;
+      const camZTarget = zFar - (zFar - zNear) * scrollProg;
+      camera.position.z += (camZTarget - camera.position.z) * 0.08;
+
+      // Slow auto-rotation of whole group + subtle wobble
+      network.rotation.y += 0.00085;
+      network.rotation.x = Math.sin(t * 0.0006) * 0.12;
+
+      // Heartbeat — scroll velocity bumps tempo
+      const velFactor = Math.min(2.2, 1 + scrollVel * 0.04);
+      const period = BASE_BEAT / velFactor;
+      if (t >= nextBeat) {
+        emitBeat();
+        nextBeat = t + period;
+      }
+      scrollVel *= 0.9;
+
+      // Ambient micro-pulses
       if (t >= nextAmbient) {
         const eIdx = Math.floor(Math.random() * edges.length);
         const e = edges[eIdx];
         spawnPulse(eIdx, Math.random() < 0.5 ? e.a : e.b, 0.28 + Math.random() * 0.15, 1);
-        nextAmbient = t + 40 + Math.floor(Math.random() * 50);
+        nextAmbient = t + 36 + Math.floor(Math.random() * 50);
       }
 
-      // Background — cream matches rest of site
-      ctx.fillStyle = "#FAFAF7";
-      ctx.fillRect(0, 0, W, H);
+      // Update pulses (positions are in network-local space — group rotates them)
+      for (const p of pulses) {
+        if (!p.active) continue;
+        p.prog += p.speed;
+        const e = edges[p.edgeIdx];
+        const startIdx = p.from;
+        const endIdx   = startIdx === e.a ? e.b : e.a;
+        const a = positions[startIdx];
+        const b = positions[endIdx];
+        const f = Math.min(1, p.prog);
+        p.mesh.position.set(
+          a.x + (b.x - a.x) * f,
+          a.y + (b.y - a.y) * f,
+          a.z + (b.z - a.z) * f,
+        );
+        const scale = 2.4 + p.intensity * 2.4;
+        p.mesh.scale.set(scale, scale, scale);
+        (p.mesh.material as THREE.SpriteMaterial).opacity = Math.min(1, p.intensity);
 
-      // Heart envelope for subtle overall brighten — very gentle
-      const ecg =
-        Math.exp(-Math.pow((phase - 0)  / 3, 2)) * 0.35 +
-        Math.exp(-Math.pow((phase - 14) / 5, 2)) * 0.20;
-
-      // ── Edges (synapse traces) ──────────────────────────
-      for (const e of edges) {
-        const na = nodes[e.a], nb = nodes[e.b];
-        // Depth mix — farther (higher z) = lighter/thinner
-        const zAvg = (na.z + nb.z) / 2;
-        const depthAlpha = 0.08 + (1 - zAvg) * 0.14;   // 0.08..0.22
-        const depthWidth = 0.35 + (1 - zAvg) * 0.5;    // 0.35..0.85
-        ctx.beginPath();
-        ctx.moveTo(na.x, na.y);
-        ctx.lineTo(nb.x, nb.y);
-        ctx.strokeStyle = `rgba(90,95,105,${depthAlpha + ecg * 0.03})`;
-        ctx.lineWidth = depthWidth;
-        ctx.stroke();
-      }
-
-      // ── Nodes (synapse cell bodies) ─────────────────────
-      for (const n of nodes) {
-        const depthAlpha = 0.18 + (1 - n.z) * 0.28;
-        const r = n.r * (0.7 + (1 - n.z) * 0.6);
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(90,95,105,${depthAlpha})`;
-        ctx.fill();
-      }
-
-      // ── Pulses travelling ───────────────────────────────
-      ctx.lineCap = "round";
-      for (let i = pulses.length - 1; i >= 0; i--) {
-        const pu = pulses[i];
-        pu.prog += pu.speed;
-
-        const edge = edges[pu.edgeIdx];
-        const startIdx = pu.from;
-        const endIdx   = startIdx === edge.a ? edge.b : edge.a;
-        const s = nodes[startIdx];
-        const e = nodes[endIdx];
-
-        const p = Math.min(1, pu.prog);
-        const hx = s.x + (e.x - s.x) * p;
-        const hy = s.y + (e.y - s.y) * p;
-
-        // Trail
-        const trailLen = 0.35;
-        const tailP = Math.max(0, p - trailLen);
-        const STEPS = 8;
-        for (let st = 0; st < STEPS; st++) {
-          const f1 = tailP + ((p - tailP) * st) / STEPS;
-          const f2 = tailP + ((p - tailP) * (st + 1)) / STEPS;
-          const x1 = s.x + (e.x - s.x) * f1;
-          const y1 = s.y + (e.y - s.y) * f1;
-          const x2 = s.x + (e.x - s.x) * f2;
-          const y2 = s.y + (e.y - s.y) * f2;
-          const alongHead = (f2 - tailP) / trailLen;
-          const a = Math.pow(Math.max(0, Math.min(1, alongHead)), 2.5);
-          ctx.beginPath();
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          ctx.strokeStyle = `rgba(${PULSE_GLOW},${a * pu.intensity * 0.55})`;
-          ctx.lineWidth = 1.2 + a * 1.2;
-          ctx.stroke();
-        }
-
-        // Head glow
-        const hr = 7 + pu.intensity * 6;
-        const hg = ctx.createRadialGradient(hx, hy, 0, hx, hy, hr);
-        hg.addColorStop(0, `rgba(${PULSE_CORE},${0.75 * pu.intensity})`);
-        hg.addColorStop(0.4, `rgba(${PULSE_GLOW},${0.4 * pu.intensity})`);
-        hg.addColorStop(1, `rgba(${PULSE_GLOW},0)`);
-        ctx.fillStyle = hg;
-        ctx.beginPath();
-        ctx.arc(hx, hy, hr, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Head core
-        ctx.beginPath();
-        ctx.arc(hx, hy, 1.3 + pu.intensity * 0.9, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${PULSE_CORE},${0.95 * pu.intensity})`;
-        ctx.fill();
-
-        // Finished this edge → hop to a connected edge or die
-        if (pu.prog >= 1) {
-          pu.hops -= 1;
-          if (pu.hops <= 0) { pulses.splice(i, 1); continue; }
-          const endNode = nodes[endIdx];
-          const nextEdges = endNode.edges.filter((x) => x !== pu.edgeIdx);
-          if (!nextEdges.length) { pulses.splice(i, 1); continue; }
-          const nextEdgeIdx = nextEdges[Math.floor(Math.random() * nextEdges.length)];
-          pu.edgeIdx = nextEdgeIdx;
-          pu.from = endIdx;
-          pu.prog = 0;
-          pu.intensity *= 0.75; // fade as it travels deeper
-          if (pu.intensity < 0.12) { pulses.splice(i, 1); continue; }
+        if (p.prog >= 1) {
+          p.hops -= 1;
+          if (p.hops <= 0) { p.active = false; p.mesh.visible = false; continue; }
+          const opts = nodeEdges[endIdx].filter((x) => x !== p.edgeIdx);
+          if (!opts.length) { p.active = false; p.mesh.visible = false; continue; }
+          p.edgeIdx = opts[Math.floor(Math.random() * opts.length)];
+          p.from = endIdx;
+          p.prog = 0;
+          p.intensity *= 0.75;
+          if (p.intensity < 0.12) { p.active = false; p.mesh.visible = false; }
         }
       }
 
-      rafRef.current = requestAnimationFrame(draw);
+      if (composer) composer.render();
+      else renderer.render(scene, camera);
+      rafRef.current = requestAnimationFrame(tick);
     };
 
-    rafRef.current = requestAnimationFrame(draw);
+    rafRef.current = requestAnimationFrame(tick);
 
     return () => {
       cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("resize", build);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      renderer.dispose();
+      edgeGeom.dispose(); edgeMat.dispose();
+      nodeGeom.dispose(); nodeMat.dispose();
+      pointTex.dispose(); pulseTex.dispose();
+      pulses.forEach((p) => (p.mesh.material as THREE.Material).dispose());
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none"
-      aria-hidden
-    />
+    <div ref={containerRef} className="absolute inset-0 w-full h-full pointer-events-none">
+      <canvas ref={canvasRef} className="block w-full h-full" aria-hidden />
+    </div>
   );
 }
-
 
 const HERO_TR = {
   en: {
