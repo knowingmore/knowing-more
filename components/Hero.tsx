@@ -23,7 +23,8 @@ function MolecularCanvas() {
 
     // ── Scene / camera / renderer ──────────────────────────────────
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0xfafaf7, 90, 260);
+    // Fog matches charcoal bg so distant geometry fades into the dark
+    scene.fog = new THREE.Fog(0x12141a, 90, 260);
 
     let W = container.clientWidth;
     let H = container.clientHeight;
@@ -39,7 +40,8 @@ function MolecularCanvas() {
     });
     renderer.setPixelRatio(DPR);
     renderer.setSize(W, H, false);
-    renderer.setClearColor(0xfafaf7, 1);
+    // Transparent canvas — container CSS bg controls color (and can lerp via scroll)
+    renderer.setClearColor(0x000000, 0);
 
     // ── Build connectome (clustered nodes) ─────────────────────────
     const NODES           = isMobile ? 110 : 200;
@@ -106,50 +108,104 @@ function MolecularCanvas() {
     const network = new THREE.Group();
     scene.add(network);
 
-    // ── Curved axon paths (quadratic bezier per edge) ─────────────
-    const SAMPLES = 16;                          // samples per curve
+    // ── Organic axon paths (CatmullRom spline with 3-4 waypoints) ─
+    // Each edge wiggles like a real axon: origin → several drift points → terminal.
+    const SAMPLES = isMobile ? 20 : 28;
     const edgeCurves: THREE.Vector3[][] = [];
+    const edgeStrength: number[] = [];           // 0..1, for per-edge opacity / width feel
+
     for (let i = 0; i < edges.length; i++) {
       const a = positions[edges[i].a];
       const b = positions[edges[i].b];
-      const mid = new THREE.Vector3().addVectors(a, b).multiplyScalar(0.5);
-      // Perpendicular direction for curve bulge
-      const dir = new THREE.Vector3().subVectors(b, a);
-      const len = dir.length();
-      // Random perpendicular: cross with a random vector
-      const rand = new THREE.Vector3(
-        Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5,
-      ).normalize();
-      const perp = new THREE.Vector3().crossVectors(dir, rand).normalize();
-      const bulge = len * (0.10 + Math.random() * 0.18);
-      mid.addScaledVector(perp, (Math.random() - 0.5) * 2 * bulge);
+      const dist = a.distanceTo(b);
 
-      const curve = new THREE.QuadraticBezierCurve3(a.clone(), mid, b.clone());
-      const pts = curve.getPoints(SAMPLES - 1); // returns SAMPLES points
+      const waypoints = 3 + Math.floor(Math.random() * 2); // 3 or 4
+      const cps: THREE.Vector3[] = [a.clone()];
+      for (let w = 1; w <= waypoints; w++) {
+        const tp = w / (waypoints + 1);
+        const base = new THREE.Vector3().lerpVectors(a, b, tp);
+        // Multi-axis organic drift (not pure perpendicular — feels less geometric)
+        const drift = new THREE.Vector3(
+          (Math.random() - 0.5),
+          (Math.random() - 0.5),
+          (Math.random() - 0.5),
+        ).normalize().multiplyScalar(dist * (0.08 + Math.random() * 0.16));
+        base.add(drift);
+        cps.push(base);
+      }
+      cps.push(b.clone());
+
+      const curve = new THREE.CatmullRomCurve3(cps, false, "catmullrom", 0.6);
+      const pts = curve.getPoints(SAMPLES - 1);
       edgeCurves.push(pts);
+      edgeStrength.push(0.35 + Math.random() * 0.65);  // varied prominence
     }
 
-    // LineSegments — for each curve, connect consecutive samples
+    // Build LineSegments with per-vertex color encoding edge strength
     const totalSegs = edges.length * (SAMPLES - 1);
     const epos = new Float32Array(totalSegs * 6);
-    let cursor = 0;
-    for (const pts of edgeCurves) {
-      for (let s = 0; s < pts.length - 1; s++) {
-        const p1 = pts[s], p2 = pts[s + 1];
+    const ecol = new Float32Array(totalSegs * 6);
+    let cursor = 0, ccursor = 0;
+    for (let ei = 0; ei < edgeCurves.length; ei++) {
+      const pts = edgeCurves[ei];
+      const s = edgeStrength[ei];
+      // Light cool grey on charcoal bg — visible but not blown out
+      const base = 0.42 + s * 0.35;      // 0.42..0.77 (light cool grey)
+      const r = base * 0.88, g = base * 0.92, bb = base * 1.0;
+      for (let si = 0; si < pts.length - 1; si++) {
+        const p1 = pts[si], p2 = pts[si + 1];
         epos[cursor++] = p1.x; epos[cursor++] = p1.y; epos[cursor++] = p1.z;
         epos[cursor++] = p2.x; epos[cursor++] = p2.y; epos[cursor++] = p2.z;
+        // Slight taper: dimmer near synapse ends (first & last 20% of curve)
+        const t1 = si / (pts.length - 1);
+        const t2 = (si + 1) / (pts.length - 1);
+        const taper = (tt: number) => {
+          const edge = Math.min(tt, 1 - tt);
+          return edge < 0.18 ? 0.55 + (edge / 0.18) * 0.45 : 1.0;
+        };
+        const m1 = taper(t1), m2 = taper(t2);
+        ecol[ccursor++] = r * m1; ecol[ccursor++] = g * m1; ecol[ccursor++] = bb * m1;
+        ecol[ccursor++] = r * m2; ecol[ccursor++] = g * m2; ecol[ccursor++] = bb * m2;
       }
     }
     const edgeGeom = new THREE.BufferGeometry();
     edgeGeom.setAttribute("position", new THREE.BufferAttribute(epos, 3));
+    edgeGeom.setAttribute("color",    new THREE.BufferAttribute(ecol, 3));
     const edgeMat = new THREE.LineBasicMaterial({
-      color: 0x6a6e78,
+      vertexColors: true,
       transparent: true,
-      opacity: 0.38,
+      opacity: 0.9,
       fog: true,
     });
     const edgeLines = new THREE.LineSegments(edgeGeom, edgeMat);
     network.add(edgeLines);
+
+    // ── Synapse bulbs (small glow spheres at each edge endpoint) ──
+    const bulbGeom = new THREE.SphereGeometry(1, 8, 8);
+    const bulbMat = new THREE.MeshBasicMaterial({
+      color: 0xb8bec8,
+      transparent: true,
+      opacity: 0.7,
+      fog: true,
+    });
+    const bulbMesh = new THREE.InstancedMesh(bulbGeom, bulbMat, edges.length * 2);
+    const bulbDummy = new THREE.Object3D();
+    for (let i = 0; i < edges.length; i++) {
+      // Bulb at endpoint 'a' (offset slightly along curve toward a-side)
+      const pts = edgeCurves[i];
+      const near_a = pts[1] || pts[0];
+      const near_b = pts[pts.length - 2] || pts[pts.length - 1];
+      bulbDummy.position.copy(near_a);
+      bulbDummy.scale.setScalar(0.35 + Math.random() * 0.25);
+      bulbDummy.updateMatrix();
+      bulbMesh.setMatrixAt(i * 2, bulbDummy.matrix);
+      bulbDummy.position.copy(near_b);
+      bulbDummy.scale.setScalar(0.35 + Math.random() * 0.25);
+      bulbDummy.updateMatrix();
+      bulbMesh.setMatrixAt(i * 2 + 1, bulbDummy.matrix);
+    }
+    bulbMesh.instanceMatrix.needsUpdate = true;
+    network.add(bulbMesh);
 
     // ── Neuron cell bodies: InstancedMesh of small spheres ────────
     // Size scaled by degree (number of connected edges) → hubs look like bigger neurons
@@ -158,9 +214,9 @@ function MolecularCanvas() {
 
     const neuronGeom = new THREE.IcosahedronGeometry(1, isMobile ? 0 : 1);
     const neuronMat = new THREE.MeshBasicMaterial({
-      color: 0x2e3138,
+      color: 0xd8dde5,
       transparent: true,
-      opacity: 0.88,
+      opacity: 0.92,
       fog: true,
     });
     const neuronMesh = new THREE.InstancedMesh(neuronGeom, neuronMat, positions.length);
@@ -210,9 +266,9 @@ function MolecularCanvas() {
     const hairGeom = new THREE.BufferGeometry();
     hairGeom.setAttribute("position", new THREE.BufferAttribute(hpos.slice(0, hc), 3));
     const hairMat = new THREE.LineBasicMaterial({
-      color: 0x6a6e78,
+      color: 0x8a92a0,
       transparent: true,
-      opacity: 0.14,
+      opacity: 0.22,
       fog: true,
     });
     const hairs = new THREE.LineSegments(hairGeom, hairMat);
@@ -408,6 +464,7 @@ function MolecularCanvas() {
       edgeGeom.dispose(); edgeMat.dispose();
       hairGeom.dispose(); hairMat.dispose();
       neuronGeom.dispose(); neuronMat.dispose();
+      bulbGeom.dispose(); bulbMat.dispose();
       pulseTex.dispose();
       pulses.forEach((p) => (p.mesh.material as THREE.Material).dispose());
     };
