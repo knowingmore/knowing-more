@@ -42,9 +42,9 @@ const TR = {
 };
 
 const variants = {
-  enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 60 : -60, scale: 1.02 }),
-  center: { opacity: 1, x: 0, scale: 1 },
-  exit:  (dir: number) => ({ opacity: 0, x: dir > 0 ? -60 : 60, scale: 0.98 }),
+  enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 40 : -40 }),
+  center: { opacity: 1, x: 0 },
+  exit:  (dir: number) => ({ opacity: 0, x: dir > 0 ? -40 : 40 }),
 };
 
 export default function LifestyleStrip({ locale = "en" }: { locale?: "en" | "pl" }) {

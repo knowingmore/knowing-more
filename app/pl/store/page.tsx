@@ -25,9 +25,9 @@ function ProductCard({ p, index }: { p: typeof productsPL[0]; index: number }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40, filter: "blur(12px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={{ duration: 0.9, delay: 0.15 + index * 0.12, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: 0.1 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
     >
       <Link href={`/pl/store/${p.slug}`} className="group block">
         <div
