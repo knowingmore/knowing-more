@@ -26,17 +26,26 @@ function MolecularCanvas() {
       tier: 0 | 1 | 2;
     };
 
-    const NODES   = 72;
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const NODES   = isMobile ? 52 : 72;
     const FOV     = 560;
-    const CONNECT = 165;  // max screen-distance for connection lines
-    const dROT_Y  = 0.0018;
-    const dROT_X  = 0.0006;
+    const CONNECT = isMobile ? 135 : 165;   // tighter network on mobile
+    const dROT_Y  = 0.00126;   // 30% slower rotation
+    const dROT_X  = 0.00042;
+    const BREATH_AMP = isMobile ? 0.026 : 0.018;   // more visible breath on small screens
     let W = 0, H = 0, CX = 0, CY = 0;
     const nodes: Node3D[] = [];
 
     // ── Pulse waves ──────────────────────────────────────────────
     const waves: { r: number; alpha: number }[] = [];
     let t = 0, nextWave = 120;
+
+    // ── Energy wave (from hero node) ─────────────────────────────
+    let energyWaveEmit = -9999;
+    const ENERGY_WAVE_INTERVAL  = 540;    // ~9s at 60fps
+    const ENERGY_WAVE_SPEED     = isMobile ? 2.6 : 3.2;
+    const ENERGY_WAVE_THICKNESS = isMobile ? 34 : 42;
+    const ENERGY_WAVE_MAX_R     = isMobile ? 380 : 520;
 
     // ── Build nodes on sphere ────────────────────────────────────
     const build = () => {
@@ -107,6 +116,9 @@ function MolecularCanvas() {
       const mx = mouse.current.x;
       const my = mouse.current.y;
 
+      // Sphere-wide breathing (6-second cycle)
+      const breath = 1 + BREATH_AMP * Math.sin(t * 0.01745);
+
       // ── Update + project nodes ───────────────────────────────
       nodes.forEach((n) => {
         n.pulse += n.pulseSpeed;
@@ -131,8 +143,8 @@ function MolecularCanvas() {
         n.y = n.oy + n.vy;
         n.z = n.oz + n.vz;
 
-        // Perspective projection
-        const scale = FOV / (FOV + n.z);
+        // Perspective projection with breathing
+        const scale = (FOV / (FOV + n.z)) * breath;
         n.sx = CX + n.x * scale;
         n.sy = CY + n.y * scale;
 
@@ -148,6 +160,15 @@ function MolecularCanvas() {
           n.vy += (dy / d) * f * scale;
         }
       });
+
+      // ── Hero node (first tier-0 node) + energy wave trigger ──
+      const heroNode = nodes[0];
+      if (t - energyWaveEmit > ENERGY_WAVE_INTERVAL) {
+        energyWaveEmit = t;
+      }
+      const waveAge = t - energyWaveEmit;
+      const waveR   = waveAge * ENERGY_WAVE_SPEED;
+      const waveActive = waveR < ENERGY_WAVE_MAX_R;
 
       // ── Sort by z (painters algorithm) ──────────────────────
       const sorted = [...nodes].sort((a, b) => a.z - b.z);
@@ -168,11 +189,27 @@ function MolecularCanvas() {
             ni.tier === 0 && nj.tier === 0 ? alpha * 2.2 :
             ni.tier <= 1 && nj.tier <= 1   ? alpha * 1.5 : alpha;
 
+          // Energy wave boost — line brightens when wave front hits its midpoint
+          let waveBoost = 0;
+          if (waveActive) {
+            const midX = (ni.sx + nj.sx) / 2;
+            const midY = (ni.sy + nj.sy) / 2;
+            const distFromHero = Math.hypot(midX - heroNode.sx, midY - heroNode.sy);
+            const delta = Math.abs(distFromHero - waveR);
+            if (delta < ENERGY_WAVE_THICKNESS) {
+              const falloff = 1 - waveR / ENERGY_WAVE_MAX_R;
+              waveBoost = (1 - delta / ENERGY_WAVE_THICKNESS) * 0.55 * falloff;
+            }
+          }
+
+          const finalAlpha = Math.min(tierAlpha + waveBoost, 0.85);
           ctx.beginPath();
           ctx.moveTo(ni.sx, ni.sy);
           ctx.lineTo(nj.sx, nj.sy);
-          ctx.strokeStyle = `rgba(232,146,10,${Math.min(tierAlpha, 0.38)})`;
-          ctx.lineWidth = ni.tier === 0 && nj.tier === 0 ? 0.9 : 0.5;
+          ctx.strokeStyle = `rgba(232,146,10,${finalAlpha})`;
+          ctx.lineWidth = waveBoost > 0.15
+            ? 1.0
+            : (ni.tier === 0 && nj.tier === 0 ? 0.9 : 0.5);
           ctx.stroke();
         }
       }
@@ -208,17 +245,22 @@ function MolecularCanvas() {
       // ── Draw nodes ────────────────────────────────────────────
       sorted.forEach((n) => {
         const depthScale = FOV / (FOV + n.z);
-        const b = Math.max(0.08, 0.45 + 0.55 * Math.sin(n.pulse));
-        const r = Math.max(0.3, n.r * depthScale * b);
+        const isHero = n === heroNode;
+
+        // Hero node: slow deliberate pulse (~4s cycle), more amplitude
+        const b = isHero
+          ? 0.55 + 0.45 * Math.sin(t * 0.026)
+          : Math.max(0.08, 0.45 + 0.55 * Math.sin(n.pulse));
+        const r = Math.max(0.3, n.r * depthScale * b * (isHero ? 1.6 : 1));
 
         const color =
           n.tier === 0 ? "232,146,10"  :
           n.tier === 1 ? (Math.sin(n.pulse * 0.5) > 0 ? "232,146,10" : "210,125,8") :
                          "196,104,42";
 
-        const baseAlpha = n.tier === 0 ? 0.85 : n.tier === 1 ? 0.60 : 0.35;
-        const glowAlpha = n.tier === 0 ? 0.28 : n.tier === 1 ? 0.16 : 0.08;
-        const glowR     = r * (n.tier === 0 ? 8 : 6);
+        const baseAlpha = isHero ? 1.0 : (n.tier === 0 ? 0.85 : n.tier === 1 ? 0.60 : 0.35);
+        const glowAlpha = isHero ? 0.42 : (n.tier === 0 ? 0.28 : n.tier === 1 ? 0.16 : 0.08);
+        const glowR     = r * (isHero ? 11 : n.tier === 0 ? 8 : 6);
 
         // Glow halo
         const g = ctx.createRadialGradient(n.sx, n.sy, 0, n.sx, n.sy, glowR);
