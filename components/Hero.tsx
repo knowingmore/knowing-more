@@ -293,24 +293,24 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           - Full-screen animation with headline centered
           - White section below with subtitle + CTAs
       ════════════════════════════════════════════ */}
-      <div className="md:hidden">
+      <div className="md:hidden min-h-screen flex flex-col bg-white overflow-hidden">
 
-        {/* Animation + headline */}
-        <section className="relative h-screen flex items-center justify-center bg-white overflow-hidden">
+        {/* Animation + headline — top portion */}
+        <div className="relative h-[54vh] flex items-center justify-center flex-shrink-0">
           <MolecularCanvas />
 
           {/* Bottom fade into white */}
-          <div className="absolute bottom-0 inset-x-0 h-32 pointer-events-none z-10"
-            style={{ background: "linear-gradient(to bottom, transparent, white 90%)" }}
+          <div className="absolute bottom-0 inset-x-0 h-16 pointer-events-none z-10"
+            style={{ background: "linear-gradient(to bottom, transparent, white 95%)" }}
             aria-hidden />
 
-          {/* Centered headline only */}
+          {/* Centered headline */}
           <motion.div
             style={{ opacity: fadeOut }}
             className="relative z-10 text-center px-6"
           >
             {/* Top rule */}
-            <div className="flex items-center gap-3 mb-6 max-w-[280px] mx-auto">
+            <div className="flex items-center gap-3 mb-4 max-w-[280px] mx-auto">
               <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
                 transition={{ duration: 1.3, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
                 className="flex-1 h-px bg-[#E8920A]/22 origin-right" />
@@ -327,30 +327,21 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
               animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
               transition={{ duration: 2.2, delay: 0.65, ease: [0.25, 0.1, 0.25, 1] }}
               className="leading-[0.88] tracking-[-0.03em] text-[#111111]"
-              style={{ fontFamily: "var(--font-playfair)", fontSize: "clamp(4.4rem, 22vw, 7rem)" }}
+              style={{ fontFamily: "var(--font-playfair)", fontSize: "clamp(3.8rem, 20vw, 6rem)" }}
             >
               <span className="block">kno<span style={{ color: "#E8920A" }}>win</span>g</span>
               <span className="block">more<span style={{ color: "#E8920A" }}>.</span></span>
             </motion.h1>
           </motion.div>
+        </div>
 
-          {/* Scroll indicator */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ delay: 3.4 }} style={{ opacity: fadeOut }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-20" aria-hidden>
-            <motion.div animate={{ y: [0, 9, 0] }}
-              transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
-              className="w-px h-10 bg-gradient-to-b from-[#111111]/20 to-transparent" />
-          </motion.div>
-        </section>
-
-        {/* Below fold — white background */}
-        <div className="bg-white px-6 pt-4 pb-14 flex flex-col items-center text-center">
+        {/* Text content — visible on same screen */}
+        <div className="flex-1 bg-white px-6 pt-2 pb-10 flex flex-col items-center text-center justify-center">
           <motion.p
             initial={{ opacity: 0, letterSpacing: "0.7em" }}
             animate={{ opacity: 1, letterSpacing: "0.42em" }}
             transition={{ duration: 1.6, delay: 0.5, ease: "easeOut" }}
-            className="text-[10px] font-mono uppercase text-[#E8920A] mb-5"
+            className="text-[10px] font-mono uppercase text-[#E8920A] mb-4"
           >
             {tr.eyebrow}
           </motion.p>
@@ -359,7 +350,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.1, delay: 2.7 }}
-            className="text-sm text-[#111111]/38 leading-[1.85] tracking-wide max-w-[300px] mb-8"
+            className="text-sm text-[#111111]/38 leading-[1.85] tracking-wide max-w-[300px] mb-6"
           >
             {tr.subtitle}
           </motion.p>
@@ -368,7 +359,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.0, delay: 2.9 }}
-            className="flex items-center gap-8 mb-10"
+            className="flex items-center gap-8 mb-6"
           >
             <a href="#products"
               className="group flex items-center gap-2 text-[#111111] text-sm font-medium tracking-wide border-b border-[#111111]/20 pb-0.5 hover:border-[#E8920A] hover:text-[#E8920A] transition-colors duration-300">
@@ -384,7 +375,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ delay: 3.1, duration: 0.9 }}
-            className="w-full max-w-[340px] pt-5 flex items-center justify-between border-t border-[#111111]/[0.07]"
+            className="w-full max-w-[340px] pt-4 flex items-center justify-between border-t border-[#111111]/[0.07]"
           >
             <span className="text-[9px] font-mono text-[#111111]/35 tracking-[0.25em] uppercase">KM — 001</span>
             <div className="flex items-center gap-2">
