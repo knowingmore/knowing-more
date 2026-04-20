@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 /* ─── Neural-Current Heartbeat Canvas ───────────────────────────── */
+/* ─── Neural Network Canvas — synapses with electrical current ──── */
 function MolecularCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef    = useRef<number>(0);
@@ -16,252 +17,251 @@ function MolecularCanvas() {
 
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
     const DPR      = Math.min(typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1, 2);
-    const PATHS    = isMobile ? 14 : 22;
-    const SEG_DEPTH = 4;                          // midpoint displacement iterations
-    const HEART_PERIOD = 62;                      // frames per beat (~60 bpm @ 60fps)
 
-    let W = 0, H = 0, CX = 0, CY = 0;
+    // Network size
+    const NODES        = isMobile ? 38 : 72;
+    const NEIGHBOURS   = isMobile ? 3  : 4;   // edges per node (approx)
+    // Heartbeat: 48 bpm → 1 beat / 1.25s → 75 frames @ 60fps
+    const BEAT_PERIOD  = 75;
+    // Pulses per beat
+    const PULSES_MIN   = 2;
+    const PULSES_MAX   = 4;
 
-    type Pt = { x: number; y: number };
-    type Path = { pts: Pt[]; cum: number[]; total: number; w: number };
+    let W = 0, H = 0;
+
+    type Node = { x: number; y: number; z: number; r: number; edges: number[] };
+    type Edge = { a: number; b: number; len: number };
     type Pulse = {
-      pathIdx: number;
-      prog: number;         // 0..1 progress along path
-      speed: number;        // per-frame progress delta
-      intensity: number;    // 0..1
-      reverse: boolean;
+      edgeIdx: number;
+      from: number;       // node index we started from (a or b)
+      prog: number;       // 0..1 along edge from "from"
+      speed: number;
+      intensity: number;
+      hops: number;       // remaining node-to-node hops
     };
 
-    const paths: Path[] = [];
+    const nodes: Node[] = [];
+    const edges: Edge[] = [];
     const pulses: Pulse[] = [];
     let t = 0;
 
-    // Seeded random for path consistency across frames
-    const rand = (seed: number) => {
-      const s = Math.sin(seed) * 43758.5453;
-      return s - Math.floor(s);
-    };
+    // Electric current colors (cool-white with slight blueshift)
+    const PULSE_CORE = "230,240,255";
+    const PULSE_GLOW = "160,200,255";
 
-    // Midpoint displacement between two points
-    const displace = (a: Pt, b: Pt, depth: number, amp: number, seed: number): Pt[] => {
-      if (depth <= 0) return [a, b];
-      const mx = (a.x + b.x) / 2;
-      const my = (a.y + b.y) / 2;
-      // Perpendicular direction
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const len = Math.hypot(dx, dy) || 1;
-      const nx = -dy / len;
-      const ny = dx / len;
-      const r = (rand(seed) - 0.5) * 2 * amp;
-      const mid = { x: mx + nx * r, y: my + ny * r };
-      const left  = displace(a, mid, depth - 1, amp * 0.52, seed * 1.7 + 1);
-      const right = displace(mid, b, depth - 1, amp * 0.52, seed * 2.3 + 2);
-      return [...left.slice(0, -1), ...right];
-    };
-
-    const buildPath = (seed: number, startAngle: number, reach: number): Path => {
-      // Path radiates outward from slightly off-center, with irregular endpoint
-      const innerR = reach * 0.08;
-      const outerR = reach * (0.55 + rand(seed * 3.1) * 0.45);
-      const wobble = (rand(seed * 5.7) - 0.5) * 0.6;
-      const endAngle = startAngle + wobble;
-
-      const a: Pt = {
-        x: CX + Math.cos(startAngle) * innerR,
-        y: CY + Math.sin(startAngle) * innerR,
-      };
-      const b: Pt = {
-        x: CX + Math.cos(endAngle) * outerR,
-        y: CY + Math.sin(endAngle) * outerR,
-      };
-
-      const amp = reach * (0.12 + rand(seed * 7.3) * 0.14);
-      const pts = displace(a, b, SEG_DEPTH, amp, seed);
-
-      // Cumulative arc length
-      const cum: number[] = [0];
-      for (let i = 1; i < pts.length; i++) {
-        cum.push(cum[i - 1] + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y));
-      }
-      return { pts, cum, total: cum[cum.length - 1], w: 0.8 + rand(seed * 11.1) * 0.6 };
+    const seedRand = (s: number) => {
+      const v = Math.sin(s) * 43758.5453;
+      return v - Math.floor(v);
     };
 
     const build = () => {
       W = canvas.offsetWidth;
       H = canvas.offsetHeight;
-      CX = W / 2;
-      CY = H / 2;
       canvas.width  = W * DPR;
       canvas.height = H * DPR;
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 
-      const reach = Math.min(W, H) * 0.62;
-      paths.length = 0;
-      for (let i = 0; i < PATHS; i++) {
-        // Distribute angles with jitter
-        const base = (i / PATHS) * Math.PI * 2;
-        const jitter = (rand(i * 13.37) - 0.5) * 0.35;
-        paths.push(buildPath(i + 1, base + jitter, reach));
+      nodes.length = 0;
+      edges.length = 0;
+      pulses.length = 0;
+
+      // Poisson-ish distribution via blue-noise rejection
+      const margin = Math.min(W, H) * 0.06;
+      const minDist = Math.min(W, H) / (isMobile ? 7.5 : 10);
+      let attempts = 0;
+      while (nodes.length < NODES && attempts < NODES * 40) {
+        attempts++;
+        const x = margin + seedRand(attempts * 2.17 + nodes.length * 3.3) * (W - margin * 2);
+        const y = margin + seedRand(attempts * 5.91 + nodes.length * 7.7) * (H - margin * 2);
+        let ok = true;
+        for (const n of nodes) {
+          if (Math.hypot(n.x - x, n.y - y) < minDist) { ok = false; break; }
+        }
+        if (!ok) continue;
+        const z = seedRand(attempts * 11.3 + nodes.length) ; // 0..1 depth
+        nodes.push({ x, y, z, r: 0.9 + seedRand(attempts) * 1.1, edges: [] });
+      }
+
+      // Connect each node to its K nearest neighbours (undirected, dedup)
+      const key = (a: number, b: number) => a < b ? `${a}-${b}` : `${b}-${a}`;
+      const seen = new Set<string>();
+      for (let i = 0; i < nodes.length; i++) {
+        const ni = nodes[i];
+        const dists: { j: number; d: number }[] = [];
+        for (let j = 0; j < nodes.length; j++) {
+          if (i === j) continue;
+          dists.push({ j, d: Math.hypot(nodes[j].x - ni.x, nodes[j].y - ni.y) });
+        }
+        dists.sort((a, b) => a.d - b.d);
+        const k = NEIGHBOURS + (seedRand(i * 19.4) > 0.7 ? 1 : 0);
+        for (let m = 0; m < k && m < dists.length; m++) {
+          const j = dists[m].j;
+          const k2 = key(i, j);
+          if (seen.has(k2)) continue;
+          seen.add(k2);
+          const idx = edges.length;
+          edges.push({ a: i, b: j, len: dists[m].d });
+          ni.edges.push(idx);
+          nodes[j].edges.push(idx);
+        }
       }
     };
 
     build();
     window.addEventListener("resize", build, { passive: true });
 
-    // Sample point at progress p (0..1) along a path, with tangent
-    const sampleAt = (path: Path, p: number) => {
-      const target = p * path.total;
-      // Binary search
-      let lo = 0, hi = path.cum.length - 1;
-      while (lo < hi - 1) {
-        const mid = (lo + hi) >> 1;
-        if (path.cum[mid] <= target) lo = mid; else hi = mid;
-      }
-      const segLen = path.cum[hi] - path.cum[lo] || 1;
-      const f = (target - path.cum[lo]) / segLen;
-      const a = path.pts[lo], b = path.pts[hi];
-      return { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f };
-    };
-
-    // Emit a pulse on a given path
-    const emitPulse = (pathIdx: number, intensity: number) => {
-      const reverse = Math.random() < 0.25;
+    // Spawn pulse travelling from node "from" along edge
+    const spawnPulse = (edgeIdx: number, from: number, intensity: number, hops: number) => {
       pulses.push({
-        pathIdx,
-        prog: reverse ? 1 : 0,
-        speed: (isMobile ? 0.016 : 0.014) + Math.random() * 0.008,
+        edgeIdx,
+        from,
+        prog: 0,
+        speed: 0.010 + Math.random() * 0.006,
         intensity,
-        reverse,
+        hops,
       });
     };
 
-    // ECG P-QRS-T beat pattern — offsets within the beat period, pulse counts, intensities
-    // P wave: small, 1 path.  QRS: big spike, many paths.  T: medium, few paths.
-    const triggerBeat = (phase: number) => {
-      // phase 0..HEART_PERIOD
-      if (phase === 0) {
-        // P wave
-        emitPulse(Math.floor(Math.random() * PATHS), 0.35);
-      } else if (phase === 10) {
-        // QRS spike
-        const count = isMobile ? 4 : 6;
-        for (let i = 0; i < count; i++) {
-          emitPulse(Math.floor(Math.random() * PATHS), 0.9 + Math.random() * 0.1);
-        }
-      } else if (phase === 13) {
-        // Q-S tail extra
-        const count = isMobile ? 2 : 3;
-        for (let i = 0; i < count; i++) {
-          emitPulse(Math.floor(Math.random() * PATHS), 0.75);
-        }
-      } else if (phase === 30) {
-        // T wave
-        const count = isMobile ? 2 : 3;
-        for (let i = 0; i < count; i++) {
-          emitPulse(Math.floor(Math.random() * PATHS), 0.5);
+    // Emit beat: pick N random edges, launch pulses
+    const emitBeat = () => {
+      const n = PULSES_MIN + Math.floor(Math.random() * (PULSES_MAX - PULSES_MIN + 1));
+      const usedEdges = new Set<number>();
+      for (let i = 0; i < n; i++) {
+        let tries = 0;
+        while (tries < 10) {
+          const eIdx = Math.floor(Math.random() * edges.length);
+          if (!usedEdges.has(eIdx)) {
+            usedEdges.add(eIdx);
+            const e = edges[eIdx];
+            const from = Math.random() < 0.5 ? e.a : e.b;
+            spawnPulse(eIdx, from, 0.85 + Math.random() * 0.15, 2 + Math.floor(Math.random() * 2));
+            break;
+          }
+          tries++;
         }
       }
     };
+
+    // Continuous faint ambient pulses — emit occasionally between beats
+    let nextAmbient = 25;
 
     const draw = () => {
       t++;
-      const phase = t % HEART_PERIOD;
-      triggerBeat(phase);
 
-      // Background wash (charcoal) — slight trail by using semi-transparent overlay
-      ctx.fillStyle = "#0F0F0F";
+      // Trigger heartbeat: QRS spike at phase 0 of each period
+      const phase = t % BEAT_PERIOD;
+      if (phase === 0) emitBeat();
+      // Ambient drift: very subtle single pulses between beats
+      if (t >= nextAmbient) {
+        const eIdx = Math.floor(Math.random() * edges.length);
+        const e = edges[eIdx];
+        spawnPulse(eIdx, Math.random() < 0.5 ? e.a : e.b, 0.28 + Math.random() * 0.15, 1);
+        nextAmbient = t + 40 + Math.floor(Math.random() * 50);
+      }
+
+      // Background — cream matches rest of site
+      ctx.fillStyle = "#FAFAF7";
       ctx.fillRect(0, 0, W, H);
 
-      // Heartbeat glow at center — strongest right at QRS
-      const beatT = phase / HEART_PERIOD;
-      // Amplitude envelope mimicking ECG
+      // Heart envelope for subtle overall brighten — very gentle
       const ecg =
-        Math.exp(-Math.pow((phase - 0)  / 3, 2)) * 0.25 +  // P
-        Math.exp(-Math.pow((phase - 11) / 2, 2)) * 1.0  +  // QRS
-        Math.exp(-Math.pow((phase - 31) / 4, 2)) * 0.45;   // T
+        Math.exp(-Math.pow((phase - 0)  / 3, 2)) * 0.35 +
+        Math.exp(-Math.pow((phase - 14) / 5, 2)) * 0.20;
 
-      // ── Idle paths (subtle grey trace) ──────────────────────
-      paths.forEach((p) => {
+      // ── Edges (synapse traces) ──────────────────────────
+      for (const e of edges) {
+        const na = nodes[e.a], nb = nodes[e.b];
+        // Depth mix — farther (higher z) = lighter/thinner
+        const zAvg = (na.z + nb.z) / 2;
+        const depthAlpha = 0.08 + (1 - zAvg) * 0.14;   // 0.08..0.22
+        const depthWidth = 0.35 + (1 - zAvg) * 0.5;    // 0.35..0.85
         ctx.beginPath();
-        ctx.moveTo(p.pts[0].x, p.pts[0].y);
-        for (let i = 1; i < p.pts.length; i++) ctx.lineTo(p.pts[i].x, p.pts[i].y);
-        ctx.strokeStyle = "rgba(170,170,170,0.09)";
-        ctx.lineWidth = p.w * 0.6;
+        ctx.moveTo(na.x, na.y);
+        ctx.lineTo(nb.x, nb.y);
+        ctx.strokeStyle = `rgba(90,95,105,${depthAlpha + ecg * 0.03})`;
+        ctx.lineWidth = depthWidth;
         ctx.stroke();
-      });
+      }
 
-      // ── Central heart glow ──────────────────────────────────
-      const glowR = Math.min(W, H) * (0.08 + ecg * 0.18);
-      const gg = ctx.createRadialGradient(CX, CY, 0, CX, CY, glowR * 2);
-      gg.addColorStop(0, `rgba(232,146,10,${0.14 + ecg * 0.32})`);
-      gg.addColorStop(0.5, `rgba(232,146,10,${0.04 + ecg * 0.1})`);
-      gg.addColorStop(1, "rgba(232,146,10,0)");
-      ctx.fillStyle = gg;
-      ctx.beginPath();
-      ctx.arc(CX, CY, glowR * 2, 0, Math.PI * 2);
-      ctx.fill();
+      // ── Nodes (synapse cell bodies) ─────────────────────
+      for (const n of nodes) {
+        const depthAlpha = 0.18 + (1 - n.z) * 0.28;
+        const r = n.r * (0.7 + (1 - n.z) * 0.6);
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(90,95,105,${depthAlpha})`;
+        ctx.fill();
+      }
 
-      // Central core dot
-      ctx.beginPath();
-      ctx.arc(CX, CY, 2.5 + ecg * 3.5, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,210,140,${0.6 + ecg * 0.4})`;
-      ctx.fill();
-
-      // ── Pulses travelling along paths ──────────────────────
+      // ── Pulses travelling ───────────────────────────────
+      ctx.lineCap = "round";
       for (let i = pulses.length - 1; i >= 0; i--) {
         const pu = pulses[i];
-        pu.prog += pu.reverse ? -pu.speed : pu.speed;
-        if (pu.prog < 0 || pu.prog > 1) { pulses.splice(i, 1); continue; }
+        pu.prog += pu.speed;
 
-        const path = paths[pu.pathIdx];
-        const head = sampleAt(path, pu.prog);
+        const edge = edges[pu.edgeIdx];
+        const startIdx = pu.from;
+        const endIdx   = startIdx === edge.a ? edge.b : edge.a;
+        const s = nodes[startIdx];
+        const e = nodes[endIdx];
 
-        // Trail: draw gradient along path from (prog - trailLen) to prog
-        const trailLen = 0.18;
-        const tail = Math.max(0, Math.min(1, pu.prog - (pu.reverse ? -trailLen : trailLen)));
-        const from = pu.reverse ? pu.prog : tail;
-        const to   = pu.reverse ? tail    : pu.prog;
+        const p = Math.min(1, pu.prog);
+        const hx = s.x + (e.x - s.x) * p;
+        const hy = s.y + (e.y - s.y) * p;
 
-        // Walk path segments within [from, to] — cheap: sample N points
-        const STEPS = 14;
-        ctx.lineCap = "round";
-        for (let s = 0; s < STEPS; s++) {
-          const f1 = from + ((to - from) * s) / STEPS;
-          const f2 = from + ((to - from) * (s + 1)) / STEPS;
-          const p1 = sampleAt(path, f1);
-          const p2 = sampleAt(path, f2);
-          const alongHead = pu.reverse ? (1 - (f2 - tail) / trailLen) : ((f2 - tail) / trailLen);
-          const a = Math.max(0, Math.min(1, alongHead));
-          const alpha = Math.pow(a, 2.2) * pu.intensity;
+        // Trail
+        const trailLen = 0.35;
+        const tailP = Math.max(0, p - trailLen);
+        const STEPS = 8;
+        for (let st = 0; st < STEPS; st++) {
+          const f1 = tailP + ((p - tailP) * st) / STEPS;
+          const f2 = tailP + ((p - tailP) * (st + 1)) / STEPS;
+          const x1 = s.x + (e.x - s.x) * f1;
+          const y1 = s.y + (e.y - s.y) * f1;
+          const x2 = s.x + (e.x - s.x) * f2;
+          const y2 = s.y + (e.y - s.y) * f2;
+          const alongHead = (f2 - tailP) / trailLen;
+          const a = Math.pow(Math.max(0, Math.min(1, alongHead)), 2.5);
           ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = `rgba(232,146,10,${alpha * 0.85})`;
-          ctx.lineWidth = path.w * (0.9 + a * 1.6);
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.strokeStyle = `rgba(${PULSE_GLOW},${a * pu.intensity * 0.55})`;
+          ctx.lineWidth = 1.2 + a * 1.2;
           ctx.stroke();
         }
 
         // Head glow
-        const hr = 14 + pu.intensity * 10;
-        const hg = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, hr);
-        hg.addColorStop(0, `rgba(255,210,140,${0.85 * pu.intensity})`);
-        hg.addColorStop(0.4, `rgba(232,146,10,${0.4 * pu.intensity})`);
-        hg.addColorStop(1, "rgba(232,146,10,0)");
+        const hr = 7 + pu.intensity * 6;
+        const hg = ctx.createRadialGradient(hx, hy, 0, hx, hy, hr);
+        hg.addColorStop(0, `rgba(${PULSE_CORE},${0.75 * pu.intensity})`);
+        hg.addColorStop(0.4, `rgba(${PULSE_GLOW},${0.4 * pu.intensity})`);
+        hg.addColorStop(1, `rgba(${PULSE_GLOW},0)`);
         ctx.fillStyle = hg;
         ctx.beginPath();
-        ctx.arc(head.x, head.y, hr, 0, Math.PI * 2);
+        ctx.arc(hx, hy, hr, 0, Math.PI * 2);
         ctx.fill();
 
         // Head core
         ctx.beginPath();
-        ctx.arc(head.x, head.y, 1.8 + pu.intensity * 1.6, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,230,180,${0.95 * pu.intensity})`;
+        ctx.arc(hx, hy, 1.3 + pu.intensity * 0.9, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${PULSE_CORE},${0.95 * pu.intensity})`;
         ctx.fill();
-      }
 
-      // Suppress unused warning for beatT
-      void beatT;
+        // Finished this edge → hop to a connected edge or die
+        if (pu.prog >= 1) {
+          pu.hops -= 1;
+          if (pu.hops <= 0) { pulses.splice(i, 1); continue; }
+          const endNode = nodes[endIdx];
+          const nextEdges = endNode.edges.filter((x) => x !== pu.edgeIdx);
+          if (!nextEdges.length) { pulses.splice(i, 1); continue; }
+          const nextEdgeIdx = nextEdges[Math.floor(Math.random() * nextEdges.length)];
+          pu.edgeIdx = nextEdgeIdx;
+          pu.from = endIdx;
+          pu.prog = 0;
+          pu.intensity *= 0.75; // fade as it travels deeper
+          if (pu.intensity < 0.12) { pulses.splice(i, 1); continue; }
+        }
+      }
 
       rafRef.current = requestAnimationFrame(draw);
     };
@@ -318,7 +318,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           - Full-screen animation with headline centered
           - White section below with subtitle + CTAs
       ════════════════════════════════════════════ */}
-      <div className="md:hidden min-h-screen flex flex-col bg-white overflow-hidden">
+      <div className="md:hidden min-h-screen flex flex-col bg-[#FAFAF7] overflow-hidden">
 
         {/* Animation + headline — top portion */}
         <div className="relative h-[54vh] flex items-center justify-center flex-shrink-0">
@@ -326,7 +326,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
 
           {/* Bottom fade into white */}
           <div className="absolute bottom-0 inset-x-0 h-16 pointer-events-none z-10"
-            style={{ background: "linear-gradient(to bottom, transparent, white 95%)" }}
+            style={{ background: "linear-gradient(to bottom, transparent, #FAFAF7 95%)" }}
             aria-hidden />
 
           {/* Centered headline */}
@@ -361,7 +361,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
         </div>
 
         {/* Text content — visible on same screen */}
-        <div className="flex-1 bg-white px-6 pt-2 pb-10 flex flex-col items-center text-center justify-center">
+        <div className="flex-1 bg-[#FAFAF7] px-6 pt-2 pb-10 flex flex-col items-center text-center justify-center">
           <motion.p
             initial={{ opacity: 0, letterSpacing: "0.7em" }}
             animate={{ opacity: 1, letterSpacing: "0.42em" }}
@@ -416,11 +416,11 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
       {/* ═══════════════════════════════════════════
           DESKTOP LAYOUT — unchanged
       ════════════════════════════════════════════ */}
-      <section className="hidden md:flex relative min-h-screen flex-col items-center justify-center bg-white overflow-hidden">
+      <section className="hidden md:flex relative min-h-screen flex-col items-center justify-center bg-[#FAFAF7] overflow-hidden">
         <MolecularCanvas />
 
         <div className="absolute bottom-0 inset-x-0 h-48 pointer-events-none z-10"
-          style={{ background: "linear-gradient(to bottom, transparent, white 85%)" }} aria-hidden />
+          style={{ background: "linear-gradient(to bottom, transparent, #FAFAF7 85%)" }} aria-hidden />
 
         <motion.div
           style={{ opacity: fadeOut, scale: scaleDown, filter: `blur(${blurOut}px)` as unknown as string }}
