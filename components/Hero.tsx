@@ -3,11 +3,10 @@
 import { useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-/* ─── 3D Molecular Network ───────────────────────────────────────── */
+/* ─── Neural-Current Heartbeat Canvas ───────────────────────────── */
 function MolecularCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef    = useRef<number>(0);
-  const mouse     = useRef({ x: -9999, y: -9999 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -15,268 +14,254 @@ function MolecularCanvas() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // ── Node definition ──────────────────────────────────────────
-    type Node3D = {
-      ox: number; oy: number; oz: number;   // original position on unit sphere
-      x:  number; y:  number; z:  number;   // current (after rotation)
-      sx: number; sy: number;               // screen projection
-      vx: number; vy: number; vz: number;   // velocity (for mouse repulsion)
-      r:  number;                           // base radius
-      pulse: number; pulseSpeed: number;
-      tier: 0 | 1 | 2;
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const DPR      = Math.min(typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1, 2);
+    const PATHS    = isMobile ? 14 : 22;
+    const SEG_DEPTH = 4;                          // midpoint displacement iterations
+    const HEART_PERIOD = 62;                      // frames per beat (~60 bpm @ 60fps)
+
+    let W = 0, H = 0, CX = 0, CY = 0;
+
+    type Pt = { x: number; y: number };
+    type Path = { pts: Pt[]; cum: number[]; total: number; w: number };
+    type Pulse = {
+      pathIdx: number;
+      prog: number;         // 0..1 progress along path
+      speed: number;        // per-frame progress delta
+      intensity: number;    // 0..1
+      reverse: boolean;
     };
 
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    const NODES   = isMobile ? 52 : 72;
-    const FOV     = 560;
-    const CONNECT = isMobile ? 135 : 165;   // tighter network on mobile
-    const dROT_Y  = 0.0009;    // 50% slower rotation — meditative
-    const dROT_X  = 0.0003;
-    const BREATH_AMP = isMobile ? 0.065 : 0.048;   // clearly visible sphere breath
-    let W = 0, H = 0, CX = 0, CY = 0;
-    const nodes: Node3D[] = [];
+    const paths: Path[] = [];
+    const pulses: Pulse[] = [];
+    let t = 0;
 
-    // ── Pulse waves ──────────────────────────────────────────────
-    const waves: { r: number; alpha: number }[] = [];
-    let t = 0, nextWave = 120;
+    // Seeded random for path consistency across frames
+    const rand = (seed: number) => {
+      const s = Math.sin(seed) * 43758.5453;
+      return s - Math.floor(s);
+    };
 
-    // ── Energy wave (from hero node) ─────────────────────────────
-    let energyWaveEmit = -9999;
-    const ENERGY_WAVE_INTERVAL  = 340;    // ~5.6s — noticeable cadence
-    const ENERGY_WAVE_SPEED     = isMobile ? 2.2 : 2.6;   // slower = visible longer
-    const ENERGY_WAVE_THICKNESS = isMobile ? 55 : 70;     // thicker front
-    const ENERGY_WAVE_MAX_R     = isMobile ? 420 : 580;
+    // Midpoint displacement between two points
+    const displace = (a: Pt, b: Pt, depth: number, amp: number, seed: number): Pt[] => {
+      if (depth <= 0) return [a, b];
+      const mx = (a.x + b.x) / 2;
+      const my = (a.y + b.y) / 2;
+      // Perpendicular direction
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const len = Math.hypot(dx, dy) || 1;
+      const nx = -dy / len;
+      const ny = dx / len;
+      const r = (rand(seed) - 0.5) * 2 * amp;
+      const mid = { x: mx + nx * r, y: my + ny * r };
+      const left  = displace(a, mid, depth - 1, amp * 0.52, seed * 1.7 + 1);
+      const right = displace(mid, b, depth - 1, amp * 0.52, seed * 2.3 + 2);
+      return [...left.slice(0, -1), ...right];
+    };
 
-    // ── Build nodes on sphere ────────────────────────────────────
+    const buildPath = (seed: number, startAngle: number, reach: number): Path => {
+      // Path radiates outward from slightly off-center, with irregular endpoint
+      const innerR = reach * 0.08;
+      const outerR = reach * (0.55 + rand(seed * 3.1) * 0.45);
+      const wobble = (rand(seed * 5.7) - 0.5) * 0.6;
+      const endAngle = startAngle + wobble;
+
+      const a: Pt = {
+        x: CX + Math.cos(startAngle) * innerR,
+        y: CY + Math.sin(startAngle) * innerR,
+      };
+      const b: Pt = {
+        x: CX + Math.cos(endAngle) * outerR,
+        y: CY + Math.sin(endAngle) * outerR,
+      };
+
+      const amp = reach * (0.12 + rand(seed * 7.3) * 0.14);
+      const pts = displace(a, b, SEG_DEPTH, amp, seed);
+
+      // Cumulative arc length
+      const cum: number[] = [0];
+      for (let i = 1; i < pts.length; i++) {
+        cum.push(cum[i - 1] + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y));
+      }
+      return { pts, cum, total: cum[cum.length - 1], w: 0.8 + rand(seed * 11.1) * 0.6 };
+    };
+
     const build = () => {
-      W  = canvas.offsetWidth;
-      H  = canvas.offsetHeight;
+      W = canvas.offsetWidth;
+      H = canvas.offsetHeight;
       CX = W / 2;
       CY = H / 2;
-      canvas.width  = W;
-      canvas.height = H;
+      canvas.width  = W * DPR;
+      canvas.height = H * DPR;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 
-      nodes.length = 0;
-
-      // Fibonacci sphere distribution
-      const golden = Math.PI * (3 - Math.sqrt(5));
-      for (let i = 0; i < NODES; i++) {
-        const y  = 1 - (i / (NODES - 1)) * 2;
-        const r  = Math.sqrt(1 - y * y);
-        const th = golden * i;
-        const x  = Math.cos(th) * r;
-        const z  = Math.sin(th) * r;
-
-        const scale = Math.min(W, H) * 0.36;
-        const tier: 0 | 1 | 2 =
-          i < 6  ? 0 :
-          i < 24 ? 1 : 2;
-
-        nodes.push({
-          ox: x * scale, oy: y * scale, oz: z * scale,
-          x:  x * scale, y:  y * scale, z:  z * scale,
-          sx: 0, sy: 0,
-          vx: 0, vy: 0, vz: 0,
-          r:  tier === 0 ? 2.8 + Math.random() * 1.6
-            : tier === 1 ? 1.6 + Math.random() * 1.2
-            :              0.7 + Math.random() * 1.0,
-          pulse:      Math.random() * Math.PI * 2,
-          pulseSpeed: 0.006 + Math.random() * 0.010,
-          tier,
-        });
+      const reach = Math.min(W, H) * 0.62;
+      paths.length = 0;
+      for (let i = 0; i < PATHS; i++) {
+        // Distribute angles with jitter
+        const base = (i / PATHS) * Math.PI * 2;
+        const jitter = (rand(i * 13.37) - 0.5) * 0.35;
+        paths.push(buildPath(i + 1, base + jitter, reach));
       }
     };
 
     build();
     window.addEventListener("resize", build, { passive: true });
 
-    const onMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    // Sample point at progress p (0..1) along a path, with tangent
+    const sampleAt = (path: Path, p: number) => {
+      const target = p * path.total;
+      // Binary search
+      let lo = 0, hi = path.cum.length - 1;
+      while (lo < hi - 1) {
+        const mid = (lo + hi) >> 1;
+        if (path.cum[mid] <= target) lo = mid; else hi = mid;
+      }
+      const segLen = path.cum[hi] - path.cum[lo] || 1;
+      const f = (target - path.cum[lo]) / segLen;
+      const a = path.pts[lo], b = path.pts[hi];
+      return { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f };
     };
-    const onLeave = () => { mouse.current = { x: -9999, y: -9999 }; };
-    window.addEventListener("mousemove",  onMove,  { passive: true });
-    window.addEventListener("mouseleave", onLeave);
 
-    // ── 3-D rotation helpers ─────────────────────────────────────
-    const rotateY = (x: number, z: number, a: number) => ({
-      x: x * Math.cos(a) + z * Math.sin(a),
-      z: -x * Math.sin(a) + z * Math.cos(a),
-    });
-    const rotateX = (y: number, z: number, a: number) => ({
-      y: y * Math.cos(a) - z * Math.sin(a),
-      z: y * Math.sin(a) + z * Math.cos(a),
-    });
+    // Emit a pulse on a given path
+    const emitPulse = (pathIdx: number, intensity: number) => {
+      const reverse = Math.random() < 0.25;
+      pulses.push({
+        pathIdx,
+        prog: reverse ? 1 : 0,
+        speed: (isMobile ? 0.016 : 0.014) + Math.random() * 0.008,
+        intensity,
+        reverse,
+      });
+    };
 
-    // ── Draw ─────────────────────────────────────────────────────
+    // ECG P-QRS-T beat pattern — offsets within the beat period, pulse counts, intensities
+    // P wave: small, 1 path.  QRS: big spike, many paths.  T: medium, few paths.
+    const triggerBeat = (phase: number) => {
+      // phase 0..HEART_PERIOD
+      if (phase === 0) {
+        // P wave
+        emitPulse(Math.floor(Math.random() * PATHS), 0.35);
+      } else if (phase === 10) {
+        // QRS spike
+        const count = isMobile ? 4 : 6;
+        for (let i = 0; i < count; i++) {
+          emitPulse(Math.floor(Math.random() * PATHS), 0.9 + Math.random() * 0.1);
+        }
+      } else if (phase === 13) {
+        // Q-S tail extra
+        const count = isMobile ? 2 : 3;
+        for (let i = 0; i < count; i++) {
+          emitPulse(Math.floor(Math.random() * PATHS), 0.75);
+        }
+      } else if (phase === 30) {
+        // T wave
+        const count = isMobile ? 2 : 3;
+        for (let i = 0; i < count; i++) {
+          emitPulse(Math.floor(Math.random() * PATHS), 0.5);
+        }
+      }
+    };
+
     const draw = () => {
       t++;
-      ctx.clearRect(0, 0, W, H);
+      const phase = t % HEART_PERIOD;
+      triggerBeat(phase);
 
-      const mx = mouse.current.x;
-      const my = mouse.current.y;
+      // Background wash (charcoal) — slight trail by using semi-transparent overlay
+      ctx.fillStyle = "#0F0F0F";
+      ctx.fillRect(0, 0, W, H);
 
-      // Sphere-wide breathing (6-second cycle)
-      const breath = 1 + BREATH_AMP * Math.sin(t * 0.01745);
+      // Heartbeat glow at center — strongest right at QRS
+      const beatT = phase / HEART_PERIOD;
+      // Amplitude envelope mimicking ECG
+      const ecg =
+        Math.exp(-Math.pow((phase - 0)  / 3, 2)) * 0.25 +  // P
+        Math.exp(-Math.pow((phase - 11) / 2, 2)) * 1.0  +  // QRS
+        Math.exp(-Math.pow((phase - 31) / 4, 2)) * 0.45;   // T
 
-      // ── Update + project nodes ───────────────────────────────
-      nodes.forEach((n) => {
-        n.pulse += n.pulseSpeed;
-
-        // Rotate home position by delta each frame (slow sphere rotation)
-        const rY = rotateY(n.ox, n.oz, dROT_Y);
-        const rX = rotateX(n.oy, rY.z, dROT_X);
-        n.ox = rY.x;
-        n.oy = rX.y;
-        n.oz = rX.z;
-
-        // Spring back to rotating home
-        n.vx += (n.ox - n.x) * 0.012;
-        n.vy += (n.oy - n.y) * 0.012;
-        n.vz += (n.oz - n.z) * 0.012;
-
-        // Velocity damping
-        n.vx *= 0.82;
-        n.vy *= 0.82;
-        n.vz *= 0.82;
-        n.x = n.ox + n.vx;
-        n.y = n.oy + n.vy;
-        n.z = n.oz + n.vz;
-
-        // Perspective projection with breathing
-        const scale = (FOV / (FOV + n.z)) * breath;
-        n.sx = CX + n.x * scale;
-        n.sy = CY + n.y * scale;
-
-        // Mouse repulsion (screen space)
-        const dx = n.sx - mx;
-        const dy = n.sy - my;
-        const d  = Math.hypot(dx, dy);
-        const rr = n.tier === 0 ? 310 : 260;
-        if (d < rr && d > 1) {
-          const strength = n.tier === 0 ? 20 : n.tier === 1 ? 13 : 8;
-          const f = Math.pow(1 - d / rr, 1.5) * strength;
-          n.vx += (dx / d) * f * scale;
-          n.vy += (dy / d) * f * scale;
-        }
+      // ── Idle paths (subtle grey trace) ──────────────────────
+      paths.forEach((p) => {
+        ctx.beginPath();
+        ctx.moveTo(p.pts[0].x, p.pts[0].y);
+        for (let i = 1; i < p.pts.length; i++) ctx.lineTo(p.pts[i].x, p.pts[i].y);
+        ctx.strokeStyle = "rgba(170,170,170,0.09)";
+        ctx.lineWidth = p.w * 0.6;
+        ctx.stroke();
       });
 
-      // ── Hero node (first tier-0 node) + energy wave trigger ──
-      const heroNode = nodes[0];
-      if (t - energyWaveEmit > ENERGY_WAVE_INTERVAL) {
-        energyWaveEmit = t;
-      }
-      const waveAge = t - energyWaveEmit;
-      const waveR   = waveAge * ENERGY_WAVE_SPEED;
-      const waveActive = waveR < ENERGY_WAVE_MAX_R;
+      // ── Central heart glow ──────────────────────────────────
+      const glowR = Math.min(W, H) * (0.08 + ecg * 0.18);
+      const gg = ctx.createRadialGradient(CX, CY, 0, CX, CY, glowR * 2);
+      gg.addColorStop(0, `rgba(232,146,10,${0.14 + ecg * 0.32})`);
+      gg.addColorStop(0.5, `rgba(232,146,10,${0.04 + ecg * 0.1})`);
+      gg.addColorStop(1, "rgba(232,146,10,0)");
+      ctx.fillStyle = gg;
+      ctx.beginPath();
+      ctx.arc(CX, CY, glowR * 2, 0, Math.PI * 2);
+      ctx.fill();
 
-      // ── Sort by z (painters algorithm) ──────────────────────
-      const sorted = [...nodes].sort((a, b) => a.z - b.z);
+      // Central core dot
+      ctx.beginPath();
+      ctx.arc(CX, CY, 2.5 + ecg * 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,210,140,${0.6 + ecg * 0.4})`;
+      ctx.fill();
 
-      // ── Connection lines ──────────────────────────────────────
-      for (let i = 0; i < sorted.length; i++) {
-        for (let j = i + 1; j < sorted.length; j++) {
-          const ni = sorted[i], nj = sorted[j];
-          const d = Math.hypot(ni.sx - nj.sx, ni.sy - nj.sy);
-          if (d > CONNECT) continue;
+      // ── Pulses travelling along paths ──────────────────────
+      for (let i = pulses.length - 1; i >= 0; i--) {
+        const pu = pulses[i];
+        pu.prog += pu.reverse ? -pu.speed : pu.speed;
+        if (pu.prog < 0 || pu.prog > 1) { pulses.splice(i, 1); continue; }
 
-          const depthFade = Math.min(
-            (FOV / (FOV + ni.z)) * 0.5 + 0.5,
-            (FOV / (FOV + nj.z)) * 0.5 + 0.5
-          );
-          const alpha = (1 - d / CONNECT) * 0.22 * depthFade;
-          const tierAlpha =
-            ni.tier === 0 && nj.tier === 0 ? alpha * 2.2 :
-            ni.tier <= 1 && nj.tier <= 1   ? alpha * 1.5 : alpha;
+        const path = paths[pu.pathIdx];
+        const head = sampleAt(path, pu.prog);
 
-          // Energy wave boost — line brightens when wave front hits its midpoint
-          let waveBoost = 0;
-          if (waveActive) {
-            const midX = (ni.sx + nj.sx) / 2;
-            const midY = (ni.sy + nj.sy) / 2;
-            const distFromHero = Math.hypot(midX - heroNode.sx, midY - heroNode.sy);
-            const delta = Math.abs(distFromHero - waveR);
-            if (delta < ENERGY_WAVE_THICKNESS) {
-              const falloff = 1 - waveR / ENERGY_WAVE_MAX_R;
-              waveBoost = (1 - delta / ENERGY_WAVE_THICKNESS) * 0.95 * falloff;
-            }
-          }
+        // Trail: draw gradient along path from (prog - trailLen) to prog
+        const trailLen = 0.18;
+        const tail = Math.max(0, Math.min(1, pu.prog - (pu.reverse ? -trailLen : trailLen)));
+        const from = pu.reverse ? pu.prog : tail;
+        const to   = pu.reverse ? tail    : pu.prog;
 
-          const finalAlpha = Math.min(tierAlpha + waveBoost, 1.0);
+        // Walk path segments within [from, to] — cheap: sample N points
+        const STEPS = 14;
+        ctx.lineCap = "round";
+        for (let s = 0; s < STEPS; s++) {
+          const f1 = from + ((to - from) * s) / STEPS;
+          const f2 = from + ((to - from) * (s + 1)) / STEPS;
+          const p1 = sampleAt(path, f1);
+          const p2 = sampleAt(path, f2);
+          const alongHead = pu.reverse ? (1 - (f2 - tail) / trailLen) : ((f2 - tail) / trailLen);
+          const a = Math.max(0, Math.min(1, alongHead));
+          const alpha = Math.pow(a, 2.2) * pu.intensity;
           ctx.beginPath();
-          ctx.moveTo(ni.sx, ni.sy);
-          ctx.lineTo(nj.sx, nj.sy);
-          ctx.strokeStyle = `rgba(232,146,10,${finalAlpha})`;
-          ctx.lineWidth = waveBoost > 0.25
-            ? 1.8
-            : (ni.tier === 0 && nj.tier === 0 ? 0.9 : 0.5);
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = `rgba(232,146,10,${alpha * 0.85})`;
+          ctx.lineWidth = path.w * (0.9 + a * 1.6);
           ctx.stroke();
         }
+
+        // Head glow
+        const hr = 14 + pu.intensity * 10;
+        const hg = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, hr);
+        hg.addColorStop(0, `rgba(255,210,140,${0.85 * pu.intensity})`);
+        hg.addColorStop(0.4, `rgba(232,146,10,${0.4 * pu.intensity})`);
+        hg.addColorStop(1, "rgba(232,146,10,0)");
+        ctx.fillStyle = hg;
+        ctx.beginPath();
+        ctx.arc(head.x, head.y, hr, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Head core
+        ctx.beginPath();
+        ctx.arc(head.x, head.y, 1.8 + pu.intensity * 1.6, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,230,180,${0.95 * pu.intensity})`;
+        ctx.fill();
       }
 
-      // ── Pulse waves from centre ───────────────────────────────
-      if (t >= nextWave) { waves.push({ r: 40, alpha: 0.18 }); nextWave = t + 160; }
-      for (let i = waves.length - 1; i >= 0; i--) {
-        waves[i].r     += 2.8;
-        waves[i].alpha *= 0.960;
-        if (waves[i].alpha < 0.003) { waves.splice(i, 1); continue; }
-        ctx.beginPath();
-        ctx.arc(CX, CY, waves[i].r, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(232,146,10,${waves[i].alpha})`;
-        ctx.lineWidth = 1.0;
-        ctx.stroke();
-      }
-
-      // ── Central orb glow ─────────────────────────────────────
-      const pulse = 0.82 + 0.18 * Math.sin(t * 0.014);
-      [
-        { r: 380, a: 0.018 }, { r: 220, a: 0.038 },
-        { r: 110, a: 0.07  }, { r: 55,  a: 0.12  },
-      ].forEach(({ r, a }) => {
-        const g = ctx.createRadialGradient(CX, CY, 0, CX, CY, r * pulse);
-        g.addColorStop(0, `rgba(232,146,10,${a * pulse})`);
-        g.addColorStop(1, "rgba(232,146,10,0)");
-        ctx.beginPath();
-        ctx.arc(CX, CY, r * pulse, 0, Math.PI * 2);
-        ctx.fillStyle = g;
-        ctx.fill();
-      });
-
-      // ── Draw nodes ────────────────────────────────────────────
-      sorted.forEach((n) => {
-        const depthScale = FOV / (FOV + n.z);
-        const isHero = n === heroNode;
-
-        // Hero node: slow deliberate pulse (~4s cycle), more amplitude
-        const b = isHero
-          ? 0.6 + 0.4 * Math.sin(t * 0.026)
-          : Math.max(0.08, 0.45 + 0.55 * Math.sin(n.pulse));
-        const r = Math.max(0.3, n.r * depthScale * b * (isHero ? 2.4 : 1));
-
-        const color =
-          n.tier === 0 ? "232,146,10"  :
-          n.tier === 1 ? (Math.sin(n.pulse * 0.5) > 0 ? "232,146,10" : "210,125,8") :
-                         "196,104,42";
-
-        const baseAlpha = isHero ? 1.0 : (n.tier === 0 ? 0.85 : n.tier === 1 ? 0.60 : 0.35);
-        const glowAlpha = isHero ? 0.65 : (n.tier === 0 ? 0.28 : n.tier === 1 ? 0.16 : 0.08);
-        const glowR     = r * (isHero ? 16 : n.tier === 0 ? 8 : 6);
-
-        // Glow halo
-        const g = ctx.createRadialGradient(n.sx, n.sy, 0, n.sx, n.sy, glowR);
-        g.addColorStop(0, `rgba(${color},${glowAlpha * b * depthScale})`);
-        g.addColorStop(1, `rgba(${color},0)`);
-        ctx.beginPath();
-        ctx.arc(n.sx, n.sy, glowR, 0, Math.PI * 2);
-        ctx.fillStyle = g;
-        ctx.fill();
-
-        // Core dot
-        ctx.beginPath();
-        ctx.arc(n.sx, n.sy, r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${color},${baseAlpha * b * depthScale})`;
-        ctx.fill();
-      });
+      // Suppress unused warning for beatT
+      void beatT;
 
       rafRef.current = requestAnimationFrame(draw);
     };
@@ -285,9 +270,7 @@ function MolecularCanvas() {
 
     return () => {
       cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("resize",    build);
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseleave", onLeave);
+      window.removeEventListener("resize", build);
     };
   }, []);
 
