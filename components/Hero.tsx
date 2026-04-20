@@ -372,19 +372,6 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             </a>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ delay: 3.1, duration: 0.9 }}
-            className="w-full max-w-[340px] pt-4 flex items-center justify-between border-t border-[#111111]/[0.07]"
-          >
-            <span className="text-[9px] font-mono text-[#111111]/35 tracking-[0.25em] uppercase">KM — 001</span>
-            <div className="flex items-center gap-2">
-              <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}
-                className="w-1 h-1 rounded-full bg-[#E8920A]" />
-              <span className="text-[9px] font-mono text-[#111111]/35 tracking-[0.2em] uppercase">{tr.meta}</span>
-            </div>
-            <span className="text-[9px] font-mono text-[#111111]/35 tracking-[0.25em] uppercase">Est. 2024</span>
-          </motion.div>
         </div>
       </div>
 
@@ -461,17 +448,6 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             </a>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ delay: 3.1, duration: 0.9 }}
-            className="mt-16 w-full max-w-[700px] pt-6 flex items-center justify-between border-t border-[#111111]/[0.07]">
-            <span className="text-[9px] font-mono text-[#111111]/45 tracking-[0.25em] uppercase">KM &mdash; 001</span>
-            <div className="flex items-center gap-3">
-              <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}
-                className="w-1 h-1 rounded-full bg-[#E8920A]" />
-              <span className="text-[9px] font-mono text-[#111111]/45 tracking-[0.22em] uppercase hidden sm:inline">{tr.meta}</span>
-            </div>
-            <span className="text-[9px] font-mono text-[#111111]/45 tracking-[0.25em] uppercase">Est.&nbsp;2024</span>
-          </motion.div>
         </motion.div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
