@@ -106,55 +106,117 @@ function MolecularCanvas() {
     const network = new THREE.Group();
     scene.add(network);
 
-    // Edges (LineSegments)
-    const edgeGeom = new THREE.BufferGeometry();
-    const epos = new Float32Array(edges.length * 6);
+    // ── Curved axon paths (quadratic bezier per edge) ─────────────
+    const SAMPLES = 16;                          // samples per curve
+    const edgeCurves: THREE.Vector3[][] = [];
     for (let i = 0; i < edges.length; i++) {
       const a = positions[edges[i].a];
       const b = positions[edges[i].b];
-      epos[i * 6 + 0] = a.x; epos[i * 6 + 1] = a.y; epos[i * 6 + 2] = a.z;
-      epos[i * 6 + 3] = b.x; epos[i * 6 + 4] = b.y; epos[i * 6 + 5] = b.z;
+      const mid = new THREE.Vector3().addVectors(a, b).multiplyScalar(0.5);
+      // Perpendicular direction for curve bulge
+      const dir = new THREE.Vector3().subVectors(b, a);
+      const len = dir.length();
+      // Random perpendicular: cross with a random vector
+      const rand = new THREE.Vector3(
+        Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5,
+      ).normalize();
+      const perp = new THREE.Vector3().crossVectors(dir, rand).normalize();
+      const bulge = len * (0.10 + Math.random() * 0.18);
+      mid.addScaledVector(perp, (Math.random() - 0.5) * 2 * bulge);
+
+      const curve = new THREE.QuadraticBezierCurve3(a.clone(), mid, b.clone());
+      const pts = curve.getPoints(SAMPLES - 1); // returns SAMPLES points
+      edgeCurves.push(pts);
     }
+
+    // LineSegments — for each curve, connect consecutive samples
+    const totalSegs = edges.length * (SAMPLES - 1);
+    const epos = new Float32Array(totalSegs * 6);
+    let cursor = 0;
+    for (const pts of edgeCurves) {
+      for (let s = 0; s < pts.length - 1; s++) {
+        const p1 = pts[s], p2 = pts[s + 1];
+        epos[cursor++] = p1.x; epos[cursor++] = p1.y; epos[cursor++] = p1.z;
+        epos[cursor++] = p2.x; epos[cursor++] = p2.y; epos[cursor++] = p2.z;
+      }
+    }
+    const edgeGeom = new THREE.BufferGeometry();
     edgeGeom.setAttribute("position", new THREE.BufferAttribute(epos, 3));
     const edgeMat = new THREE.LineBasicMaterial({
-      color: 0x5a5e68,
+      color: 0x6a6e78,
       transparent: true,
-      opacity: 0.32,
+      opacity: 0.38,
       fog: true,
     });
     const edgeLines = new THREE.LineSegments(edgeGeom, edgeMat);
     network.add(edgeLines);
 
-    // Nodes (Points)
-    const nodeGeom = new THREE.BufferGeometry();
-    const npos = new Float32Array(positions.length * 3);
-    positions.forEach((p, i) => { npos[i*3]=p.x; npos[i*3+1]=p.y; npos[i*3+2]=p.z; });
-    nodeGeom.setAttribute("position", new THREE.BufferAttribute(npos, 3));
+    // ── Neuron cell bodies: InstancedMesh of small spheres ────────
+    // Size scaled by degree (number of connected edges) → hubs look like bigger neurons
+    const degrees = nodeEdges.map((e) => e.length);
+    const maxDeg = Math.max(...degrees);
 
-    // Circular sprite for points
-    const pointCanvas = document.createElement("canvas");
-    pointCanvas.width = 32; pointCanvas.height = 32;
-    const pctx = pointCanvas.getContext("2d")!;
-    const pg = pctx.createRadialGradient(16, 16, 0, 16, 16, 16);
-    pg.addColorStop(0,   "rgba(90,94,104,1)");
-    pg.addColorStop(0.5, "rgba(90,94,104,0.6)");
-    pg.addColorStop(1,   "rgba(90,94,104,0)");
-    pctx.fillStyle = pg;
-    pctx.fillRect(0, 0, 32, 32);
-    const pointTex = new THREE.CanvasTexture(pointCanvas);
-
-    const nodeMat = new THREE.PointsMaterial({
-      map: pointTex,
-      color: 0xffffff,
-      size: 2.6,
-      sizeAttenuation: true,
+    const neuronGeom = new THREE.IcosahedronGeometry(1, isMobile ? 0 : 1);
+    const neuronMat = new THREE.MeshBasicMaterial({
+      color: 0x2e3138,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.88,
       fog: true,
-      depthWrite: false,
     });
-    const nodePoints = new THREE.Points(nodeGeom, nodeMat);
-    network.add(nodePoints);
+    const neuronMesh = new THREE.InstancedMesh(neuronGeom, neuronMat, positions.length);
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < positions.length; i++) {
+      const deg = degrees[i] / maxDeg;       // 0..1
+      const r = 0.6 + deg * 1.4 + Math.random() * 0.25;
+      dummy.position.copy(positions[i]);
+      dummy.scale.setScalar(r);
+      dummy.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+      dummy.updateMatrix();
+      neuronMesh.setMatrixAt(i, dummy.matrix);
+    }
+    neuronMesh.instanceMatrix.needsUpdate = true;
+    network.add(neuronMesh);
+
+    // ── Dendrite stubs (short free-floating hairs for organic feel) ─
+    const HAIRS_PER_NODE = isMobile ? 2 : 3;
+    const hairSegs = positions.length * HAIRS_PER_NODE * (SAMPLES - 1);
+    const hpos = new Float32Array(hairSegs * 6);
+    let hc = 0;
+    for (let i = 0; i < positions.length; i++) {
+      const origin = positions[i];
+      const hairCount = HAIRS_PER_NODE + (Math.random() > 0.7 ? 1 : 0);
+      for (let h = 0; h < hairCount && h < HAIRS_PER_NODE + 1; h++) {
+        const dir = new THREE.Vector3(
+          Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5,
+        ).normalize();
+        const length = 3 + Math.random() * 5;
+        const end = new THREE.Vector3().addVectors(origin, dir.clone().multiplyScalar(length));
+        // Midpoint with slight curve
+        const mid = new THREE.Vector3().addVectors(origin, end).multiplyScalar(0.5);
+        const perp = new THREE.Vector3(
+          Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5,
+        ).normalize();
+        mid.addScaledVector(perp, length * (Math.random() - 0.5) * 0.35);
+        const curve = new THREE.QuadraticBezierCurve3(origin.clone(), mid, end);
+        const pts = curve.getPoints(SAMPLES - 1);
+        for (let s = 0; s < pts.length - 1; s++) {
+          const p1 = pts[s], p2 = pts[s + 1];
+          if (hc + 6 > hpos.length) break;
+          hpos[hc++] = p1.x; hpos[hc++] = p1.y; hpos[hc++] = p1.z;
+          hpos[hc++] = p2.x; hpos[hc++] = p2.y; hpos[hc++] = p2.z;
+        }
+      }
+    }
+    const hairGeom = new THREE.BufferGeometry();
+    hairGeom.setAttribute("position", new THREE.BufferAttribute(hpos.slice(0, hc), 3));
+    const hairMat = new THREE.LineBasicMaterial({
+      color: 0x6a6e78,
+      transparent: true,
+      opacity: 0.14,
+      fog: true,
+    });
+    const hairs = new THREE.LineSegments(hairGeom, hairMat);
+    network.add(hairs);
 
     // ── Pulse sprites (pool) ───────────────────────────────────────
     const MAX_PULSES = isMobile ? 28 : 50;
@@ -292,20 +354,27 @@ function MolecularCanvas() {
         nextAmbient = t + 36 + Math.floor(Math.random() * 50);
       }
 
-      // Update pulses (positions are in network-local space — group rotates them)
+      // Update pulses — traverse stored curve samples (smooth along bezier)
       for (const p of pulses) {
         if (!p.active) continue;
         p.prog += p.speed;
         const e = edges[p.edgeIdx];
         const startIdx = p.from;
         const endIdx   = startIdx === e.a ? e.b : e.a;
-        const a = positions[startIdx];
-        const b = positions[endIdx];
+        const curve = edgeCurves[p.edgeIdx];
+        // If traversing a->b we walk curve forward; if b->a, backward
+        const forward = startIdx === e.a;
         const f = Math.min(1, p.prog);
+        const tf = forward ? f : 1 - f;
+        const fi = tf * (curve.length - 1);
+        const i0 = Math.floor(fi);
+        const i1 = Math.min(curve.length - 1, i0 + 1);
+        const ft = fi - i0;
+        const pa = curve[i0], pb = curve[i1];
         p.mesh.position.set(
-          a.x + (b.x - a.x) * f,
-          a.y + (b.y - a.y) * f,
-          a.z + (b.z - a.z) * f,
+          pa.x + (pb.x - pa.x) * ft,
+          pa.y + (pb.y - pa.y) * ft,
+          pa.z + (pb.z - pa.z) * ft,
         );
         const scale = 2.4 + p.intensity * 2.4;
         p.mesh.scale.set(scale, scale, scale);
@@ -337,8 +406,9 @@ function MolecularCanvas() {
       window.removeEventListener("resize", onResize);
       renderer.dispose();
       edgeGeom.dispose(); edgeMat.dispose();
-      nodeGeom.dispose(); nodeMat.dispose();
-      pointTex.dispose(); pulseTex.dispose();
+      hairGeom.dispose(); hairMat.dispose();
+      neuronGeom.dispose(); neuronMat.dispose();
+      pulseTex.dispose();
       pulses.forEach((p) => (p.mesh.material as THREE.Material).dispose());
     };
   }, []);
