@@ -54,10 +54,10 @@ function PillarBlock({ p, i }: { p: typeof pillars[0]; i: number }) {
       className={`grid grid-cols-1 md:grid-cols-2 gap-10 xl:gap-20 items-center py-20 border-b border-[#111111]/[0.07] last:border-0 ${flip ? "md:[&>*:first-child]:order-2" : ""}`}
     >
       <div className={flip ? "md:order-2" : ""}>
-        <p className="text-[9px] font-mono tracking-[0.38em] uppercase text-[#C4682A]/70 mb-5">{p.index}</p>
+        <p className="text-[9px] font-mono tracking-[0.38em] uppercase text-[#1B2A4A]/70 mb-5">{p.index}</p>
         <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.02em] text-[#111111] mb-5 leading-tight"
           style={{ fontFamily: "var(--font-playfair)" }}>
-          {p.title}<span style={{ color: "#C4682A" }}>.</span>
+          {p.title}<span style={{ color: "#1B2A4A" }}>.</span>
         </h2>
         <p className="text-sm text-[#111111]/45 leading-[1.9]">{p.body}</p>
       </div>
@@ -87,7 +87,7 @@ export default function MethodsPage() {
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 xl:px-16">
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#C4682A] mb-6">
+            className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#1B2A4A] mb-6">
             Our Methods - How We Build
           </motion.p>
 
@@ -117,7 +117,7 @@ export default function MethodsPage() {
                 className="px-6 py-8 border-b border-r border-[#111111]/[0.07] last:border-r-0 md:border-b-0">
                 <p className="text-4xl font-bold text-[#111111] tracking-[-0.03em] leading-none"
                   style={{ fontFamily: "var(--font-playfair)" }}>{s.value}</p>
-                <p className="mt-2 text-[9px] font-mono tracking-[0.22em] uppercase text-[#C4682A]">{s.label}</p>
+                <p className="mt-2 text-[9px] font-mono tracking-[0.22em] uppercase text-[#1B2A4A]">{s.label}</p>
                 <p className="mt-1 text-xs text-[#111111]/28 leading-snug">{s.sub}</p>
               </div>
             ))}
@@ -140,7 +140,7 @@ export default function MethodsPage() {
           aria-hidden />
         <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
           <div>
-            <p className="text-[9px] font-mono tracking-[0.4em] uppercase text-[#C4682A] mb-4">The Standard</p>
+            <p className="text-[9px] font-mono tracking-[0.4em] uppercase text-[#1B2A4A] mb-4">The Standard</p>
             <p className="text-2xl md:text-3xl font-bold text-[#111111] tracking-[-0.02em] max-w-[500px]"
               style={{ fontFamily: "var(--font-playfair)" }}>
               &ldquo;If it&apos;s not in the science,<br />it&apos;s not in the formula.&rdquo;

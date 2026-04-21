@@ -80,9 +80,9 @@ function ProductCard({ p, index }: { p: typeof productsPL[0]; index: number }) {
 
       <div className="mb-4">
         <Link href={`/pl/store/${p.slug}`}>
-          <h3 className="text-xl font-bold tracking-[-0.02em] text-[#111111] hover:text-[#C4682A] transition-colors duration-300"
+          <h3 className="text-xl font-bold tracking-[-0.02em] text-[#111111] hover:text-[#1B2A4A] transition-colors duration-300"
             style={{ fontFamily: "var(--font-playfair)" }}>
-            {p.name}<span style={{ color: "#C4682A" }}>.</span>
+            {p.name}<span style={{ color: "#1B2A4A" }}>.</span>
           </h3>
         </Link>
         <p className="mt-1 text-[9px] font-mono tracking-[0.22em] uppercase text-[#111111]/30">{p.tagline}</p>
@@ -107,7 +107,7 @@ export default function StorePL() {
         <div className="max-w-[1440px] mx-auto">
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#C4682A] mb-6">
+            className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#1B2A4A] mb-6">
             Kolekcja
           </motion.p>
 
@@ -148,7 +148,7 @@ export default function StorePL() {
                 <Image src="/images/products/all-three.png" alt="Wszystkie trzy" fill className="object-contain" />
               </div>
               <div>
-                <p className="text-[9px] font-mono tracking-[0.28em] uppercase text-[#C4682A] mb-1">Pełny system</p>
+                <p className="text-[9px] font-mono tracking-[0.28em] uppercase text-[#1B2A4A] mb-1">Pełny system</p>
                 <h3 className="text-lg font-bold text-[#111111] tracking-[-0.02em]"
                   style={{ fontFamily: "var(--font-playfair)" }}>
                   Wszystkie trzy formuły. <span className="text-[#111111]/30 font-normal italic">Stworzone na długą grę.</span>
@@ -156,7 +156,7 @@ export default function StorePL() {
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-xs text-[#111111]/28 line-through">387,00 zł</span>
                   <span className="text-sm font-semibold text-[#111111]">329,00 zł</span>
-                  <span className="text-[8px] font-mono text-[#C4682A] bg-[#C4682A]/10 px-2 py-0.5 rounded-full">Zaoszczędź 15%</span>
+                  <span className="text-[8px] font-mono text-[#1B2A4A] bg-[#1B2A4A]/10 px-2 py-0.5 rounded-full">Zaoszczędź 15%</span>
                 </div>
               </div>
             </div>

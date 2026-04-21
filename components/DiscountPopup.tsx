@@ -10,7 +10,7 @@ const STORAGE_KEY = "km_discount_dismissed";
 const TR = {
   en: {
     eyebrow: "Welcome offer",
-    headline: <>Get <span style={{ color: "#C4682A" }}>20 zł off</span><br />your first order.</>,
+    headline: <>Get <span style={{ color: "#1B2A4A" }}>20 zł off</span><br />your first order.</>,
     body: "Sign up and we'll send your discount code straight to your inbox. One email — no noise.",
     placeholder: "your@email.com",
     cta: "Claim my 20 zł",
@@ -24,7 +24,7 @@ const TR = {
   },
   pl: {
     eyebrow: "Oferta powitalna",
-    headline: <>Odbierz <span style={{ color: "#C4682A" }}>20 zł</span><br />na pierwszy zakup.</>,
+    headline: <>Odbierz <span style={{ color: "#1B2A4A" }}>20 zł</span><br />na pierwszy zakup.</>,
     body: "Zapisz się do newslettera — wyślemy Ci kod rabatowy prosto na maila. Jeden mail, żadnego spamu.",
     placeholder: "twój@email.com",
     cta: "Odbierz 20 zł",
@@ -151,7 +151,7 @@ export default function DiscountPopup() {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
-                        className="w-14 h-14 rounded-full bg-[#C4682A] flex items-center justify-center text-white text-2xl"
+                        className="w-14 h-14 rounded-full bg-[#1B2A4A] flex items-center justify-center text-white text-2xl"
                       >
                         ✓
                       </motion.div>
@@ -164,7 +164,7 @@ export default function DiscountPopup() {
                       <button
                         onClick={dismiss}
                         className="mt-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:opacity-90"
-                        style={{ background: "#C4682A" }}
+                        style={{ background: "#1B2A4A" }}
                       >
                         {tr.successClose}
                       </button>
@@ -172,7 +172,7 @@ export default function DiscountPopup() {
                   ) : (
                     <motion.div key="form" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
 
-                      <p className="text-[9px] font-mono tracking-[0.32em] uppercase text-[#C4682A]/80 mb-5">
+                      <p className="text-[9px] font-mono tracking-[0.32em] uppercase text-[#1B2A4A]/80 mb-5">
                         {tr.eyebrow}
                       </p>
 
@@ -192,12 +192,12 @@ export default function DiscountPopup() {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           required
-                          className="w-full px-4 py-3.5 rounded-full text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#C4682A]/50 transition-colors"
+                          className="w-full px-4 py-3.5 rounded-full text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#1B2A4A]/50 transition-colors"
                         />
                         <button
                           type="submit"
                           className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-white text-sm font-semibold tracking-wide transition-all duration-200 hover:opacity-90 hover:scale-[1.01]"
-                          style={{ background: "linear-gradient(135deg, #C4682A 0%, #d4780a 100%)" }}
+                          style={{ background: "linear-gradient(135deg, #1B2A4A 0%, #d4780a 100%)" }}
                         >
                           {tr.cta}
                           <span>→</span>

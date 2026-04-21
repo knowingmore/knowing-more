@@ -6,10 +6,10 @@ export default function PrivacyPolicyPage() {
     <main className="min-h-screen bg-white">
       <Navbar />
       <section className="pt-36 pb-24 px-6 md:px-12 xl:px-16 max-w-[1440px] mx-auto">
-        <p className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#C4682A] mb-6">Legal</p>
+        <p className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#1B2A4A] mb-6">Legal</p>
         <h1 className="text-[clamp(2.5rem,5vw,5rem)] font-bold leading-[0.9] tracking-[-0.03em] text-[#111111] mb-16"
           style={{ fontFamily: "var(--font-playfair)" }}>
-          Privacy Policy<span style={{ color: "#C4682A" }}>.</span>
+          Privacy Policy<span style={{ color: "#1B2A4A" }}>.</span>
         </h1>
         <div className="max-w-[720px] space-y-10 text-sm text-[#111111]/50 leading-relaxed">
           <p className="text-xs text-[#111111]/30">Last updated: January 2026</p>

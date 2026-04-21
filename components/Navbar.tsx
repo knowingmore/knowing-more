@@ -102,7 +102,7 @@ export default function Navbar({ locale = "en" }: { locale?: "en" | "pl" }) {
             <a
               href={cta.href}
               className="px-5 py-2 rounded-full text-white text-[13px] font-semibold flex items-center gap-1.5 transition-all duration-200 hover:opacity-90 hover:scale-[1.02]"
-              style={{ background: "#C4682A" }}
+              style={{ background: "#1B2A4A" }}
             >
               {cta.label}
             </a>

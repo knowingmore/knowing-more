@@ -169,10 +169,10 @@ const articleMap: Record<string, typeof posts[number]> = Object.fromEntries(
 
 /* ─── Category colours ───────────────────────────────────────────── */
 const categoryColor: Record<string, string> = {
-  Nauka: "#C4682A",
+  Nauka: "#1B2A4A",
   Składniki: "#A0784A",
   Wydajność: "#111111",
-  Branża: "#C4682A",
+  Branża: "#1B2A4A",
   Standardy: "#888",
 };
 
@@ -186,7 +186,7 @@ export default async function BlogArticlePagePL({
   const article = articleMap[slug];
   if (!article) notFound();
 
-  const color = categoryColor[article.category] ?? "#C4682A";
+  const color = categoryColor[article.category] ?? "#1B2A4A";
 
   /* Related articles: same category, excluding current */
   const related = posts
@@ -235,7 +235,7 @@ export default async function BlogArticlePagePL({
           style={{ fontFamily: "var(--font-playfair)" }}
         >
           {article.title}
-          <span style={{ color: "#C4682A" }}>.</span>
+          <span style={{ color: "#1B2A4A" }}>.</span>
         </h1>
 
         {/* Body prose */}
@@ -258,7 +258,7 @@ export default async function BlogArticlePagePL({
         {/* Back link */}
         <Link
           href="/pl/blog"
-          className="inline-flex items-center gap-2 text-sm text-[#111111]/40 hover:text-[#C4682A] transition-colors duration-200"
+          className="inline-flex items-center gap-2 text-sm text-[#111111]/40 hover:text-[#1B2A4A] transition-colors duration-200"
         >
           ← Powrót do dziennika
         </Link>
@@ -268,12 +268,12 @@ export default async function BlogArticlePagePL({
       {related.length > 0 && (
         <section className="border-t border-[#111111]/[0.07] py-20">
           <div className="max-w-[1440px] mx-auto px-6 md:px-12 xl:px-16">
-            <p className="text-[9px] font-mono tracking-[0.4em] uppercase text-[#C4682A]/70 mb-8">
+            <p className="text-[9px] font-mono tracking-[0.4em] uppercase text-[#1B2A4A]/70 mb-8">
               Podobne artykuły
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
               {related.map((post) => {
-                const relColor = categoryColor[post.category] ?? "#C4682A";
+                const relColor = categoryColor[post.category] ?? "#1B2A4A";
                 return (
                   <Link key={post.slug} href={`/pl/blog/${post.slug}`} className="group">
                     <div className="relative rounded-xl overflow-hidden aspect-[3/2] mb-5">
@@ -304,12 +304,12 @@ export default async function BlogArticlePagePL({
                       </span>
                     </div>
                     <h3
-                      className="text-base md:text-lg font-bold tracking-[-0.02em] text-[#111111] mb-4 leading-snug group-hover:text-[#C4682A] transition-colors duration-300"
+                      className="text-base md:text-lg font-bold tracking-[-0.02em] text-[#111111] mb-4 leading-snug group-hover:text-[#1B2A4A] transition-colors duration-300"
                       style={{ fontFamily: "var(--font-playfair)" }}
                     >
                       {post.title}
                     </h3>
-                    <span className="inline-flex items-center gap-1.5 text-xs text-[#C4682A] font-medium">
+                    <span className="inline-flex items-center gap-1.5 text-xs text-[#1B2A4A] font-medium">
                       Czytaj artykuł{" "}
                       <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">
                         →
@@ -327,7 +327,7 @@ export default async function BlogArticlePagePL({
       <section className="border-t border-[#111111]/[0.07] py-20">
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 xl:px-16">
           <div className="max-w-[640px] mx-auto text-center">
-            <p className="text-[9px] font-mono tracking-[0.4em] uppercase text-[#C4682A]/70 mb-4">
+            <p className="text-[9px] font-mono tracking-[0.4em] uppercase text-[#1B2A4A]/70 mb-4">
               Newsletter
             </p>
             <h2
@@ -335,7 +335,7 @@ export default async function BlogArticlePagePL({
               style={{ fontFamily: "var(--font-playfair)" }}
             >
               Każdy wtorek
-              <span style={{ color: "#C4682A" }}>.</span>
+              <span style={{ color: "#1B2A4A" }}>.</span>
             </h2>
             <p className="text-sm text-[#111111]/38 leading-relaxed mb-8">
               jeden artykuł wart Twojego czasu.
@@ -347,7 +347,7 @@ export default async function BlogArticlePagePL({
               <input
                 type="email"
                 placeholder="your@email.com"
-                className="flex-1 px-4 py-3.5 rounded-full text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#C4682A]/40 transition-colors"
+                className="flex-1 px-4 py-3.5 rounded-full text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#1B2A4A]/40 transition-colors"
               />
               <button
                 type="submit"

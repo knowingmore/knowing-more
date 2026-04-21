@@ -29,7 +29,7 @@ export default function Marquee() {
           <span
             key={i}
             className={`inline-flex items-center mx-5 text-[9px] font-semibold tracking-[0.28em] uppercase ${
-              item === "·" ? "text-[#C4682A]" : "text-white/30"
+              item === "·" ? "text-[#1B2A4A]" : "text-white/30"
             }`}
           >
             {item}

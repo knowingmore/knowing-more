@@ -6,14 +6,14 @@ export default function ShippingPage() {
     <main className="min-h-screen bg-white">
       <Navbar />
       <section className="pt-36 pb-24 px-6 md:px-12 xl:px-16 max-w-[1440px] mx-auto">
-        <p className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#C4682A] mb-6">Support</p>
+        <p className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#1B2A4A] mb-6">Support</p>
         <h1 className="text-[clamp(3rem,6vw,6rem)] font-bold leading-[0.9] tracking-[-0.03em] text-[#111111] mb-16"
           style={{ fontFamily: "var(--font-playfair)" }}>
-          Shipping &amp; Returns<span style={{ color: "#C4682A" }}>.</span>
+          Shipping &amp; Returns<span style={{ color: "#1B2A4A" }}>.</span>
         </h1>
         <div className="max-w-[720px] space-y-12">
           <div>
-            <div className="w-8 h-px bg-[#C4682A] mb-5" />
+            <div className="w-8 h-px bg-[#1B2A4A] mb-5" />
             <h2 className="text-lg font-bold text-[#111111] mb-4" style={{ fontFamily: "var(--font-playfair)" }}>Shipping</h2>
             <div className="space-y-4 text-sm text-[#111111]/50 leading-relaxed">
               <p>We ship within Poland and the European Union. Orders are dispatched within 1–2 business days of placement.</p>
@@ -33,7 +33,7 @@ export default function ShippingPage() {
           </div>
 
           <div>
-            <div className="w-8 h-px bg-[#C4682A] mb-5" />
+            <div className="w-8 h-px bg-[#1B2A4A] mb-5" />
             <h2 className="text-lg font-bold text-[#111111] mb-4" style={{ fontFamily: "var(--font-playfair)" }}>Returns</h2>
             <div className="space-y-4 text-sm text-[#111111]/50 leading-relaxed">
               <p>We offer a <strong className="text-[#111111]/70">30-day money-back guarantee</strong> on all products. If you are unsatisfied for any reason, contact us within 30 days of delivery.</p>
@@ -43,7 +43,7 @@ export default function ShippingPage() {
           </div>
 
           <div>
-            <div className="w-8 h-px bg-[#C4682A] mb-5" />
+            <div className="w-8 h-px bg-[#1B2A4A] mb-5" />
             <h2 className="text-lg font-bold text-[#111111] mb-4" style={{ fontFamily: "var(--font-playfair)" }}>Damaged or incorrect orders</h2>
             <p className="text-sm text-[#111111]/50 leading-relaxed">If your order arrives damaged or incorrect, contact us within 48 hours of delivery at support@knowingmore.com with a photo of the item. We will dispatch a replacement at no cost.</p>
           </div>

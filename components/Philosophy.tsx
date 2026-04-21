@@ -74,7 +74,7 @@ export default function Philosophy({ locale = "en" }: { locale?: "en" | "pl" }) 
         <div className="relative h-px bg-[#1A1A1A]/8 mb-14 md:mb-20 overflow-hidden">
           <motion.div
             style={{ scaleX: lineScaleX, transformOrigin: "left" }}
-            className="absolute inset-0 bg-[#C4682A]"
+            className="absolute inset-0 bg-[#1B2A4A]"
           />
         </div>
 
@@ -94,7 +94,7 @@ export default function Philosophy({ locale = "en" }: { locale?: "en" | "pl" }) 
                   fontSize: "clamp(2.4rem, 5.5vw, 6rem)",
                 }}
               >
-                <span style={{ color: "#C4682A" }}>{tr.h1}</span>{tr.h1rest}
+                <span style={{ color: "#1B2A4A" }}>{tr.h1}</span>{tr.h1rest}
               </h2>
             </motion.div>
 
@@ -145,7 +145,7 @@ export default function Philosophy({ locale = "en" }: { locale?: "en" | "pl" }) 
               className={`pt-8 pb-4 pr-8 ${i < 2 ? "md:border-r border-[#1A1A1A]/8" : ""}`}
             >
               <p
-                className="text-[9px] font-mono tracking-[0.32em] uppercase text-[#C4682A] mb-3"
+                className="text-[9px] font-mono tracking-[0.32em] uppercase text-[#1B2A4A] mb-3"
               >
                 {String(i + 1).padStart(2, "0")}
               </p>

@@ -703,13 +703,13 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
               className="flex items-center gap-3 mb-4 max-w-[280px] mx-auto">
               <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
                 transition={{ duration: 1.3, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="flex-1 h-px bg-[#C4682A]/22 origin-right" />
+                className="flex-1 h-px bg-[#1B2A4A]/22 origin-right" />
               <motion.div animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.3, 0.8] }}
                 transition={{ duration: 2.8, repeat: Infinity, delay: 1.8 }}
-                className="w-1.5 h-1.5 rounded-full bg-[#C4682A] flex-shrink-0" />
+                className="w-1.5 h-1.5 rounded-full bg-[#1B2A4A] flex-shrink-0" />
               <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
                 transition={{ duration: 1.3, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="flex-1 h-px bg-[#C4682A]/22 origin-left" />
+                className="flex-1 h-px bg-[#1B2A4A]/22 origin-left" />
             </motion.div>
 
             <motion.h1
@@ -723,8 +723,8 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
                 fontSize: "clamp(3.8rem, 20vw, 6rem)",
               }}
             >
-              <span className="block">kno<span style={{ color: "#C4682A" }}>win</span>g</span>
-              <span className="block">more<span style={{ color: "#C4682A" }}>.</span></span>
+              <span className="block">kno<span style={{ color: "#1B2A4A" }}>win</span>g</span>
+              <span className="block">more<span style={{ color: "#1B2A4A" }}>.</span></span>
             </motion.h1>
           </div>
         </div>
@@ -737,7 +737,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              background: "#C4682A",
+              background: "#1B2A4A",
               boxShadow: "0 8px 28px rgba(52,81,200,0.35), inset 0 1px 0 rgba(255,255,255,0.10)",
             }}
             className="mb-5 inline-flex items-center gap-2.5 rounded-full px-4 py-2 font-mono uppercase font-bold tracking-[0.28em] text-white"
@@ -772,7 +772,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             className="flex items-center gap-8 mb-6"
           >
             <a href="#products"
-              className="group flex items-center gap-2 text-[#FAFAF7] text-sm font-medium tracking-wide border-b border-[#FAFAF7]/25 pb-0.5 hover:border-[#C4682A] hover:text-[#C4682A] transition-colors duration-300">
+              className="group flex items-center gap-2 text-[#FAFAF7] text-sm font-medium tracking-wide border-b border-[#FAFAF7]/25 pb-0.5 hover:border-[#1B2A4A] hover:text-[#1B2A4A] transition-colors duration-300">
               {tr.cta1}
               <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
             </a>
@@ -789,7 +789,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           >
             <div className="flex items-center gap-2">
               <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}
-                className="w-1 h-1 rounded-full bg-[#C4682A]" />
+                className="w-1 h-1 rounded-full bg-[#1B2A4A]" />
               <span className="text-[9px] font-mono text-[#FAFAF7]/45 tracking-[0.2em] uppercase">{tr.meta}</span>
             </div>
             <span className="text-[9px] font-mono text-[#FAFAF7]/45 tracking-[0.25em] uppercase">Est. 2024</span>
@@ -839,7 +839,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             variants={item}
             style={{
               opacity: fadeOut,
-              background: "#C4682A",
+              background: "#1B2A4A",
               boxShadow: "0 10px 40px rgba(52,81,200,0.40), inset 0 1px 0 rgba(255,255,255,0.10)",
             }}
             className="mb-12 inline-flex items-center gap-3 rounded-full px-6 py-2.5 font-mono uppercase font-bold tracking-[0.32em] text-white"
@@ -873,14 +873,14 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           {/* Top rule with staggered pieces */}
           <motion.div variants={item} style={{ opacity: fadeOut }}
             className="w-full max-w-[560px] flex items-center gap-3 mb-10">
-            <motion.div variants={rule} className="flex-1 h-px bg-[#C4682A]/22 origin-right" />
+            <motion.div variants={rule} className="flex-1 h-px bg-[#1B2A4A]/22 origin-right" />
             <motion.div
               animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.35, 0.8] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-              className="w-1.5 h-1.5 rounded-full bg-[#C4682A] flex-shrink-0"
+              className="w-1.5 h-1.5 rounded-full bg-[#1B2A4A] flex-shrink-0"
               style={{ boxShadow: "0 0 12px rgba(52,81,200,0.8)" }}
             />
-            <motion.div variants={rule} className="flex-1 h-px bg-[#C4682A]/22 origin-left" />
+            <motion.div variants={rule} className="flex-1 h-px bg-[#1B2A4A]/22 origin-left" />
           </motion.div>
 
           {/* Headline — word-by-word variants reveal (with room for descenders) */}
@@ -896,12 +896,12 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           >
             <span className="block overflow-hidden" style={{ paddingBottom: "0.18em" }}>
               <motion.span variants={word} className="inline-block">
-                kno<span style={{ color: "#C4682A" }}>win</span>g
+                kno<span style={{ color: "#1B2A4A" }}>win</span>g
               </motion.span>
             </span>
             <span className="block overflow-hidden" style={{ paddingBottom: "0.18em" }}>
               <motion.span variants={word} className="inline-block">
-                more<span style={{ color: "#C4682A" }}>.</span>
+                more<span style={{ color: "#1B2A4A" }}>.</span>
               </motion.span>
             </span>
           </motion.h1>
@@ -933,7 +933,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: "spring", stiffness: 380, damping: 22 }}
-              className="group flex items-center gap-2.5 text-[#FAFAF7] text-sm font-medium tracking-wide border-b border-[#FAFAF7]/25 pb-0.5 hover:border-[#C4682A] hover:text-[#C4682A] transition-colors duration-300">
+              className="group flex items-center gap-2.5 text-[#FAFAF7] text-sm font-medium tracking-wide border-b border-[#FAFAF7]/25 pb-0.5 hover:border-[#1B2A4A] hover:text-[#1B2A4A] transition-colors duration-300">
               {tr.cta1}
               <span className="group-hover:translate-x-1.5 transition-transform duration-200 text-base leading-none">→</span>
             </motion.a>
@@ -950,7 +950,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             <div className="flex items-center gap-3">
               <motion.div animate={{ opacity: [0.4, 1, 0.4], scale: [1, 1.25, 1] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="w-1 h-1 rounded-full bg-[#C4682A]"
+                className="w-1 h-1 rounded-full bg-[#1B2A4A]"
                 style={{ boxShadow: "0 0 8px rgba(52,81,200,0.6)" }} />
               <span className="text-[9px] font-mono text-[#FAFAF7]/55 tracking-[0.22em] uppercase hidden sm:inline">{tr.meta}</span>
             </div>

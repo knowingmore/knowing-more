@@ -131,7 +131,7 @@ export default function Footer({ locale = "en" }: { locale?: "en" | "pl" }) {
             <span className="text-[9px] font-mono text-white/20 tracking-[0.22em] uppercase">
               {d.made}
             </span>
-            <span className="text-[#C4682A] text-[9px] font-mono tracking-[0.22em] uppercase ml-1">
+            <span className="text-[#1B2A4A] text-[9px] font-mono tracking-[0.22em] uppercase ml-1">
               knowing more.
             </span>
           </div>

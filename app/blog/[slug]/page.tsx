@@ -270,14 +270,14 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
   if (!article) notFound();
 
   const categoryColor: Record<string, string> = {
-    Science: "#C4682A",
+    Science: "#1B2A4A",
     Ingredients: "#A0784A",
     Performance: "#111111",
-    Industry: "#C4682A",
+    Industry: "#1B2A4A",
     Standards: "#888",
   };
 
-  const color = categoryColor[article.category] ?? "#C4682A";
+  const color = categoryColor[article.category] ?? "#1B2A4A";
 
   return (
     <main className="min-h-screen bg-white">
@@ -306,7 +306,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
         <h1 className="text-3xl md:text-4xl font-bold tracking-[-0.02em] text-[#111111] mb-10 leading-tight"
           style={{ fontFamily: "var(--font-playfair)" }}>
-          {article.title}<span style={{ color: "#C4682A" }}>.</span>
+          {article.title}<span style={{ color: "#1B2A4A" }}>.</span>
         </h1>
 
         {/* Body prose */}
@@ -319,7 +319,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
         {/* Back link */}
         <Link href="/blog"
-          className="inline-flex items-center gap-2 text-sm text-[#111111]/40 hover:text-[#C4682A] transition-colors duration-200">
+          className="inline-flex items-center gap-2 text-sm text-[#111111]/40 hover:text-[#1B2A4A] transition-colors duration-200">
           ← Back to Journal
         </Link>
       </article>

@@ -90,7 +90,7 @@ export default function Science({ locale = "en" }: { locale?: "en" | "pl" }) {
               >
                 {s.value}
               </p>
-              <p className="mt-2 text-[10px] font-semibold tracking-[0.22em] uppercase text-[#C4682A]">
+              <p className="mt-2 text-[10px] font-semibold tracking-[0.22em] uppercase text-[#1B2A4A]">
                 {s.label}
               </p>
               <p className="mt-1 text-xs text-[#111111]/30 leading-snug">{s.sub}</p>
@@ -146,7 +146,7 @@ export default function Science({ locale = "en" }: { locale?: "en" | "pl" }) {
               className="absolute top-5 right-[-8px] md:right-[-24px] bg-white border border-[#111111]/10 rounded-2xl px-5 py-4 shadow-lg"
             >
               <p
-                className="text-[#C4682A] text-xl font-bold"
+                className="text-[#1B2A4A] text-xl font-bold"
                 style={{ fontFamily: "var(--font-playfair)" }}
               >
                 {tr.badgeTitle}
@@ -164,7 +164,7 @@ export default function Science({ locale = "en" }: { locale?: "en" | "pl" }) {
             transition={{ duration: 0.95, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="col-span-12 md:col-span-5 md:col-start-8 mt-12 md:mt-0"
           >
-            <p className="text-[9px] font-mono text-[#C4682A] tracking-[0.38em] uppercase mb-6">
+            <p className="text-[9px] font-mono text-[#1B2A4A] tracking-[0.38em] uppercase mb-6">
               {tr.sectionLabel}
             </p>
 
@@ -180,7 +180,7 @@ export default function Science({ locale = "en" }: { locale?: "en" | "pl" }) {
               {tr.headlineLine2}
               <br />
               {tr.headlineLine3}
-              <span style={{ color: "#C4682A" }}>{tr.headlineAccent}</span>
+              <span style={{ color: "#1B2A4A" }}>{tr.headlineAccent}</span>
             </h2>
 
             <p className="mt-6 text-sm text-[#111111]/40 leading-[1.78] max-w-[420px]">
@@ -196,7 +196,7 @@ export default function Science({ locale = "en" }: { locale?: "en" | "pl" }) {
                   transition={{ delay: 0.35 + i * 0.09, duration: 0.5 }}
                   className="flex items-start gap-3 text-sm text-[#111111]/45"
                 >
-                  <span className="mt-2 w-1 h-1 rounded-full flex-shrink-0 bg-[#C4682A]" />
+                  <span className="mt-2 w-1 h-1 rounded-full flex-shrink-0 bg-[#1B2A4A]" />
                   {point}
                 </motion.li>
               ))}
