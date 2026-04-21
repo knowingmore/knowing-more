@@ -33,7 +33,7 @@ export default function SciencePage() {
     <main className="min-h-screen bg-white">
       <Navbar />
       <section className="pt-36 pb-24 px-6 md:px-12 xl:px-16 max-w-[1440px] mx-auto">
-        <p className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#E8920A] mb-6">Our Science</p>
+        <p className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#1B2A4A] mb-6">Our Science</p>
         <h1 className="text-[clamp(3rem,6vw,6rem)] font-bold leading-[0.9] tracking-[-0.03em] text-[#111111] mb-6"
           style={{ fontFamily: "var(--font-playfair)" }}>
           The standard we hold<br />
@@ -45,7 +45,7 @@ export default function SciencePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0 border border-[#111111]/[0.07] rounded-2xl overflow-hidden">
           {pillars.map((p, i) => (
             <div key={i} className="p-8 border-b border-r border-[#111111]/[0.07]">
-              <div className="w-8 h-px bg-[#E8920A] mb-6" />
+              <div className="w-8 h-px bg-[#1B2A4A] mb-6" />
               <h3 className="text-base font-bold text-[#111111] mb-3 tracking-[-0.01em]"
                 style={{ fontFamily: "var(--font-playfair)" }}>{p.title}</h3>
               <p className="text-sm text-[#111111]/40 leading-relaxed">{p.body}</p>

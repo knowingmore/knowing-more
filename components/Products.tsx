@@ -66,7 +66,7 @@ const productsData: Record<Locale, Product[]> = {
         "The gut is your foundation. Targeted prebiotics, digestive enzymes, and mucosal support nutrients to restore and protect the microbiome - the ecosystem your entire health depends on.",
       can: "/images/products/gut-health.png",
       lifestyle: "/images/website/model-gut-health-orange.jpg",
-      accent: "#C4682A",
+      accent: "#1B2A4A",
       glowColor: "rgba(196,104,42,0.3)",
       tags: ["Digestion", "Microbiome", "Immunity"],
       price: "109,00 zł",
@@ -116,7 +116,7 @@ const productsData: Record<Locale, Product[]> = {
         "Jelita to centrum dowodzenia Twojego ciała. Prebiotyki, enzymy trawienne i wsparcie dla mikrobioty jelitowej — żeby Twój układ pokarmowy pracował tak, jak powinien.",
       can: "/images/products/gut-health.png",
       lifestyle: "/images/website/model-gut-health-orange.jpg",
-      accent: "#C4682A",
+      accent: "#1B2A4A",
       glowColor: "rgba(196,104,42,0.3)",
       tags: ["Trawienie", "Mikrobiom", "Odporność"],
       price: "109,00 zł",
@@ -254,7 +254,7 @@ function ProductPanel({
               }}
             >
               {product.name}
-              <span style={{ color: product.accent === "#111111" ? "#E8920A" : product.accent }}>.</span>
+              <span style={{ color: product.accent === "#111111" ? "#1B2A4A" : product.accent }}>.</span>
             </h2>
 
             <p className="mt-4 text-base font-medium text-[#111111]/40 tracking-wide">
@@ -321,7 +321,7 @@ export default function Products({ locale = "en" }: { locale?: "en" | "pl" }) {
             animate={headerInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="text-[9px] font-mono text-[#E8920A] tracking-[0.38em] uppercase mb-5">
+            <p className="text-[9px] font-mono text-[#1B2A4A] tracking-[0.38em] uppercase mb-5">
               {t.sectionLabel}
             </p>
             <h2

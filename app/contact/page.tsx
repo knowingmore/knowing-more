@@ -51,7 +51,7 @@ export default function ContactPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#E8920A] mb-6"
+          className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#1B2A4A] mb-6"
         >
           Support
         </motion.p>
@@ -101,7 +101,7 @@ export default function ContactPage() {
                 <span
                   className="text-sm transition-all duration-300 flex-shrink-0"
                   style={{
-                    color: selected === topic.id ? "#E8920A" : "rgba(17,17,17,0.25)",
+                    color: selected === topic.id ? "#1B2A4A" : "rgba(17,17,17,0.25)",
                     transform: selected === topic.id ? "rotate(90deg)" : "rotate(0deg)",
                     display: "inline-block",
                   }}
@@ -129,7 +129,7 @@ export default function ContactPage() {
                 {active.href && active.cta && (
                   <Link
                     href={active.href}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-[#E8920A] hover:gap-3 transition-all duration-200"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-[#1B2A4A] hover:gap-3 transition-all duration-200"
                   >
                     {active.cta} <span>→</span>
                   </Link>
@@ -155,10 +155,10 @@ export default function ContactPageOriginal() {
     <main className="min-h-screen bg-white">
       <Navbar />
       <section className="pt-36 pb-24 px-6 md:px-12 xl:px-16 max-w-[1440px] mx-auto">
-        <p className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#E8920A] mb-6">Contact</p>
+        <p className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#1B2A4A] mb-6">Contact</p>
         <h1 className="text-[clamp(3rem,6vw,6rem)] font-bold leading-[0.9] tracking-[-0.03em] text-[#111111] mb-16"
           style={{ fontFamily: "var(--font-playfair)" }}>
-          Get in touch<span style={{ color: "#E8920A" }}>.</span>
+          Get in touch<span style={{ color: "#1B2A4A" }}>.</span>
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-[960px]">
           <div className="space-y-8">
@@ -170,7 +170,7 @@ export default function ContactPageOriginal() {
             ].map((item) => (
               <div key={item.label}>
                 <p className="text-[9px] font-mono tracking-[0.25em] uppercase text-[#111111]/30 mb-1">{item.label}</p>
-                <a href={`mailto:${item.value}`} className="text-sm text-[#111111] hover:text-[#E8920A] transition-colors duration-200">
+                <a href={`mailto:${item.value}`} className="text-sm text-[#111111] hover:text-[#1B2A4A] transition-colors duration-200">
                   {item.value}
                 </a>
               </div>
@@ -183,8 +183,8 @@ export default function ContactPageOriginal() {
           </div>
 
           {done ? (
-            <div className="flex flex-col items-center justify-center gap-4 py-16 rounded-2xl border border-[#E8920A]/20 bg-[#E8920A]/5 text-center">
-              <div className="w-12 h-12 rounded-full bg-[#E8920A] flex items-center justify-center text-white text-xl">✓</div>
+            <div className="flex flex-col items-center justify-center gap-4 py-16 rounded-2xl border border-[#1B2A4A]/20 bg-[#1B2A4A]/5 text-center">
+              <div className="w-12 h-12 rounded-full bg-[#1B2A4A] flex items-center justify-center text-white text-xl">✓</div>
               <p className="font-semibold text-[#111111]" style={{ fontFamily: "var(--font-playfair)" }}>Message sent.</p>
               <p className="text-sm text-[#111111]/40 max-w-[220px]">We&apos;ll get back to you within 1 business day.</p>
             </div>
@@ -197,13 +197,13 @@ export default function ContactPageOriginal() {
                 <div key={f.name}>
                   <label className="text-[9px] font-mono tracking-[0.22em] uppercase text-[#111111]/40 block mb-2">{f.label}</label>
                   <input type={f.type} required
-                    className="w-full px-4 py-3.5 rounded-full text-sm border border-[#111111]/12 bg-white text-[#111111] outline-none focus:border-[#E8920A]/50 transition-colors" />
+                    className="w-full px-4 py-3.5 rounded-full text-sm border border-[#111111]/12 bg-white text-[#111111] outline-none focus:border-[#1B2A4A]/50 transition-colors" />
                 </div>
               ))}
               <div>
                 <label className="text-[9px] font-mono tracking-[0.22em] uppercase text-[#111111]/40 block mb-2">Message</label>
                 <textarea required rows={5}
-                  className="w-full px-4 py-3.5 rounded-2xl text-sm border border-[#111111]/12 bg-white text-[#111111] outline-none focus:border-[#E8920A]/50 transition-colors resize-none" />
+                  className="w-full px-4 py-3.5 rounded-2xl text-sm border border-[#111111]/12 bg-white text-[#111111] outline-none focus:border-[#1B2A4A]/50 transition-colors resize-none" />
               </div>
               <button type="submit"
                 className="w-full py-4 rounded-full bg-[#111111] text-white text-sm font-semibold hover:bg-[#222] transition-colors duration-200">

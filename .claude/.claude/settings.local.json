@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest knowing-more --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes)",
+      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$PATH\")",
+      "Bash(mkdir -p \"/Users/monikabukowska/Desktop/knowing-more/public/images/products\" \"/Users/monikabukowska/Desktop/knowing-more/public/images/website\" \"/Users/monikabukowska/Desktop/knowing-more/public/images/logo\")",
+      "Bash(cp \"/Users/monikabukowska/Desktop/Longevity business /products/1.png\" \"/Users/monikabukowska/Desktop/knowing-more/public/images/products/all-three.png\")",
+      "Bash(cp \"/Users/monikabukowska/Desktop/Longevity business /products/2.png\" \"/Users/monikabukowska/Desktop/knowing-more/public/images/products/performance.png\")",
+      "Bash(cp \"/Users/monikabukowska/Desktop/Longevity business /products/3.png\" \"/Users/monikabukowska/Desktop/knowing-more/public/images/products/balance.png\")",
+      "Bash(cp \"/Users/monikabukowska/Desktop/Longevity business /products/4.png\" \"/Users/monikabukowska/Desktop/knowing-more/public/images/products/gut-health.png\")",
+      "Bash(grep -v \"^$\")",
+      "Bash(grep -v node_modules find \"/Users/monikabukowska/Desktop/Smile swim new website\" -maxdepth 1)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(xargs kill:*)",
+      "Bash(cp \"/Users/monikabukowska/Desktop/knowing-more/start-dev.sh\" \"/Users/monikabukowska/Desktop/Longevity business /start-dev.sh\")",
+      "Bash(chmod +x \"/Users/monikabukowska/Desktop/Longevity business /start-dev.sh\")",
+      "Bash(ln -sf /Users/monikabukowska/.nvm/versions/node/v20.20.2/bin/node /usr/local/bin/node)",
+      "Bash(ln -sf /Users/monikabukowska/.nvm/versions/node/v20.20.2/bin/npm /usr/local/bin/npm)",
+      "Bash(sudo ln:*)",
+      "Read(//usr/bin/**)",
+      "Bash(mkdir -p ~/bin)",
+      "Bash(ln -sf /Users/monikabukowska/.nvm/versions/node/v20.20.2/bin/node ~/bin/node)",
+      "Bash(ln -sf /Users/monikabukowska/.nvm/versions/node/v20.20.2/bin/npm ~/bin/npm)",
+      "Read(//Users/monikabukowska/**)",
+      "Bash(echo \"server stopped\" mv \"/Users/monikabukowska/Desktop/knowing-more\" \"/Users/monikabukowska/Desktop/Longevity business /knowing-more\" echo \"moved: $?\" ls \"/Users/monikabukowska/Desktop/Longevity business /\")"
+    ]
+  }
+}

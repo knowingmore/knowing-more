@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "knowing-more dev",
+      "runtimeExecutable": "/usr/bin/env",
+      "runtimeArgs": ["PATH=/Users/monikabukowska/.nvm/versions/node/v20.20.2/bin:/usr/bin:/bin", "/Users/monikabukowska/.nvm/versions/node/v20.20.2/bin/node", "/Users/monikabukowska/Desktop/Longevity business /knowing-more/node_modules/.bin/next", "dev", "/Users/monikabukowska/Desktop/Longevity business /knowing-more", "--port", "3000"],
+      "port": 3000
+    }
+  ]
+}

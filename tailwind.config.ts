@@ -15,7 +15,7 @@ const config: Config = {
           dark: "#111C33",
         },
         amber: {
-          brand: "#E8920A",
+          brand: "#1B2A4A",
           light: "#F5A832",
           pale: "#FDF3E0",
         },
@@ -25,7 +25,7 @@ const config: Config = {
           pale: "#F5EEE4",
         },
         terracotta: {
-          DEFAULT: "#C4682A",
+          DEFAULT: "#1B2A4A",
           light: "#D4803E",
           pale: "#F5E8DC",
         },

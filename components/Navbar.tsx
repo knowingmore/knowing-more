@@ -28,6 +28,7 @@ const ctaData = {
 
 export default function Navbar({ locale = "en" }: { locale?: "en" | "pl" }) {
   const [scrolled, setScrolled] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navLinks = navLinksData[locale];
@@ -35,7 +36,13 @@ export default function Navbar({ locale = "en" }: { locale?: "en" | "pl" }) {
   const logoHref = locale === "pl" ? "/pl" : "/";
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 40);
+      // Hero is 220vh — logo appears once hero is fully behind the user
+      setPastHero(y > window.innerHeight * 1.15);
+    };
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -53,8 +60,19 @@ export default function Navbar({ locale = "en" }: { locale?: "en" | "pl" }) {
         }`}
       >
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 xl:px-16 h-[68px] flex items-center justify-between">
-          {/* Logo */}
-          <a href={logoHref} className="relative z-10">
+          {/* Logo — hidden on hero, fades in once user passes the hero section */}
+          <motion.a
+            href={logoHref}
+            className="relative z-10"
+            initial={false}
+            animate={{
+              opacity: pastHero ? 1 : 0,
+              y: pastHero ? 0 : -6,
+              pointerEvents: pastHero ? "auto" : "none",
+            }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            aria-hidden={!pastHero}
+          >
             <Image
               src="/images/logo/logo.png"
               alt="knowing more."
@@ -63,7 +81,7 @@ export default function Navbar({ locale = "en" }: { locale?: "en" | "pl" }) {
               className="object-contain"
               priority
             />
-          </a>
+          </motion.a>
 
           {/* Desktop nav - centered absolute */}
           <nav className="hidden md:flex items-center gap-9 absolute left-1/2 -translate-x-1/2">
@@ -84,7 +102,7 @@ export default function Navbar({ locale = "en" }: { locale?: "en" | "pl" }) {
             <a
               href={cta.href}
               className="px-5 py-2 rounded-full text-white text-[13px] font-semibold flex items-center gap-1.5 transition-all duration-200 hover:opacity-90 hover:scale-[1.02]"
-              style={{ background: "#E8920A" }}
+              style={{ background: "#1B2A4A" }}
             >
               {cta.label}
             </a>

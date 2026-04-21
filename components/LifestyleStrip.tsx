@@ -88,7 +88,7 @@ export default function LifestyleStrip({ locale = "en" }: { locale?: "en" | "pl"
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="col-span-12 md:col-span-8"
           >
-            <p className="text-[9px] font-mono text-[#E8920A] tracking-[0.38em] uppercase mb-5">
+            <p className="text-[9px] font-mono text-[#1B2A4A] tracking-[0.38em] uppercase mb-5">
               {tr.sectionLabel}
             </p>
             <h2
@@ -177,7 +177,7 @@ export default function LifestyleStrip({ locale = "en" }: { locale?: "en" | "pl"
           <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/10 z-10">
             <motion.div
               key={active}
-              className="h-full bg-[#E8920A]"
+              className="h-full bg-[#1B2A4A]"
               initial={{ width: "0%" }}
               animate={{ width: "100%" }}
               transition={{ duration: 5, ease: "linear" }}
@@ -197,7 +197,7 @@ export default function LifestyleStrip({ locale = "en" }: { locale?: "en" | "pl"
               <div
                 className={`rounded-full transition-all duration-300 ${
                   i === active
-                    ? "w-6 h-1.5 bg-[#E8920A]"
+                    ? "w-6 h-1.5 bg-[#1B2A4A]"
                     : "w-1.5 h-1.5 bg-[#111111]/20"
                 }`}
               />
@@ -219,7 +219,7 @@ export default function LifestyleStrip({ locale = "en" }: { locale?: "en" | "pl"
           </span>
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((s) => (
-              <span key={s} className="text-[#E8920A] text-[10px]">★</span>
+              <span key={s} className="text-[#1B2A4A] text-[10px]">★</span>
             ))}
           </div>
           <span className="text-[9px] font-mono text-[#111111]/22 tracking-[0.2em] uppercase">

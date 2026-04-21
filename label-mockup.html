@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>knowing more. — Label Redesign Concept</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #F2EFE9;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 40px;
+    gap: 80px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #111;
+    opacity: 0.35;
+    font-weight: 400;
+  }
+
+  .row {
+    display: flex;
+    gap: 60px;
+    align-items: flex-end;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .can-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .label-name {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #111;
+    opacity: 0.3;
+    font-weight: 500;
+  }
+
+  /* ── Can shell ───────────────────────────────────────── */
+  .can {
+    position: relative;
+    width: 200px;
+    height: 240px;
+    border-radius: 18px 18px 14px 14px;
+    overflow: hidden;
+    box-shadow:
+      0 30px 60px rgba(0,0,0,0.22),
+      0 8px 20px rgba(0,0,0,0.14),
+      inset 0 1px 0 rgba(255,255,255,0.12),
+      inset -4px 0 12px rgba(0,0,0,0.15),
+      inset 4px 0 8px rgba(255,255,255,0.06);
+  }
+
+  /* Lid */
+  .can::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 32px;
+    border-radius: 18px 18px 0 0;
+    z-index: 10;
+    background: inherit;
+    filter: brightness(0.75);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3), inset 0 -1px 0 rgba(0,0,0,0.2);
+  }
+
+  /* Rim below lid */
+  .can::after {
+    content: '';
+    position: absolute;
+    top: 29px; left: 0; right: 0;
+    height: 5px;
+    background: rgba(0,0,0,0.25);
+    z-index: 11;
+  }
+
+  /* Performance — deep navy */
+  .can-performance {
+    background: linear-gradient(135deg, #1C2A45 0%, #1B2A4A 40%, #152035 100%);
+  }
+  .can-performance::before { background: linear-gradient(135deg, #141f34, #1a2740); }
+
+  /* Balance — warm stone */
+  .can-balance {
+    background: linear-gradient(135deg, #9E8060 0%, #A0784A 40%, #7E6038 100%);
+  }
+  .can-balance::before { background: linear-gradient(135deg, #7a6248, #8e7055); }
+
+  /* Gut Health — terracotta */
+  .can-gut {
+    background: linear-gradient(135deg, #B85C28 0%, #C4682A 40%, #9E4E20 100%);
+  }
+  .can-gut::before { background: linear-gradient(135deg, #8c3e18, #ab5222); }
+
+  /* Specular highlight */
+  .can-shine {
+    position: absolute;
+    top: 32px; left: 12px;
+    width: 28px;
+    bottom: 10px;
+    background: linear-gradient(to right, rgba(255,255,255,0.09), transparent);
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* ── Label area ──────────────────────────────────────── */
+  .label {
+    position: absolute;
+    top: 44px; bottom: 14px;
+    left: 0; right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 14px 14px;
+    z-index: 6;
+  }
+
+  /* Top section */
+  .label-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+  }
+
+  .formula-id {
+    font-size: 7.5px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  /* Thin amber rule */
+  .rule {
+    width: 24px;
+    height: 1px;
+    background: #E8920A;
+    margin: 0 auto 10px;
+    opacity: 0.7;
+  }
+
+  .brand-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 8.5px;
+    letter-spacing: 0.18em;
+    text-transform: lowercase;
+    color: rgba(255,255,255,0.45);
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+
+  /* Product name — the hero */
+  .product-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #fff;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .product-name-dot {
+    color: #E8920A;
+  }
+
+  .tagline {
+    font-size: 7px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    font-weight: 400;
+    margin-top: 6px;
+    text-align: center;
+  }
+
+  /* Middle divider */
+  .label-divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  /* Key benefit */
+  .key-benefit {
+    font-size: 6.5px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.28);
+    text-align: center;
+    line-height: 1.8;
+    font-weight: 400;
+  }
+
+  .key-benefit strong {
+    color: rgba(255,255,255,0.55);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* Bottom strip */
+  .label-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .bottom-rule {
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin-bottom: 2px;
+  }
+
+  .cert-strip {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cert-item {
+    font-size: 5.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+    font-weight: 500;
+  }
+
+  .cert-dot {
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .capsule-count {
+    font-size: 6px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.22);
+  }
+
+  /* ── Comparison note ─────────────────────────────────── */
+  .note {
+    max-width: 680px;
+    text-align: center;
+    font-size: 12px;
+    color: #111;
+    opacity: 0.45;
+    line-height: 1.9;
+    letter-spacing: 0.01em;
+  }
+
+  .note strong {
+    opacity: 1;
+    color: #111;
+    font-weight: 600;
+  }
+
+  /* ── Canva guide ─────────────────────────────────────── */
+  .guide {
+    max-width: 720px;
+    width: 100%;
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    border: 1px solid rgba(0,0,0,0.07);
+  }
+
+  .guide h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: #111;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .guide-sub {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #E8920A;
+    margin-bottom: 28px;
+    font-weight: 500;
+  }
+
+  .guide-section {
+    margin-bottom: 28px;
+  }
+
+  .guide-section h3 {
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #111;
+    opacity: 0.4;
+    font-weight: 600;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+  }
+
+  .guide-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .guide-tag {
+    flex-shrink: 0;
+    background: rgba(232,146,10,0.1);
+    color: #E8920A;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+    margin-top: 1px;
+  }
+
+  .guide-text {
+    font-size: 12px;
+    color: #111;
+    opacity: 0.65;
+    line-height: 1.7;
+  }
+
+  .color-swatch {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 3px 0;
+    font-size: 11px;
+    color: #111;
+    opacity: 0.7;
+  }
+
+  .swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+  }
+
+</style>
+</head>
+<body>
+
+<h1>knowing more. — Label Redesign Concept</h1>
+
+<!-- ── The three cans ──────────────────────────────────── -->
+<div class="row">
+
+  <!-- Performance -->
+  <div class="can-wrap">
+    <div class="can can-performance">
+      <div class="can-shine"></div>
+      <div class="label">
+        <div class="label-top">
+          <span class="formula-id">Formula 001</span>
+          <div class="rule"></div>
+          <span class="brand-mark">knowing more.</span>
+          <div class="product-name">Performance<span class="product-name-dot">.</span></div>
+          <div class="tagline">Energy · Recovery · Focus</div>
+        </div>
+        <div class="label-divider"></div>
+        <div class="key-benefit">
+          <strong>NMN · CoQ10 · Alpha-GPC</strong>
+          Clinically dosed · Full label
+        </div>
+        <div class="label-bottom">
+          <div class="bottom-rule"></div>
+          <div class="cert-strip">
+            <span class="cert-item">GMP</span>
+            <div class="cert-dot"></div>
+            <span class="cert-item">3rd Party Tested</span>
+            <div class="cert-dot"></div>
+            <span class="cert-item">Vegan</span>
+          </div>
+          <span class="capsule-count">60 Capsules · 30 Servings</span>
+        </div>
+      </div>
+    </div>
+    <span class="label-name">Performance</span>
+  </div>
+
+  <!-- Balance -->
+  <div class="can-wrap">
+    <div class="can can-balance">
+      <div class="can-shine"></div>
+      <div class="label">
+        <div class="label-top">
+          <span class="formula-id">Formula 002</span>
+          <div class="rule"></div>
+          <span class="brand-mark">knowing more.</span>
+          <div class="product-name">Balance<span class="product-name-dot">.</span></div>
+          <div class="tagline">Cortisol · Sleep · Hormones</div>
+        </div>
+        <div class="label-divider"></div>
+        <div class="key-benefit">
+          <strong>KSM-66 · L-Theanine · Magnesium</strong>
+          Clinically dosed · Full label
+        </div>
+        <div class="label-bottom">
+          <div class="bottom-rule"></div>
+          <div class="cert-strip">
+            <span class="cert-item">GMP</span>
+            <div class="cert-dot"></div>
+            <span class="cert-item">3rd Party Tested</span>
+            <div class="cert-dot"></div>
+            <span class="cert-item">Vegan</span>
+          </div>
+          <span class="capsule-count">60 Capsules · 30 Servings</span>
+        </div>
+      </div>
+    </div>
+    <span class="label-name">Balance</span>
+  </div>
+
+  <!-- Gut Health -->
+  <div class="can-wrap">
+    <div class="can can-gut">
+      <div class="can-shine"></div>
+      <div class="label">
+        <div class="label-top">
+          <span class="formula-id">Formula 003</span>
+          <div class="rule"></div>
+          <span class="brand-mark">knowing more.</span>
+          <div class="product-name">Gut Health<span class="product-name-dot">.</span></div>
+          <div class="tagline">Microbiome · Digestion · Immunity</div>
+        </div>
+        <div class="label-divider"></div>
+        <div class="key-benefit">
+          <strong>50B CFU Probiotic · L-Glutamine</strong>
+          Clinically dosed · Full label
+        </div>
+        <div class="label-bottom">
+          <div class="bottom-rule"></div>
+          <div class="cert-strip">
+            <span class="cert-item">GMP</span>
+            <div class="cert-dot"></div>
+            <span class="cert-item">3rd Party Tested</span>
+            <div class="cert-dot"></div>
+            <span class="cert-item">Vegan</span>
+          </div>
+          <span class="capsule-count">30 Capsules · 30 Servings</span>
+        </div>
+      </div>
+    </div>
+    <span class="label-name">Gut Health</span>
+  </div>
+
+</div>
+
+<p class="note">
+  Key changes from current design: <strong>product name is now the hero</strong> (large, central serif),
+  the brand "knowing more." becomes a quiet mark above it.
+  Formula numbers (001–003) add collectible, luxury series identity.
+  Three-line ingredient preview signals clinical credibility.
+  A clean cert strip at the base replaces loose text.
+  The <strong>tagline is removed from the label</strong> — white space creates the premium feel.
+</p>
+
+<!-- ── Canva recreation guide ──────────────────────────── -->
+<div class="guide">
+
+  <p class="guide-sub">Canva Recreation Guide</p>
+  <h2>How to rebuild this in Canva</h2>
+
+  <div class="guide-section">
+    <h3>Label dimensions</h3>
+    <div class="guide-row">
+      <span class="guide-tag">Size</span>
+      <span class="guide-text">Create a custom canvas: <strong>1200 × 1800 px</strong> (portrait). This wraps around a standard supplement canister label. Export as PNG with transparent background.</span>
+    </div>
+  </div>
+
+  <div class="guide-section">
+    <h3>Typography — in order top to bottom</h3>
+    <div class="guide-row">
+      <span class="guide-tag">1</span>
+      <span class="guide-text"><strong>Formula 001</strong> — Inter, 7–8pt, letter-spacing +400, uppercase, white 35% opacity</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">2</span>
+      <span class="guide-text"><strong>Thin amber line</strong> — 1px horizontal rule, color #E8920A, 40px wide, centered</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">3</span>
+      <span class="guide-text"><strong>knowing more.</strong> — Playfair Display Regular, 10pt, letter-spacing +180, lowercase, white 45% opacity</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">4</span>
+      <span class="guide-text"><strong>PERFORMANCE.</strong> — Playfair Display Medium, 52–58pt, white 100%, the period in #E8920A amber. This is the visual hero — make it big.</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">5</span>
+      <span class="guide-text"><strong>Energy · Recovery · Focus</strong> — Inter Light, 7pt, letter-spacing +280, uppercase, white 30% opacity</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">6</span>
+      <span class="guide-text"><strong>Full-width 1px divider line</strong> — white 10% opacity, spanning full label width</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">7</span>
+      <span class="guide-text"><strong>NMN · CoQ10 · Alpha-GPC</strong> — Inter SemiBold, 6pt, letter-spacing +300, white 55% opacity</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">8</span>
+      <span class="guide-text"><strong>Clinically dosed · Full label</strong> — Inter Regular, 6pt, white 28% opacity, below</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">9</span>
+      <span class="guide-text"><strong>GMP · 3rd Party Tested · Vegan</strong> — Inter, 5.5pt, letter-spacing +220, white 20% opacity, at the very bottom</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">10</span>
+      <span class="guide-text"><strong>60 Capsules · 30 Servings</strong> — Inter, 6pt, white 22% opacity, bottom edge</span>
+    </div>
+  </div>
+
+  <div class="guide-section">
+    <h3>Background colors per product</h3>
+    <div class="guide-row">
+      <span class="guide-tag">P</span>
+      <span class="guide-text">
+        Performance — <span class="color-swatch"><span class="swatch" style="background:#1B2A4A;border:1px solid rgba(0,0,0,0.1)"></span>#1B2A4A</span> Deep navy. Lid slightly darker: <span class="color-swatch"><span class="swatch" style="background:#141f34;border:1px solid rgba(0,0,0,0.1)"></span>#141F34</span>
+      </span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">B</span>
+      <span class="guide-text">
+        Balance — <span class="color-swatch"><span class="swatch" style="background:#A0784A;border:1px solid rgba(0,0,0,0.1)"></span>#A0784A</span> Warm stone. Lid: <span class="color-swatch"><span class="swatch" style="background:#7a6248;border:1px solid rgba(0,0,0,0.1)"></span>#7A6248</span>
+      </span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">G</span>
+      <span class="guide-text">
+        Gut Health — <span class="color-swatch"><span class="swatch" style="background:#C4682A;border:1px solid rgba(0,0,0,0.1)"></span>#C4682A</span> Terracotta. Lid: <span class="color-swatch"><span class="swatch" style="background:#8c3e18;border:1px solid rgba(0,0,0,0.1)"></span>#8C3E18</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="guide-section">
+    <h3>What to remove vs current design</h3>
+    <div class="guide-row">
+      <span class="guide-tag">Remove</span>
+      <span class="guide-text">"Good things come to those who are" — the tagline on the label clutters the premium feel. Move it to marketing, not the can.</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">Remove</span>
+      <span class="guide-text">The large "knowing" wordmark as the visual hero — demote it to a small quiet mark above the product name.</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">Add</span>
+      <span class="guide-text">Formula series number (001 / 002 / 003) — creates a luxury collectible series feel, like a perfume house.</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">Add</span>
+      <span class="guide-text">3 key ingredient callouts in small text — signals clinical transparency without crowding.</span>
+    </div>
+    <div class="guide-row">
+      <span class="guide-tag">Add</span>
+      <span class="guide-text">Subtle drop shadow on the whole can image when placed on white — gives depth and cost.</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

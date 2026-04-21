@@ -15,7 +15,7 @@ export default function LabTestingPage() {
     <main className="min-h-screen bg-white">
       <Navbar />
       <section className="pt-36 pb-24 px-6 md:px-12 xl:px-16 max-w-[1440px] mx-auto">
-        <p className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#E8920A] mb-6">Lab Testing</p>
+        <p className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#1B2A4A] mb-6">Lab Testing</p>
         <h1 className="text-[clamp(3rem,6vw,6rem)] font-bold leading-[0.9] tracking-[-0.03em] text-[#111111] mb-6"
           style={{ fontFamily: "var(--font-playfair)" }}>
           Every batch. Every time.<br />
@@ -27,7 +27,7 @@ export default function LabTestingPage() {
         <div className="max-w-[720px] space-y-0 border border-[#111111]/[0.07] rounded-2xl overflow-hidden">
           {tests.map((t, i) => (
             <div key={i} className="flex gap-6 p-7 border-b border-[#111111]/[0.07] last:border-b-0">
-              <div className="w-1 h-1 rounded-full bg-[#E8920A] mt-2.5 flex-shrink-0" />
+              <div className="w-1 h-1 rounded-full bg-[#1B2A4A] mt-2.5 flex-shrink-0" />
               <div>
                 <h3 className="text-sm font-bold text-[#111111] mb-1.5" style={{ fontFamily: "var(--font-playfair)" }}>
                   {t.name}

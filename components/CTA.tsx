@@ -53,7 +53,7 @@ export default function CTA() {
             transition={{ duration: 1.05, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="col-span-12 md:col-span-8"
           >
-            <p className="text-[9px] font-mono text-[#E8920A] tracking-[0.38em] uppercase mb-7">
+            <p className="text-[9px] font-mono text-[#1B2A4A] tracking-[0.38em] uppercase mb-7">
               07 &mdash; Start Today
             </p>
             <h2
@@ -103,7 +103,7 @@ export default function CTA() {
         >
           {trustSignals.map((signal) => (
             <div key={signal} className="flex items-center gap-2.5">
-              <span className="w-1 h-1 rounded-full bg-[#E8920A]" aria-hidden />
+              <span className="w-1 h-1 rounded-full bg-[#1B2A4A]" aria-hidden />
               <span className="text-xs text-[#111111]/30 tracking-wide">{signal}</span>
             </div>
           ))}

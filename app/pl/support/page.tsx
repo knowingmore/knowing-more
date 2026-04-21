@@ -30,7 +30,7 @@ function FAQItem({ q, a, i }: { q: string; a: string; i: number }) {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between gap-4 py-6 text-left group"
       >
-        <span className="text-sm md:text-base font-medium text-[#111111] group-hover:text-[#E8920A] transition-colors duration-200">
+        <span className="text-sm md:text-base font-medium text-[#111111] group-hover:text-[#1B2A4A] transition-colors duration-200">
           {q}
         </span>
         <motion.span
@@ -81,7 +81,7 @@ export default function SupportPage() {
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 xl:px-16">
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#E8920A] mb-6">
+            className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#1B2A4A] mb-6">
             Wsparcie — Jesteśmy tu
           </motion.p>
           <motion.h1
@@ -102,10 +102,10 @@ export default function SupportPage() {
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 xl:px-16">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
             <div className="md:col-span-4">
-              <p className="text-[9px] font-mono tracking-[0.4em] uppercase text-[#E8920A]/70 mb-3">FAQ</p>
+              <p className="text-[9px] font-mono tracking-[0.4em] uppercase text-[#1B2A4A]/70 mb-3">FAQ</p>
               <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.02em] text-[#111111] mb-4"
                 style={{ fontFamily: "var(--font-playfair)" }}>
-                Najczęstsze pytania<span style={{ color: "#E8920A" }}>.</span>
+                Najczęstsze pytania<span style={{ color: "#1B2A4A" }}>.</span>
               </h2>
               <p className="text-sm text-[#111111]/38 leading-relaxed">
                 Nie znalazłeś odpowiedzi? Napisz do nas poniżej.
@@ -123,10 +123,10 @@ export default function SupportPage() {
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 xl:px-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             <div>
-              <p className="text-[9px] font-mono tracking-[0.4em] uppercase text-[#E8920A]/70 mb-3">Kontakt</p>
+              <p className="text-[9px] font-mono tracking-[0.4em] uppercase text-[#1B2A4A]/70 mb-3">Kontakt</p>
               <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.02em] text-[#111111] mb-4"
                 style={{ fontFamily: "var(--font-playfair)" }}>
-                Napisz do nas<span style={{ color: "#E8920A" }}>.</span>
+                Napisz do nas<span style={{ color: "#1B2A4A" }}>.</span>
               </h2>
               <p className="text-sm text-[#111111]/38 leading-relaxed mb-8">
                 Odpowiadamy na wszystkie pytania w ciągu 24 godzin w dni robocze. W sprawach dotyczących zamówień prosimy o podanie numeru zamówienia.
@@ -153,7 +153,7 @@ export default function SupportPage() {
                     initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
                     className="flex flex-col items-center gap-4 py-12 text-center"
                   >
-                    <div className="w-12 h-12 rounded-full bg-[#E8920A] flex items-center justify-center text-white text-xl">✓</div>
+                    <div className="w-12 h-12 rounded-full bg-[#1B2A4A] flex items-center justify-center text-white text-xl">✓</div>
                     <p className="text-lg font-bold text-[#111111]" style={{ fontFamily: "var(--font-playfair)" }}>
                       Wiadomość otrzymana.
                     </p>
@@ -174,7 +174,7 @@ export default function SupportPage() {
                           placeholder={field.placeholder}
                           value={field.value}
                           onChange={(e) => field.set(e.target.value)}
-                          className="w-full px-4 py-3.5 rounded-xl text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#E8920A]/40 transition-colors"
+                          className="w-full px-4 py-3.5 rounded-xl text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#1B2A4A]/40 transition-colors"
                         />
                       </div>
                     ))}
@@ -187,7 +187,7 @@ export default function SupportPage() {
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         rows={5}
-                        className="w-full px-4 py-3.5 rounded-xl text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#E8920A]/40 transition-colors resize-none"
+                        className="w-full px-4 py-3.5 rounded-xl text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#1B2A4A]/40 transition-colors resize-none"
                       />
                     </div>
                     <button type="submit"

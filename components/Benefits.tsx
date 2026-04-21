@@ -67,7 +67,7 @@ export default function Benefits() {
           transition={{ duration: 0.75, ease: "easeOut" }}
           className="text-center mb-16 md:mb-20 max-w-2xl mx-auto"
         >
-          <p className="text-xs font-semibold tracking-[0.25em] uppercase text-[#E8920A] mb-4">
+          <p className="text-xs font-semibold tracking-[0.25em] uppercase text-[#1B2A4A] mb-4">
             Why knowing more.
           </p>
           <h2
