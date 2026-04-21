@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>knowing more. — Product Renders</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #F4F1EC;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── PAGE SHELL ── */
+.page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 80px 60px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.header-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: #E8920A;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 500;
+  color: #111;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  margin-bottom: 16px;
+}
+
+.header-title .dim { color: rgba(17,17,17,0.2); font-style: italic; }
+.header-title .dot { color: #E8920A; }
+
+.header-sub {
+  font-size: 13px;
+  color: rgba(17,17,17,0.38);
+  letter-spacing: 0.01em;
+}
+
+/* ── PRODUCTS ROW ── */
+.products-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  align-items: end;
+}
+
+/* ── PRODUCT UNIT ── */
+.product-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+/* ── CAN SCENE ── */
+.can-scene {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 24px;
+}
+
+/* Shadow on floor */
+.can-shadow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 28px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.22) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(4px);
+}
+
+/* ── THE CAN ── */
+.can {
+  position: relative;
+  width: 220px;
+  height: 270px;
+  border-radius: 50% / 12px;  /* subtle perspective warp */
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+/* Can body */
+.can-body {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* Lid */
+.can-lid {
+  position: absolute;
+  top: -8px;
+  left: -3px;
+  right: -3px;
+  height: 52px;
+  border-radius: 14px 14px 10px 10px;
+  z-index: 20;
+  overflow: hidden;
+  box-shadow:
+    0 6px 16px rgba(0,0,0,0.25),
+    inset 0 -3px 8px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.can-lid-inner {
+  position: absolute;
+  inset: 0;
+}
+
+/* Lid rim */
+.can-lid::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  height: 8px;
+  background: rgba(0,0,0,0.3);
+}
+
+/* Body gradient overlay (cylinder effect) */
+.can-body-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Left dark edge */
+.can-edge-left {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0;
+  width: 28px;
+  background: linear-gradient(to right, rgba(0,0,0,0.35), transparent);
+  z-index: 3;
+}
+
+/* Right dark edge */
+.can-edge-right {
+  position: absolute;
+  top: 0; bottom: 0;
+  right: 0;
+  width: 28px;
+  background: linear-gradient(to left, rgba(0,0,0,0.30), transparent);
+  z-index: 3;
+}
+
+/* Specular highlight - main */
+.can-specular {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 22px;
+  width: 36px;
+  background: linear-gradient(to right,
+    rgba(255,255,255,0.13) 0%,
+    rgba(255,255,255,0.06) 60%,
+    transparent 100%);
+  z-index: 4;
+}
+
+/* Secondary soft highlight */
+.can-specular-2 {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  background: radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.05) 0%, transparent 70%);
+  z-index: 4;
+}
+
+/* Bottom edge darkening */
+.can-bottom-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  height: 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.2), transparent);
+  z-index: 4;
+}
+
+/* ── LABEL ── */
+.can-label {
+  position: absolute;
+  top: 52px;
+  bottom: 10px;
+  left: 4px;
+  right: 4px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 18px 14px;
+}
+
+/* Formula ID */
+.l-formula {
+  font-family: 'Inter', sans-serif;
+  font-size: 7.5px;
+  letter-spacing: 0.44em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Amber rule */
+.l-rule {
+  width: 28px;
+  height: 1px;
+  background: #E8920A;
+  opacity: 0.65;
+  margin: 9px auto;
+  flex-shrink: 0;
+}
+
+/* knowing more. */
+.l-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+/* Product name */
+.l-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  color: #fff;
+  text-align: center;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  font-size: 30px;
+}
+
+.l-name-dot { color: #E8920A; }
+
+/* Tagline */
+.l-tagline {
+  font-size: 6.5px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.27);
+  text-align: center;
+  margin-top: 7px;
+  font-weight: 400;
+}
+
+/* Mid divider */
+.l-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.09);
+  flex-shrink: 0;
+}
+
+/* Ingredients */
+.l-ingredients {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.l-ing-primary {
+  font-size: 6.5px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+}
+
+.l-ing-sub {
+  font-size: 6px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.24);
+  font-weight: 400;
+}
+
+/* Cert strip */
+.l-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.l-bottom-rule {
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin-bottom: 1px;
+}
+
+.l-certs {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.l-cert {
+  font-size: 5.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.18);
+  font-weight: 500;
+}
+
+.l-cert-dot {
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  flex-shrink: 0;
+}
+
+.l-servings {
+  font-size: 5.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.19);
+}
+
+/* ── PRODUCT INFO BELOW ── */
+.product-info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.product-series {
+  font-size: 8px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #E8920A;
+  font-weight: 600;
+}
+
+.product-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: #111;
+  letter-spacing: -0.01em;
+}
+
+.product-title .dot { color: #E8920A; }
+
+.product-tag {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: rgba(17,17,17,0.35);
+  font-weight: 400;
+}
+
+.product-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.price-old {
+  font-size: 12px;
+  color: rgba(17,17,17,0.25);
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+.price-new {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+}
+
+.price-save {
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: rgba(232,146,10,0.12);
+  color: #E8920A;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+/* ── COLOUR VARIANTS ── */
+/* Performance — Navy */
+.bg-navy { background: linear-gradient(160deg, #1e304e 0%, #1B2A4A 50%, #131e35 100%); }
+.lid-navy { background: linear-gradient(160deg, #131e35 0%, #111b2e 100%); }
+
+/* Balance — Stone */
+.bg-stone { background: linear-gradient(160deg, #b08a60 0%, #A0784A 50%, #7d6038 100%); }
+.lid-stone { background: linear-gradient(160deg, #7a6248 0%, #6a5440 100%); }
+
+/* Gut Health — Terracotta */
+.bg-terra { background: linear-gradient(160deg, #cc7235 0%, #C4682A 50%, #9e4e1f 100%); }
+.lid-terra { background: linear-gradient(160deg, #8c3e18 0%, #7a3515 100%); }
+
+/* ── BUNDLE SECTION ── */
+.bundle-section {
+  margin-top: 100px;
+  padding: 60px;
+  background: #111;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+}
+
+.bundle-eyebrow {
+  font-size: 8px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: #E8920A;
+  font-weight: 600;
+  text-align: center;
+}
+
+.bundle-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  color: white;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-align: center;
+  line-height: 1;
+}
+
+.bundle-title .dim { color: rgba(255,255,255,0.25); font-style: italic; }
+.bundle-title .dot { color: #E8920A; }
+
+.bundle-cans {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bundle-cans .can {
+  width: 150px;
+  height: 186px;
+}
+
+.bundle-cans .can-lid {
+  height: 36px;
+}
+
+.bundle-cans .l-formula { font-size: 6px; letter-spacing: 0.38em; }
+.bundle-cans .l-brand { font-size: 7.5px; margin-bottom: 6px; }
+.bundle-cans .l-name { font-size: 20px; }
+.bundle-cans .l-tagline { font-size: 5px; margin-top: 5px; }
+.bundle-cans .l-ing-primary { font-size: 5.5px; }
+.bundle-cans .l-ing-sub { font-size: 5px; }
+.bundle-cans .l-cert { font-size: 4.5px; }
+.bundle-cans .l-servings { font-size: 4.5px; }
+.bundle-cans .l-rule { width: 20px; margin: 6px auto; }
+.bundle-cans .can-label { padding: 12px 12px 10px; }
+
+/* Middle can slightly taller in bundle */
+.bundle-cans .can-mid {
+  width: 165px;
+  height: 205px;
+  transform: translateY(-10px);
+}
+
+.bundle-cans .can-mid .l-name { font-size: 22px; }
+
+.bundle-price-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.bundle-price-old { font-size: 16px; color: rgba(255,255,255,0.25); text-decoration: line-through; }
+.bundle-price-new { font-family: 'Playfair Display', serif; font-size: 36px; color: white; font-weight: 500; }
+.bundle-save { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; background: #E8920A; color: white; padding: 6px 14px; border-radius: 20px; font-weight: 700; }
+
+.bundle-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 36px;
+  border-radius: 50px;
+  background: white;
+  color: #111;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+}
+
+.bundle-btn span { color: #E8920A; font-size: 16px; }
+
+/* ── DETAIL CALLOUTS ── */
+.callouts {
+  margin-top: 100px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(17,17,17,0.08);
+  border: 1px solid rgba(17,17,17,0.08);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.callout {
+  background: white;
+  padding: 36px 32px;
+}
+
+.callout-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(232,146,10,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.callout-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: #111;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.callout-title .dot { color: #E8920A; }
+
+.callout-text {
+  font-size: 12px;
+  color: rgba(17,17,17,0.45);
+  line-height: 1.75;
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="header">
+    <p class="header-eyebrow">knowing more. — Product Renders · New Label Concept</p>
+    <h1 class="header-title">
+      Formula Series<span class="dot">.</span><br/>
+      <span class="dim">001 · 002 · 003</span>
+    </h1>
+    <p class="header-sub">Redesigned label · Prestige direction · Canva-ready specification</p>
+  </div>
+
+  <!-- ── THREE PRODUCTS ── -->
+  <div class="products-row">
+
+    <!-- PERFORMANCE -->
+    <div class="product-unit">
+      <div class="can-scene">
+        <div class="can-shadow"></div>
+        <div class="can">
+          <div class="can-body bg-navy">
+            <div class="can-edge-left"></div>
+            <div class="can-edge-right"></div>
+            <div class="can-specular"></div>
+            <div class="can-specular-2"></div>
+            <div class="can-bottom-fade"></div>
+          </div>
+          <div class="can-lid">
+            <div class="can-lid-inner lid-navy"></div>
+          </div>
+          <div class="can-label">
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <span class="l-formula">Formula 001</span>
+              <div class="l-rule"></div>
+              <span class="l-brand">knowing more.</span>
+              <div class="l-name">Performance<span class="l-name-dot">.</span></div>
+              <div class="l-tagline">Energy · Recovery · Focus</div>
+            </div>
+            <div class="l-divider"></div>
+            <div class="l-ingredients">
+              <span class="l-ing-primary">NMN · CoQ10 · Alpha-GPC</span>
+              <span class="l-ing-sub">Clinically dosed · Full label</span>
+            </div>
+            <div class="l-bottom">
+              <div class="l-bottom-rule"></div>
+              <div class="l-certs">
+                <span class="l-cert">GMP</span>
+                <span class="l-cert-dot"></span>
+                <span class="l-cert">3rd Party Tested</span>
+                <span class="l-cert-dot"></span>
+                <span class="l-cert">Vegan</span>
+              </div>
+              <span class="l-servings">60 Capsules · 30 Servings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="product-info">
+        <span class="product-series">Formula 001</span>
+        <span class="product-title">Performance<span class="dot">.</span></span>
+        <span class="product-tag">Energy · Recovery · Focus</span>
+        <div class="product-price-row">
+          <span class="price-old">229,00 zł</span>
+          <span class="price-new">109,00 zł</span>
+          <span class="price-save">Save 52%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BALANCE -->
+    <div class="product-unit">
+      <div class="can-scene">
+        <div class="can-shadow"></div>
+        <div class="can">
+          <div class="can-body bg-stone">
+            <div class="can-edge-left"></div>
+            <div class="can-edge-right"></div>
+            <div class="can-specular"></div>
+            <div class="can-specular-2"></div>
+            <div class="can-bottom-fade"></div>
+          </div>
+          <div class="can-lid">
+            <div class="can-lid-inner lid-stone"></div>
+          </div>
+          <div class="can-label">
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <span class="l-formula">Formula 002</span>
+              <div class="l-rule"></div>
+              <span class="l-brand">knowing more.</span>
+              <div class="l-name">Balance<span class="l-name-dot">.</span></div>
+              <div class="l-tagline">Cortisol · Sleep · Hormones</div>
+            </div>
+            <div class="l-divider"></div>
+            <div class="l-ingredients">
+              <span class="l-ing-primary">KSM-66 · L-Theanine · Magnesium</span>
+              <span class="l-ing-sub">Clinically dosed · Full label</span>
+            </div>
+            <div class="l-bottom">
+              <div class="l-bottom-rule"></div>
+              <div class="l-certs">
+                <span class="l-cert">GMP</span>
+                <span class="l-cert-dot"></span>
+                <span class="l-cert">3rd Party Tested</span>
+                <span class="l-cert-dot"></span>
+                <span class="l-cert">Vegan</span>
+              </div>
+              <span class="l-servings">60 Capsules · 30 Servings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="product-info">
+        <span class="product-series">Formula 002</span>
+        <span class="product-title">Balance<span class="dot">.</span></span>
+        <span class="product-tag">Cortisol · Sleep · Hormones</span>
+        <div class="product-price-row">
+          <span class="price-old">229,00 zł</span>
+          <span class="price-new">109,00 zł</span>
+          <span class="price-save">Save 52%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUT HEALTH -->
+    <div class="product-unit">
+      <div class="can-scene">
+        <div class="can-shadow"></div>
+        <div class="can">
+          <div class="can-body bg-terra">
+            <div class="can-edge-left"></div>
+            <div class="can-edge-right"></div>
+            <div class="can-specular"></div>
+            <div class="can-specular-2"></div>
+            <div class="can-bottom-fade"></div>
+          </div>
+          <div class="can-lid">
+            <div class="can-lid-inner lid-terra"></div>
+          </div>
+          <div class="can-label">
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <span class="l-formula">Formula 003</span>
+              <div class="l-rule"></div>
+              <span class="l-brand">knowing more.</span>
+              <div class="l-name">Gut Health<span class="l-name-dot">.</span></div>
+              <div class="l-tagline">Microbiome · Digestion · Immunity</div>
+            </div>
+            <div class="l-divider"></div>
+            <div class="l-ingredients">
+              <span class="l-ing-primary">50B CFU · L-Glutamine · Zinc</span>
+              <span class="l-ing-sub">Clinically dosed · Full label</span>
+            </div>
+            <div class="l-bottom">
+              <div class="l-bottom-rule"></div>
+              <div class="l-certs">
+                <span class="l-cert">GMP</span>
+                <span class="l-cert-dot"></span>
+                <span class="l-cert">3rd Party Tested</span>
+                <span class="l-cert-dot"></span>
+                <span class="l-cert">Vegan</span>
+              </div>
+              <span class="l-servings">30 Capsules · 30 Servings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="product-info">
+        <span class="product-series">Formula 003</span>
+        <span class="product-title">Gut Health<span class="dot">.</span></span>
+        <span class="product-tag">Microbiome · Digestion · Immunity</span>
+        <div class="product-price-row">
+          <span class="price-old">229,00 zł</span>
+          <span class="price-new">109,00 zł</span>
+          <span class="price-save">Save 52%</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── BUNDLE ── -->
+  <div class="bundle-section">
+    <p class="bundle-eyebrow">Complete System · All Three Formulas</p>
+    <h2 class="bundle-title">
+      The full protocol<span class="dot">.</span><br/>
+      <span class="dim">Performance · Balance · Gut Health</span>
+    </h2>
+
+    <div class="bundle-cans">
+      <!-- Performance small -->
+      <div class="can">
+        <div class="can-body bg-navy">
+          <div class="can-edge-left"></div><div class="can-edge-right"></div>
+          <div class="can-specular"></div><div class="can-bottom-fade"></div>
+        </div>
+        <div class="can-lid"><div class="can-lid-inner lid-navy"></div></div>
+        <div class="can-label">
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <span class="l-formula">Formula 001</span>
+            <div class="l-rule"></div>
+            <span class="l-brand">knowing more.</span>
+            <div class="l-name">Performance<span class="l-name-dot">.</span></div>
+            <div class="l-tagline">Energy · Recovery · Focus</div>
+          </div>
+          <div class="l-divider"></div>
+          <div class="l-ingredients">
+            <span class="l-ing-primary">NMN · CoQ10 · Alpha-GPC</span>
+            <span class="l-ing-sub">Clinically dosed</span>
+          </div>
+          <div class="l-bottom">
+            <div class="l-bottom-rule"></div>
+            <div class="l-certs">
+              <span class="l-cert">GMP</span><span class="l-cert-dot"></span>
+              <span class="l-cert">Vegan</span>
+            </div>
+            <span class="l-servings">60 Caps · 30 Servings</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Balance — hero centre -->
+      <div class="can can-mid">
+        <div class="can-body bg-stone">
+          <div class="can-edge-left"></div><div class="can-edge-right"></div>
+          <div class="can-specular"></div><div class="can-bottom-fade"></div>
+        </div>
+        <div class="can-lid"><div class="can-lid-inner lid-stone"></div></div>
+        <div class="can-label">
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <span class="l-formula">Formula 002</span>
+            <div class="l-rule"></div>
+            <span class="l-brand">knowing more.</span>
+            <div class="l-name">Balance<span class="l-name-dot">.</span></div>
+            <div class="l-tagline">Cortisol · Sleep · Hormones</div>
+          </div>
+          <div class="l-divider"></div>
+          <div class="l-ingredients">
+            <span class="l-ing-primary">KSM-66 · L-Theanine · Mg</span>
+            <span class="l-ing-sub">Clinically dosed</span>
+          </div>
+          <div class="l-bottom">
+            <div class="l-bottom-rule"></div>
+            <div class="l-certs">
+              <span class="l-cert">GMP</span><span class="l-cert-dot"></span>
+              <span class="l-cert">Vegan</span>
+            </div>
+            <span class="l-servings">60 Caps · 30 Servings</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gut Health small -->
+      <div class="can">
+        <div class="can-body bg-terra">
+          <div class="can-edge-left"></div><div class="can-edge-right"></div>
+          <div class="can-specular"></div><div class="can-bottom-fade"></div>
+        </div>
+        <div class="can-lid"><div class="can-lid-inner lid-terra"></div></div>
+        <div class="can-label">
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <span class="l-formula">Formula 003</span>
+            <div class="l-rule"></div>
+            <span class="l-brand">knowing more.</span>
+            <div class="l-name">Gut Health<span class="l-name-dot">.</span></div>
+            <div class="l-tagline">Microbiome · Digestion</div>
+          </div>
+          <div class="l-divider"></div>
+          <div class="l-ingredients">
+            <span class="l-ing-primary">50B CFU · L-Glutamine</span>
+            <span class="l-ing-sub">Clinically dosed</span>
+          </div>
+          <div class="l-bottom">
+            <div class="l-bottom-rule"></div>
+            <div class="l-certs">
+              <span class="l-cert">GMP</span><span class="l-cert-dot"></span>
+              <span class="l-cert">Vegan</span>
+            </div>
+            <span class="l-servings">30 Caps · 30 Servings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bundle-price-row">
+      <span class="bundle-price-old">687,00 zł</span>
+      <span class="bundle-price-new">299,00 zł</span>
+      <span class="bundle-save">Save 56%</span>
+    </div>
+
+    <button class="bundle-btn">
+      Join the waitlist <span>→</span>
+    </button>
+  </div>
+
+  <!-- ── CALLOUTS ── -->
+  <div class="callouts">
+    <div class="callout">
+      <div class="callout-icon">◎</div>
+      <p class="callout-title">Formula series<span class="dot">.</span></p>
+      <p class="callout-text">001 / 002 / 003 — a numbered luxury series, like a perfume house. Each formula has its own identity within a cohesive system.</p>
+    </div>
+    <div class="callout">
+      <div class="callout-icon">✦</div>
+      <p class="callout-title">Clinical transparency<span class="dot">.</span></p>
+      <p class="callout-text">Key ingredients named on the label at a glance. No proprietary blends. No hiding. The formulas stand on their own merit.</p>
+    </div>
+    <div class="callout">
+      <div class="callout-icon">◈</div>
+      <p class="callout-title">Prestige restraint<span class="dot">.</span></p>
+      <p class="callout-text">The product name is the hero. The brand steps back. White space and a single amber accent do more than any decoration could.</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

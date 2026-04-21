@@ -254,7 +254,7 @@ function ProductPanel({
               }}
             >
               {product.name}
-              <span style={{ color: product.accent === "#111111" ? "#E8920A" : product.accent }}>.</span>
+              <span style={{ color: product.accent === "#111111" ? "#C4682A" : product.accent }}>.</span>
             </h2>
 
             <p className="mt-4 text-base font-medium text-[#111111]/40 tracking-wide">
@@ -321,7 +321,7 @@ export default function Products({ locale = "en" }: { locale?: "en" | "pl" }) {
             animate={headerInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="text-[9px] font-mono text-[#E8920A] tracking-[0.38em] uppercase mb-5">
+            <p className="text-[9px] font-mono text-[#C4682A] tracking-[0.38em] uppercase mb-5">
               {t.sectionLabel}
             </p>
             <h2

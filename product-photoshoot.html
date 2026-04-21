@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>knowing more. — Product Photoshoot</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #0c0c0c;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── STUDIO SCENE ── */
+.studio {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 40px 60px;
+  overflow: hidden;
+}
+
+/* Seamless paper backdrop */
+.studio-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 20%, rgba(30,26,20,1) 0%, rgba(10,10,10,1) 100%);
+  z-index: 0;
+}
+
+/* Studio floor line */
+.studio-floor {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 45%;
+  background: linear-gradient(to top, rgba(5,5,5,1) 0%, rgba(12,12,12,0) 100%);
+  z-index: 0;
+}
+
+/* Key light — upper left */
+.studio-light-key {
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(ellipse, rgba(255,240,200,0.04) 0%, transparent 65%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Fill light — upper right soft */
+.studio-light-fill {
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 50%;
+  height: 60%;
+  background: radial-gradient(ellipse, rgba(200,210,255,0.02) 0%, transparent 65%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Vignette */
+.studio-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 90% 90% at 50% 50%, transparent 50%, rgba(0,0,0,0.65) 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── HEADER ── */
+.studio-header {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.studio-eyebrow {
+  font-size: 8.5px;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: #E8920A;
+  font-weight: 600;
+  margin-bottom: 14px;
+  opacity: 0.85;
+}
+
+.studio-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 4rem);
+  font-weight: 400;
+  color: rgba(255,255,255,0.88);
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+}
+
+.studio-title .dim { color: rgba(255,255,255,0.2); font-style: italic; }
+.studio-title .dot { color: #E8920A; }
+
+/* ── CANVAS STAGE ── */
+.stage {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  gap: 0;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+canvas.product-canvas {
+  display: block;
+  cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+
+canvas.product-canvas:hover { transform: translateY(-12px) scale(1.02); }
+
+/* ── PRODUCT LABELS BELOW ── */
+.product-labels {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  gap: 0;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.product-label {
+  text-align: center;
+  padding: 0 24px;
+}
+
+.product-label-num {
+  font-size: 8px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: #E8920A;
+  font-weight: 600;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+.product-label-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  color: rgba(255,255,255,0.82);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.product-label-name .dot { color: #E8920A; }
+
+.product-label-tag {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: rgba(255,255,255,0.25);
+  margin-top: 4px;
+}
+
+.product-label-price {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.price-old { font-size: 11px; color: rgba(255,255,255,0.18); text-decoration: line-through; }
+.price-new { font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 600; }
+.price-badge {
+  font-size: 7.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(232,146,10,0.15);
+  color: #E8920A;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+/* ── DIVIDER ── */
+.studio-divider {
+  position: relative;
+  z-index: 10;
+  width: 1px;
+  height: 60px;
+  background: rgba(255,255,255,0.06);
+  margin: 56px auto 0;
+}
+
+/* ── BUNDLE SCENE ── */
+.bundle-scene {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 80px 40px 60px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  width: 100%;
+}
+
+.bundle-eyebrow {
+  font-size: 8px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: #E8920A;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.bundle-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 3vw, 2.8rem);
+  color: rgba(255,255,255,0.82);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: 56px;
+}
+
+.bundle-title .dim { color: rgba(255,255,255,0.2); font-style: italic; }
+.bundle-title .dot { color: #E8920A; }
+
+.bundle-stage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 0;
+}
+
+.bundle-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 48px;
+}
+
+.b-old { font-size: 14px; color: rgba(255,255,255,0.18); text-decoration: line-through; }
+.b-new { font-family: 'Playfair Display', serif; font-size: 32px; color: rgba(255,255,255,0.82); font-weight: 400; }
+.b-badge { font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; background: #E8920A; color: white; padding: 6px 14px; border-radius: 20px; font-weight: 700; }
+
+.bundle-btn {
+  margin-top: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 36px;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent;
+  color: rgba(255,255,255,0.65);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.bundle-btn:hover { border-color: #E8920A; color: #E8920A; }
+.bundle-btn .arrow { color: #E8920A; }
+
+/* ── FOOTER ── */
+.studio-footer {
+  position: relative;
+  z-index: 10;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 28px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.footer-brand { font-family: 'Playfair Display', serif; font-size: 13px; color: rgba(255,255,255,0.2); }
+.footer-note { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.12); }
+</style>
+</head>
+<body>
+
+<!-- ── STUDIO SCENE ── -->
+<div class="studio">
+  <div class="studio-bg"></div>
+  <div class="studio-floor"></div>
+  <div class="studio-light-key"></div>
+  <div class="studio-light-fill"></div>
+  <div class="studio-vignette"></div>
+
+  <div class="studio-header">
+    <p class="studio-eyebrow">knowing more. — Formula Series 2025</p>
+    <h1 class="studio-title">
+      Three formulas<span class="dot">.</span><br/>
+      <span class="dim">Performance · Balance · Gut Health</span>
+    </h1>
+  </div>
+
+  <!-- ── CANVASES ── -->
+  <div class="stage">
+    <canvas id="c-performance" class="product-canvas"></canvas>
+    <canvas id="c-balance" class="product-canvas"></canvas>
+    <canvas id="c-gut" class="product-canvas"></canvas>
+  </div>
+
+  <!-- Labels -->
+  <div class="product-labels" id="product-labels">
+    <div class="product-label" style="width:320px">
+      <p class="product-label-num">Formula 001</p>
+      <p class="product-label-name">Performance<span class="dot">.</span></p>
+      <p class="product-label-tag">Energy · Recovery · Focus</p>
+      <div class="product-label-price">
+        <span class="price-old">229,00 zł</span>
+        <span class="price-new">109,00 zł</span>
+        <span class="price-badge">Save 52%</span>
+      </div>
+    </div>
+    <div class="product-label" style="width:320px">
+      <p class="product-label-num">Formula 002</p>
+      <p class="product-label-name">Balance<span class="dot">.</span></p>
+      <p class="product-label-tag">Cortisol · Sleep · Hormones</p>
+      <div class="product-label-price">
+        <span class="price-old">229,00 zł</span>
+        <span class="price-new">109,00 zł</span>
+        <span class="price-badge">Save 52%</span>
+      </div>
+    </div>
+    <div class="product-label" style="width:320px">
+      <p class="product-label-num">Formula 003</p>
+      <p class="product-label-name">Gut Health<span class="dot">.</span></p>
+      <p class="product-label-tag">Microbiome · Digestion · Immunity</p>
+      <div class="product-label-price">
+        <span class="price-old">229,00 zł</span>
+        <span class="price-new">109,00 zł</span>
+        <span class="price-badge">Save 52%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── BUNDLE SCENE ── -->
+<div class="bundle-scene">
+  <div class="studio-bg" style="position:absolute;inset:0;z-index:0;"></div>
+  <div class="studio-vignette" style="position:absolute;inset:0;z-index:0;pointer-events:none;"></div>
+  <div style="position:relative;z-index:10;">
+    <p class="bundle-eyebrow">Complete System</p>
+    <h2 class="bundle-title">The full protocol<span class="dot">.</span><br/><span class="dim">One system. Three pillars.</span></h2>
+    <div class="bundle-stage">
+      <canvas id="c-b-perf" class="product-canvas"></canvas>
+      <canvas id="c-b-bal" class="product-canvas"></canvas>
+      <canvas id="c-b-gut" class="product-canvas"></canvas>
+    </div>
+    <div class="bundle-price-row">
+      <span class="b-old">687,00 zł</span>
+      <span class="b-new">299,00 zł</span>
+      <span class="b-badge">Save 56%</span>
+    </div>
+    <div><button class="bundle-btn">Join the waitlist <span class="arrow">→</span></button></div>
+  </div>
+</div>
+
+<div class="studio-footer">
+  <span class="footer-brand">knowing more.</span>
+  <span class="footer-note">Formula Series · 001 · 002 · 003</span>
+</div>
+
+<script>
+// ── HELPERS ──────────────────────────────────────────────
+function hex2rgb(hex) {
+  const n = parseInt(hex.replace('#',''), 16);
+  return [(n>>16)&255, (n>>8)&255, n&255];
+}
+
+function adj([r,g,b], d) {
+  return `rgb(${Math.max(0,Math.min(255,r+d))},${Math.max(0,Math.min(255,g+d))},${Math.max(0,Math.min(255,b+d))})`;
+}
+
+function adjA([r,g,b], d, a) {
+  return `rgba(${Math.max(0,Math.min(255,r+d))},${Math.max(0,Math.min(255,g+d))},${Math.max(0,Math.min(255,b+d))},${a})`;
+}
+
+// ── MAIN RENDERER ────────────────────────────────────────
+function drawProduct(canvasId, config, scale = 1) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  const DPR = window.devicePixelRatio || 2;
+
+  // Can geometry
+  const CW   = 220 * scale;   // can width
+  const CH   = 290 * scale;   // can body height
+  const LH   = 55  * scale;   // lid height
+  const ER   = 0.22;           // ellipse ratio (perspective)
+  const LW   = CW + 10*scale; // lid slightly wider
+
+  const RX   = CW / 2;        // body radius x
+  const RY   = RX * ER;       // body ellipse ry
+  const LRX  = LW / 2;        // lid radius x
+  const LRY  = LRX * ER;      // lid ellipse ry
+
+  // Canvas size with padding for shadows
+  const PAD  = 80 * scale;
+  const W    = CW + PAD * 2;
+  const H    = CH + LH + LRY + PAD * 2 + 60 * scale; // extra for reflection
+
+  canvas.width  = W * DPR;
+  canvas.height = H * DPR;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(DPR, DPR);
+
+  // Origin: center-top of body (just below lid)
+  const OX = W / 2;
+  const OY = PAD + LH + LRY;
+
+  // Key positions
+  const bodyTop    = OY;
+  const bodyBottom = OY + CH;
+
+  const rgb  = hex2rgb(config.color);
+  const lrgb = hex2rgb(config.lidColor);
+
+  // ── AMBIENT SURFACE GLOW ──
+  const glowGrad = ctx.createRadialGradient(OX, bodyBottom + RY, 0, OX, bodyBottom + RY, RX * 2.4);
+  glowGrad.addColorStop(0,   adjA(rgb, -20, 0.18));
+  glowGrad.addColorStop(0.5, adjA(rgb, -40, 0.05));
+  glowGrad.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.save();
+  ctx.translate(OX, bodyBottom + RY);
+  ctx.scale(1, 0.28);
+  ctx.translate(-OX, -(bodyBottom + RY));
+  ctx.beginPath();
+  ctx.arc(OX, bodyBottom + RY, RX * 2.4, 0, Math.PI * 2);
+  ctx.fillStyle = glowGrad;
+  ctx.fill();
+  ctx.restore();
+
+  // ── HARD SHADOW (cast) ──
+  const shadowGrad = ctx.createRadialGradient(OX + RX * 0.3, bodyBottom + RY * 1.2, 0, OX + RX * 0.3, bodyBottom + RY * 1.2, RX * 2);
+  shadowGrad.addColorStop(0,   'rgba(0,0,0,0.55)');
+  shadowGrad.addColorStop(0.35,'rgba(0,0,0,0.2)');
+  shadowGrad.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.save();
+  ctx.translate(OX, bodyBottom + RY * 1.2);
+  ctx.scale(1.5, 0.22);
+  ctx.translate(-OX, -(bodyBottom + RY * 1.2));
+  ctx.beginPath();
+  ctx.arc(OX + RX * 0.3, bodyBottom + RY * 1.2, RX * 2, 0, Math.PI * 2);
+  ctx.fillStyle = shadowGrad;
+  ctx.fill();
+  ctx.restore();
+
+  // ── FLOOR REFLECTION ──
+  const refGrad = ctx.createLinearGradient(0, bodyBottom + RY, 0, bodyBottom + RY + 80 * scale);
+  refGrad.addColorStop(0,   adjA(rgb, -10, 0.22));
+  refGrad.addColorStop(0.4, adjA(rgb, -30, 0.08));
+  refGrad.addColorStop(1,   'rgba(0,0,0,0)');
+
+  ctx.save();
+  ctx.translate(OX, bodyBottom + RY * 2);
+  ctx.scale(1, -1);
+  ctx.translate(-OX, -(bodyBottom + RY * 2));
+
+  // Clip to ellipse zone
+  ctx.beginPath();
+  ctx.ellipse(OX, bodyBottom + RY, RX * 0.85, RY * 0.85, 0, 0, Math.PI, false);
+  ctx.rect(OX - RX, bodyBottom + RY, CW, 80 * scale);
+  // No actual clipping, just draw reflection body shape
+  ctx.restore();
+
+  // Draw reflection as faded cylinder
+  ctx.save();
+  ctx.globalAlpha = 0.18;
+  ctx.translate(OX, bodyBottom + RY * 2);
+  ctx.scale(1, -0.35);
+  ctx.translate(-OX, -(bodyBottom + RY * 2));
+
+  // Body reflect
+  ctx.beginPath();
+  ctx.moveTo(OX - RX, bodyTop);
+  ctx.lineTo(OX - RX, bodyBottom);
+  ctx.ellipse(OX, bodyBottom, RX, RY, 0, Math.PI, 0, false);
+  ctx.lineTo(OX + RX, bodyTop);
+  ctx.ellipse(OX, bodyTop, RX, RY, 0, 0, Math.PI, false);
+  ctx.closePath();
+  const refBodyGrad = ctx.createLinearGradient(OX - RX, 0, OX + RX, 0);
+  refBodyGrad.addColorStop(0,    adj(rgb, -50));
+  refBodyGrad.addColorStop(0.3,  adj(rgb, 0));
+  refBodyGrad.addColorStop(0.55, adj(rgb, 15));
+  refBodyGrad.addColorStop(1,    adj(rgb, -45));
+  ctx.fillStyle = refBodyGrad;
+  ctx.fill();
+  ctx.restore();
+
+  // Fade the reflection with gradient
+  ctx.save();
+  const refFade = ctx.createLinearGradient(0, bodyBottom + RY, 0, bodyBottom + RY + 90*scale);
+  refFade.addColorStop(0,   'rgba(0,0,0,0)');
+  refFade.addColorStop(0.3, 'rgba(0,0,0,0.6)');
+  refFade.addColorStop(1,   'rgba(0,0,0,1)');
+  ctx.fillStyle = refFade;
+  ctx.fillRect(OX - RX - 10, bodyBottom + RY, CW + 20, 90 * scale);
+  ctx.restore();
+
+  // ── CAN BODY ──
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(OX - RX, bodyTop);
+  ctx.lineTo(OX - RX, bodyBottom);
+  ctx.ellipse(OX, bodyBottom, RX, RY, 0, Math.PI, 0, false);
+  ctx.lineTo(OX + RX, bodyTop);
+  ctx.ellipse(OX, bodyTop, RX, RY, 0, 0, Math.PI, false);
+  ctx.closePath();
+  ctx.clip();
+
+  // Base color gradient (cylinder shading)
+  const bodyGrad = ctx.createLinearGradient(OX - RX, 0, OX + RX, 0);
+  bodyGrad.addColorStop(0,    adj(rgb, -70));
+  bodyGrad.addColorStop(0.06, adj(rgb, -42));
+  bodyGrad.addColorStop(0.16, adj(rgb, -12));
+  bodyGrad.addColorStop(0.38, adj(rgb,  8));
+  bodyGrad.addColorStop(0.55, adj(rgb, 14));
+  bodyGrad.addColorStop(0.72, adj(rgb,  4));
+  bodyGrad.addColorStop(0.86, adj(rgb, -16));
+  bodyGrad.addColorStop(1,    adj(rgb, -62));
+  ctx.fillStyle = bodyGrad;
+  ctx.fillRect(OX - RX, bodyTop - RY, CW, CH + RY * 2);
+
+  // Primary specular highlight (sharp strip)
+  const spec1 = ctx.createLinearGradient(OX - RX, 0, OX + RX * 0.3, 0);
+  spec1.addColorStop(0,    'rgba(255,255,255,0)');
+  spec1.addColorStop(0.14, 'rgba(255,255,255,0)');
+  spec1.addColorStop(0.20, 'rgba(255,255,255,0.18)');
+  spec1.addColorStop(0.24, 'rgba(255,255,255,0.28)');
+  spec1.addColorStop(0.27, 'rgba(255,255,255,0.18)');
+  spec1.addColorStop(0.34, 'rgba(255,255,255,0.04)');
+  spec1.addColorStop(1,    'rgba(255,255,255,0)');
+  ctx.fillStyle = spec1;
+  ctx.fillRect(OX - RX, bodyTop, CW, CH);
+
+  // Secondary broad highlight
+  const spec2 = ctx.createLinearGradient(OX - RX, 0, OX + RX, 0);
+  spec2.addColorStop(0,    'rgba(255,255,255,0)');
+  spec2.addColorStop(0.28, 'rgba(255,255,255,0)');
+  spec2.addColorStop(0.45, 'rgba(255,255,255,0.04)');
+  spec2.addColorStop(0.55, 'rgba(255,255,255,0.06)');
+  spec2.addColorStop(0.65, 'rgba(255,255,255,0.02)');
+  spec2.addColorStop(1,    'rgba(255,255,255,0)');
+  ctx.fillStyle = spec2;
+  ctx.fillRect(OX - RX, bodyTop, CW, CH);
+
+  // Top rim ambient occlusion (dark at top edge)
+  const aoTop = ctx.createLinearGradient(0, bodyTop, 0, bodyTop + 28 * scale);
+  aoTop.addColorStop(0,   'rgba(0,0,0,0.28)');
+  aoTop.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.fillStyle = aoTop;
+  ctx.fillRect(OX - RX, bodyTop, CW, 28 * scale);
+
+  // Bottom AO
+  const aoBot = ctx.createLinearGradient(0, bodyBottom - 20*scale, 0, bodyBottom);
+  aoBot.addColorStop(0,   'rgba(0,0,0,0)');
+  aoBot.addColorStop(1,   'rgba(0,0,0,0.30)');
+  ctx.fillStyle = aoBot;
+  ctx.fillRect(OX - RX, bodyBottom - 20*scale, CW, 20*scale);
+
+  ctx.restore();
+
+  // ── BOTTOM ELLIPSE ──
+  ctx.beginPath();
+  ctx.ellipse(OX, bodyBottom, RX, RY, 0, 0, Math.PI * 2);
+  const botEllipseGrad = ctx.createRadialGradient(OX - RX*0.2, bodyBottom, 0, OX, bodyBottom, RX);
+  botEllipseGrad.addColorStop(0,   adj(rgb, -15));
+  botEllipseGrad.addColorStop(0.6, adj(rgb, -35));
+  botEllipseGrad.addColorStop(1,   adj(rgb, -55));
+  ctx.fillStyle = botEllipseGrad;
+  ctx.fill();
+
+  // ── LABEL TEXT ON BODY ──
+  const lbl = config.label;
+  const labelTop    = bodyTop + 28 * scale;
+  const labelBottom = bodyBottom - 16 * scale;
+  const labelH      = labelBottom - labelTop;
+
+  // Formula number
+  ctx.save();
+  ctx.globalAlpha = 0.32;
+  ctx.font = `500 ${9*scale}px "Inter"`;
+  ctx.letterSpacing = `${4*scale}px`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText(lbl.formula.toUpperCase(), OX, labelTop);
+  ctx.restore();
+
+  // Amber rule
+  const ruleY = labelTop + 18 * scale;
+  ctx.save();
+  ctx.globalAlpha = 0.6;
+  ctx.beginPath();
+  ctx.moveTo(OX - 14 * scale, ruleY);
+  ctx.lineTo(OX + 14 * scale, ruleY);
+  ctx.strokeStyle = '#E8920A';
+  ctx.lineWidth = 1.2 * scale;
+  ctx.stroke();
+  ctx.restore();
+
+  // knowing more.
+  ctx.save();
+  ctx.globalAlpha = 0.38;
+  ctx.font = `400 ${9.5*scale}px "Playfair Display"`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('knowing more.', OX, ruleY + 8 * scale);
+  ctx.restore();
+
+  // Product name — HERO
+  const nameSize = lbl.name.length > 8 ? 26 * scale : 30 * scale;
+  ctx.save();
+  ctx.globalAlpha = 0.95;
+  ctx.font = `500 ${nameSize}px "Playfair Display"`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText(lbl.name, OX - 6 * scale, ruleY + 24 * scale);
+
+  // Amber dot
+  const nameWidth = ctx.measureText(lbl.name).width;
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#E8920A';
+  ctx.font = `500 ${nameSize}px "Playfair Display"`;
+  ctx.fillText('.', OX + nameWidth / 2, ruleY + 24 * scale);
+  ctx.restore();
+
+  // Tagline
+  ctx.save();
+  ctx.globalAlpha = 0.26;
+  ctx.font = `400 ${6.5*scale}px "Inter"`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText(lbl.tagline.toUpperCase(), OX, ruleY + 24 * scale + nameSize + 7 * scale);
+  ctx.restore();
+
+  // Mid divider
+  const midY = labelTop + labelH * 0.62;
+  ctx.save();
+  ctx.globalAlpha = 0.09;
+  ctx.beginPath();
+  ctx.moveTo(OX - RX * 0.72, midY);
+  ctx.lineTo(OX + RX * 0.72, midY);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 0.8 * scale;
+  ctx.stroke();
+  ctx.restore();
+
+  // Ingredients
+  ctx.save();
+  ctx.globalAlpha = 0.50;
+  ctx.font = `600 ${6.5*scale}px "Inter"`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText(lbl.ingredients.toUpperCase(), OX, midY + 10 * scale);
+  ctx.restore();
+
+  ctx.save();
+  ctx.globalAlpha = 0.22;
+  ctx.font = `400 ${6*scale}px "Inter"`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('CLINICALLY DOSED · FULL LABEL', OX, midY + 22 * scale);
+  ctx.restore();
+
+  // Bottom cert strip
+  ctx.save();
+  ctx.globalAlpha = 0.07;
+  ctx.beginPath();
+  ctx.moveTo(OX - RX * 0.72, labelBottom - 22 * scale);
+  ctx.lineTo(OX + RX * 0.72, labelBottom - 22 * scale);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 0.8 * scale;
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.save();
+  ctx.globalAlpha = 0.18;
+  ctx.font = `500 ${5.5*scale}px "Inter"`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('GMP  ·  3RD PARTY TESTED  ·  VEGAN', OX, labelBottom - 17 * scale);
+  ctx.restore();
+
+  ctx.save();
+  ctx.globalAlpha = 0.14;
+  ctx.font = `400 ${5.5*scale}px "Inter"`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText(lbl.servings.toUpperCase(), OX, labelBottom - 5 * scale);
+  ctx.restore();
+
+  // ── LID ──
+  const lidTop    = bodyTop - LH;
+  const lidBottom = bodyTop;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(OX - LRX, lidTop + LRY);
+  ctx.lineTo(OX - LRX, lidBottom);
+  ctx.ellipse(OX, lidBottom, LRX, LRY, 0, Math.PI, 0, false);
+  ctx.lineTo(OX + LRX, lidTop + LRY);
+  ctx.ellipse(OX, lidTop, LRX, LRY, 0, 0, Math.PI, false);
+  ctx.closePath();
+  ctx.clip();
+
+  // Lid gradient
+  const lidGrad = ctx.createLinearGradient(OX - LRX, 0, OX + LRX, 0);
+  lidGrad.addColorStop(0,    adj(lrgb, -55));
+  lidGrad.addColorStop(0.06, adj(lrgb, -30));
+  lidGrad.addColorStop(0.20, adj(lrgb,  -5));
+  lidGrad.addColorStop(0.42, adj(lrgb,  10));
+  lidGrad.addColorStop(0.58, adj(lrgb,   6));
+  lidGrad.addColorStop(0.82, adj(lrgb, -18));
+  lidGrad.addColorStop(1,    adj(lrgb, -52));
+  ctx.fillStyle = lidGrad;
+  ctx.fillRect(OX - LRX, lidTop, LW, LH + LRY);
+
+  // Lid specular
+  const lidSpec = ctx.createLinearGradient(OX - LRX, 0, OX + LRX * 0.3, 0);
+  lidSpec.addColorStop(0,    'rgba(255,255,255,0)');
+  lidSpec.addColorStop(0.18, 'rgba(255,255,255,0.13)');
+  lidSpec.addColorStop(0.25, 'rgba(255,255,255,0.22)');
+  lidSpec.addColorStop(0.30, 'rgba(255,255,255,0.10)');
+  lidSpec.addColorStop(0.45, 'rgba(255,255,255,0)');
+  ctx.fillStyle = lidSpec;
+  ctx.fillRect(OX - LRX, lidTop, LW, LH + LRY);
+
+  // Lid bottom AO
+  const lidAO = ctx.createLinearGradient(0, lidBottom - 14*scale, 0, lidBottom);
+  lidAO.addColorStop(0, 'rgba(0,0,0,0)');
+  lidAO.addColorStop(1, 'rgba(0,0,0,0.35)');
+  ctx.fillStyle = lidAO;
+  ctx.fillRect(OX - LRX, lidBottom - 14*scale, LW, 14*scale);
+
+  ctx.restore();
+
+  // ── LID RIM (dark seam) ──
+  ctx.save();
+  ctx.beginPath();
+  ctx.ellipse(OX, lidBottom, LRX, LRY, 0, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(0,0,0,0.55)';
+  ctx.lineWidth = 3 * scale;
+  ctx.stroke();
+  ctx.restore();
+
+  // ── LID TOP ELLIPSE ──
+  ctx.save();
+  ctx.beginPath();
+  ctx.ellipse(OX, lidTop, LRX, LRY, 0, 0, Math.PI * 2);
+  const topGrad = ctx.createRadialGradient(
+    OX - LRX * 0.3, lidTop - LRY * 0.4, 0,
+    OX, lidTop, LRX
+  );
+  topGrad.addColorStop(0,   adj(lrgb, 35));
+  topGrad.addColorStop(0.3, adj(lrgb, 18));
+  topGrad.addColorStop(0.7, adj(lrgb, -8));
+  topGrad.addColorStop(1,   adj(lrgb, -45));
+  ctx.fillStyle = topGrad;
+  ctx.fill();
+
+  // Rim highlight on top
+  ctx.beginPath();
+  ctx.ellipse(OX, lidTop, LRX, LRY, 0, 0, Math.PI * 2);
+  ctx.strokeStyle = adjA(lrgb, 50, 0.25);
+  ctx.lineWidth = 1.5 * scale;
+  ctx.stroke();
+  ctx.restore();
+}
+
+// ── PRODUCT CONFIGS ─────────────────────────────────────
+const PRODUCTS = {
+  performance: {
+    color:    '#1B2A4A',
+    lidColor: '#111d33',
+    label: {
+      formula:     'Formula 001',
+      name:        'Performance',
+      tagline:     'Energy · Recovery · Focus',
+      ingredients: 'NMN · CoQ10 · Alpha-GPC',
+      servings:    '60 Capsules · 30 Servings',
+    }
+  },
+  balance: {
+    color:    '#A0784A',
+    lidColor: '#7a5e38',
+    label: {
+      formula:     'Formula 002',
+      name:        'Balance',
+      tagline:     'Cortisol · Sleep · Hormones',
+      ingredients: 'KSM-66 · L-Theanine · Magnesium',
+      servings:    '60 Capsules · 30 Servings',
+    }
+  },
+  gut: {
+    color:    '#C4682A',
+    lidColor: '#8c3e18',
+    label: {
+      formula:     'Formula 003',
+      name:        'Gut Health',
+      tagline:     'Microbiome · Digestion · Immunity',
+      ingredients: '50B CFU · L-Glutamine · Zinc',
+      servings:    '30 Capsules · 30 Servings',
+    }
+  }
+};
+
+// ── RENDER ALL ───────────────────────────────────────────
+window.addEventListener('load', () => {
+  // Hero cans (full size)
+  drawProduct('c-performance', PRODUCTS.performance, 1);
+  drawProduct('c-balance',     PRODUCTS.balance,     1);
+  drawProduct('c-gut',         PRODUCTS.gut,         1);
+
+  // Bundle cans (smaller)
+  drawProduct('c-b-perf', PRODUCTS.performance, 0.7);
+  drawProduct('c-b-bal',  PRODUCTS.balance,     0.82);
+  drawProduct('c-b-gut',  PRODUCTS.gut,         0.7);
+});
+</script>
+</body>
+</html>

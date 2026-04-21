@@ -143,7 +143,7 @@ export default function Carousel() {
                     style={{ color: p.color, opacity: 0.6 }}>knowing more.</p>
                   <h3 className="text-2xl md:text-3xl font-bold tracking-[-0.02em] text-[#111111] mb-1"
                     style={{ fontFamily: "var(--font-playfair)" }}>
-                    {p.name}<span style={{ color: "#E8920A" }}>.</span>
+                    {p.name}<span style={{ color: "#C4682A" }}>.</span>
                   </h3>
                   <p className="text-[9px] font-mono tracking-[0.22em] uppercase text-[#111111]/30 mb-3">
                     {p.tagline}

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>knowing more. — Product Photography</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #f0ede8;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Toggle buttons */
+.bg-switcher {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  gap: 8px;
+  z-index: 100;
+}
+.bg-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.bg-btn:hover { transform: scale(1.1); border-color: rgba(255,255,255,0.8); }
+.bg-btn.active { border-color: #E8920A; }
+.bg-cream  { background: #f0ede8; }
+.bg-white  { background: #ffffff; }
+.bg-dark   { background: #0d0d0d; }
+.bg-marble { background: linear-gradient(135deg, #e8e4de, #d4cfc8); }
+
+/* Scene */
+.scene {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  transition: background 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ambient floor shadow */
+.scene::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 35%;
+  background: linear-gradient(to top, rgba(0,0,0,0.08), transparent);
+  pointer-events: none;
+}
+
+.cans-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  position: relative;
+  z-index: 1;
+}
+
+canvas {
+  display: block;
+  cursor: pointer;
+  transition: transform 0.7s cubic-bezier(0.16,1,0.3,1), filter 0.4s ease;
+  filter: drop-shadow(0 40px 60px rgba(0,0,0,0.28)) drop-shadow(0 8px 20px rgba(0,0,0,0.18));
+}
+canvas:hover {
+  transform: translateY(-20px) scale(1.03);
+  filter: drop-shadow(0 60px 80px rgba(0,0,0,0.35)) drop-shadow(0 12px 28px rgba(0,0,0,0.22));
+}
+</style>
+</head>
+<body>
+
+<div class="bg-switcher">
+  <div class="bg-btn bg-cream  active" onclick="setBg('cream')"  title="Cream"></div>
+  <div class="bg-btn bg-white"          onclick="setBg('white')"  title="White"></div>
+  <div class="bg-btn bg-dark"           onclick="setBg('dark')"   title="Dark studio"></div>
+  <div class="bg-btn bg-marble"         onclick="setBg('marble')" title="Marble"></div>
+</div>
+
+<div class="scene" id="scene">
+  <div class="cans-row">
+    <canvas id="c1"></canvas>
+    <canvas id="c2"></canvas>
+    <canvas id="c3"></canvas>
+  </div>
+</div>
+
+<script>
+// ── helpers ──────────────────────────────────────────────
+const DPR = Math.min(window.devicePixelRatio || 2, 3);
+
+function hex2rgb(h) {
+  const n = parseInt(h.replace('#',''), 16);
+  return [(n>>16)&255,(n>>8)&255,n&255];
+}
+function c([r,g,b], d, a=1) {
+  return `rgba(${Math.max(0,Math.min(255,r+d))},${Math.max(0,Math.min(255,g+d))},${Math.max(0,Math.min(255,b+d))},${a})`;
+}
+
+// ── CAN RENDERER ─────────────────────────────────────────
+function renderCan(canvas, cfg, W_px, H_px) {
+  canvas.width  = W_px * DPR;
+  canvas.height = H_px * DPR;
+  canvas.style.width  = W_px + 'px';
+  canvas.style.height = H_px + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(DPR, DPR);
+
+  const rgb  = hex2rgb(cfg.color);
+  const lrgb = hex2rgb(cfg.lidColor);
+
+  // Geometry
+  const CW  = W_px * 0.70;       // can body width
+  const CH  = H_px * 0.60;       // can body height
+  const LH  = H_px * 0.14;       // lid height
+  const EP  = 0.21;               // ellipse perspective ratio
+  const BRX = CW / 2;             // body rx
+  const BRY = BRX * EP;           // body ry
+  const LRX = BRX + 5;            // lid rx (slightly wider)
+  const LRY = LRX * EP;
+  const CX  = W_px / 2;           // center x
+  const CY  = H_px * 0.10 + LH + LRY; // body top y
+
+  const bodyTop = CY;
+  const bodyBot = CY + CH;
+
+  // ── floor shadow ──
+  ctx.save();
+  const sh = ctx.createRadialGradient(CX, bodyBot + BRY, 0, CX, bodyBot + BRY, BRX * 2.2);
+  sh.addColorStop(0,   'rgba(0,0,0,0.38)');
+  sh.addColorStop(0.4, 'rgba(0,0,0,0.12)');
+  sh.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.translate(CX, bodyBot + BRY * 1.1);
+  ctx.scale(1.6, 0.25);
+  ctx.translate(-CX, -(bodyBot + BRY * 1.1));
+  ctx.beginPath();
+  ctx.arc(CX, bodyBot + BRY * 1.1, BRX * 2.2, 0, Math.PI*2);
+  ctx.fillStyle = sh;
+  ctx.fill();
+  ctx.restore();
+
+  // ── reflection ──
+  ctx.save();
+  ctx.globalAlpha = 0.13;
+  ctx.translate(CX, bodyBot + BRY * 2.1);
+  ctx.scale(1, -0.28);
+  ctx.translate(-CX, -(bodyBot + BRY * 2.1));
+  ctx.beginPath();
+  ctx.moveTo(CX - BRX, bodyTop);
+  ctx.lineTo(CX - BRX, bodyBot);
+  ctx.ellipse(CX, bodyBot, BRX, BRY, 0, Math.PI, 0, false);
+  ctx.lineTo(CX + BRX, bodyTop);
+  ctx.ellipse(CX, bodyTop, BRX, BRY, 0, 0, Math.PI, false);
+  ctx.closePath();
+  const rg = ctx.createLinearGradient(CX-BRX,0,CX+BRX,0);
+  rg.addColorStop(0,   c(rgb,-60)); rg.addColorStop(0.4, c(rgb,0));
+  rg.addColorStop(0.6, c(rgb,12)); rg.addColorStop(1,   c(rgb,-55));
+  ctx.fillStyle = rg;
+  ctx.fill();
+  ctx.restore();
+  // fade reflection
+  ctx.save();
+  const rf = ctx.createLinearGradient(0, bodyBot + BRY, 0, bodyBot + BRY + H_px*0.15);
+  rf.addColorStop(0, 'rgba(0,0,0,0)'); rf.addColorStop(1, 'rgba(0,0,0,1)');
+  ctx.fillStyle = rf;
+  ctx.fillRect(0, bodyBot + BRY, W_px, H_px*0.15);
+  ctx.restore();
+
+  // ── body ──
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(CX - BRX, bodyTop);
+  ctx.lineTo(CX - BRX, bodyBot);
+  ctx.ellipse(CX, bodyBot, BRX, BRY, 0, Math.PI, 0, false);
+  ctx.lineTo(CX + BRX, bodyTop);
+  ctx.ellipse(CX, bodyTop, BRX, BRY, 0, 0, Math.PI, false);
+  ctx.closePath();
+  ctx.clip();
+
+  // Cylinder colour gradient
+  const bg = ctx.createLinearGradient(CX-BRX, 0, CX+BRX, 0);
+  bg.addColorStop(0,    c(rgb,-75));
+  bg.addColorStop(0.05, c(rgb,-48));
+  bg.addColorStop(0.14, c(rgb,-16));
+  bg.addColorStop(0.35, c(rgb, 8));
+  bg.addColorStop(0.52, c(rgb,16));
+  bg.addColorStop(0.68, c(rgb, 5));
+  bg.addColorStop(0.85, c(rgb,-18));
+  bg.addColorStop(1,    c(rgb,-68));
+  ctx.fillStyle = bg;
+  ctx.fillRect(CX-BRX, bodyTop-BRY, CW, CH+BRY*2);
+
+  // Sharp specular stripe
+  const sp = ctx.createLinearGradient(CX-BRX, 0, CX+BRX*0.35, 0);
+  sp.addColorStop(0,    'rgba(255,255,255,0)');
+  sp.addColorStop(0.16, 'rgba(255,255,255,0.01)');
+  sp.addColorStop(0.21, 'rgba(255,255,255,0.22)');
+  sp.addColorStop(0.25, 'rgba(255,255,255,0.34)');
+  sp.addColorStop(0.28, 'rgba(255,255,255,0.18)');
+  sp.addColorStop(0.35, 'rgba(255,255,255,0.03)');
+  sp.addColorStop(1,    'rgba(255,255,255,0)');
+  ctx.fillStyle = sp;
+  ctx.fillRect(CX-BRX, bodyTop, CW, CH);
+
+  // Soft secondary highlight (broad centre catch)
+  const sp2 = ctx.createLinearGradient(CX-BRX, 0, CX+BRX, 0);
+  sp2.addColorStop(0,    'rgba(255,255,255,0)');
+  sp2.addColorStop(0.38, 'rgba(255,255,255,0)');
+  sp2.addColorStop(0.50, 'rgba(255,255,255,0.05)');
+  sp2.addColorStop(0.60, 'rgba(255,255,255,0.08)');
+  sp2.addColorStop(0.72, 'rgba(255,255,255,0.03)');
+  sp2.addColorStop(1,    'rgba(255,255,255,0)');
+  ctx.fillStyle = sp2;
+  ctx.fillRect(CX-BRX, bodyTop, CW, CH);
+
+  // Top AO
+  const ao = ctx.createLinearGradient(0, bodyTop, 0, bodyTop+32);
+  ao.addColorStop(0, 'rgba(0,0,0,0.30)'); ao.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle = ao; ctx.fillRect(CX-BRX, bodyTop, CW, 32);
+  // Bottom AO
+  const aob = ctx.createLinearGradient(0, bodyBot-22, 0, bodyBot);
+  aob.addColorStop(0,'rgba(0,0,0,0)'); aob.addColorStop(1,'rgba(0,0,0,0.32)');
+  ctx.fillStyle = aob; ctx.fillRect(CX-BRX, bodyBot-22, CW, 22);
+  ctx.restore();
+
+  // Bottom cap
+  ctx.beginPath();
+  ctx.ellipse(CX, bodyBot, BRX, BRY, 0, 0, Math.PI*2);
+  const bc = ctx.createRadialGradient(CX-BRX*0.25, bodyBot, 0, CX, bodyBot, BRX);
+  bc.addColorStop(0, c(rgb,-10)); bc.addColorStop(0.6, c(rgb,-38)); bc.addColorStop(1, c(rgb,-62));
+  ctx.fillStyle = bc; ctx.fill();
+
+  // ── LABEL TEXT ──
+  const LT = bodyTop + 30;
+  const LB = bodyBot - 18;
+  const LMid = LT + (LB-LT)*0.60;
+
+  // formula number
+  ctx.save(); ctx.globalAlpha = 0.30;
+  ctx.font = `500 ${Math.round(7.5*(CW/154))}px Inter`;
+  ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText(cfg.label.formula.toUpperCase(), CX, LT);
+  ctx.restore();
+
+  // amber rule
+  const ry = LT + 17*(CW/154);
+  ctx.save(); ctx.globalAlpha = 0.65;
+  ctx.beginPath();
+  ctx.moveTo(CX-13*(CW/154), ry); ctx.lineTo(CX+13*(CW/154), ry);
+  ctx.strokeStyle='#E8920A'; ctx.lineWidth=1.4*(CW/154); ctx.stroke();
+  ctx.restore();
+
+  // knowing more.
+  ctx.save(); ctx.globalAlpha = 0.38;
+  ctx.font = `400 ${Math.round(9*(CW/154))}px "Playfair Display"`;
+  ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText('knowing more.', CX, ry + 7*(CW/154));
+  ctx.restore();
+
+  // product name
+  const ns = cfg.label.name.length > 8 ? Math.round(27*(CW/154)) : Math.round(31*(CW/154));
+  ctx.save(); ctx.globalAlpha = 0.94;
+  ctx.font = `500 ${ns}px "Playfair Display"`;
+  ctx.textAlign='center'; ctx.textBaseline='top';
+  const nameY = ry + 22*(CW/154);
+  // white part
+  ctx.fillStyle='#fff';
+  const nw = ctx.measureText(cfg.label.name).width;
+  ctx.fillText(cfg.label.name, CX - 4*(CW/154), nameY);
+  // amber dot
+  ctx.globalAlpha = 1; ctx.fillStyle='#E8920A';
+  ctx.fillText('.', CX - 4*(CW/154) + nw/2, nameY);
+  ctx.restore();
+
+  // tagline
+  ctx.save(); ctx.globalAlpha = 0.24;
+  ctx.font = `400 ${Math.round(6.5*(CW/154))}px Inter`;
+  ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText(cfg.label.tagline.toUpperCase(), CX, nameY + ns + 7*(CW/154));
+  ctx.restore();
+
+  // mid rule
+  ctx.save(); ctx.globalAlpha = 0.09;
+  ctx.beginPath();
+  ctx.moveTo(CX-BRX*0.7, LMid); ctx.lineTo(CX+BRX*0.7, LMid);
+  ctx.strokeStyle='#fff'; ctx.lineWidth=0.9*(CW/154); ctx.stroke();
+  ctx.restore();
+
+  // ingredients
+  ctx.save(); ctx.globalAlpha = 0.48;
+  ctx.font = `600 ${Math.round(6.5*(CW/154))}px Inter`;
+  ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText(cfg.label.ingredients.toUpperCase(), CX, LMid + 10*(CW/154));
+  ctx.restore();
+
+  ctx.save(); ctx.globalAlpha = 0.21;
+  ctx.font = `400 ${Math.round(6*(CW/154))}px Inter`;
+  ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText('CLINICALLY DOSED · FULL LABEL', CX, LMid + 22*(CW/154));
+  ctx.restore();
+
+  // cert strip
+  ctx.save(); ctx.globalAlpha = 0.07;
+  ctx.beginPath();
+  ctx.moveTo(CX-BRX*0.7, LB-22*(CW/154)); ctx.lineTo(CX+BRX*0.7, LB-22*(CW/154));
+  ctx.strokeStyle='#fff'; ctx.lineWidth=0.8*(CW/154); ctx.stroke();
+  ctx.restore();
+
+  ctx.save(); ctx.globalAlpha = 0.17;
+  ctx.font = `500 ${Math.round(5.5*(CW/154))}px Inter`;
+  ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText('GMP  ·  3RD PARTY TESTED  ·  VEGAN', CX, LB-17*(CW/154));
+  ctx.restore();
+
+  ctx.save(); ctx.globalAlpha = 0.13;
+  ctx.font = `400 ${Math.round(5.5*(CW/154))}px Inter`;
+  ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText(cfg.label.servings.toUpperCase(), CX, LB-5*(CW/154));
+  ctx.restore();
+
+  // ── LID BODY ──
+  const lidTop = bodyTop - LH;
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(CX-LRX, lidTop+LRY);
+  ctx.lineTo(CX-LRX, bodyTop);
+  ctx.ellipse(CX, bodyTop, LRX, LRY, 0, Math.PI, 0, false);
+  ctx.lineTo(CX+LRX, lidTop+LRY);
+  ctx.ellipse(CX, lidTop, LRX, LRY, 0, 0, Math.PI, false);
+  ctx.closePath(); ctx.clip();
+
+  const lg = ctx.createLinearGradient(CX-LRX, 0, CX+LRX, 0);
+  lg.addColorStop(0,    c(lrgb,-60));
+  lg.addColorStop(0.07, c(lrgb,-32));
+  lg.addColorStop(0.20, c(lrgb, -6));
+  lg.addColorStop(0.42, c(lrgb, 12));
+  lg.addColorStop(0.58, c(lrgb,  7));
+  lg.addColorStop(0.84, c(lrgb,-20));
+  lg.addColorStop(1,    c(lrgb,-56));
+  ctx.fillStyle=lg;
+  ctx.fillRect(CX-LRX, lidTop, LRX*2, LH+LRY);
+
+  // lid specular
+  const ls = ctx.createLinearGradient(CX-LRX, 0, CX+LRX*0.35, 0);
+  ls.addColorStop(0,    'rgba(255,255,255,0)');
+  ls.addColorStop(0.18, 'rgba(255,255,255,0.12)');
+  ls.addColorStop(0.24, 'rgba(255,255,255,0.22)');
+  ls.addColorStop(0.30, 'rgba(255,255,255,0.10)');
+  ls.addColorStop(0.45, 'rgba(255,255,255,0)');
+  ctx.fillStyle=ls;
+  ctx.fillRect(CX-LRX, lidTop, LRX*2, LH+LRY);
+
+  // lid bottom AO
+  const la = ctx.createLinearGradient(0, bodyTop-16, 0, bodyTop);
+  la.addColorStop(0,'rgba(0,0,0,0)'); la.addColorStop(1,'rgba(0,0,0,0.38)');
+  ctx.fillStyle=la; ctx.fillRect(CX-LRX, bodyTop-16, LRX*2, 16);
+  ctx.restore();
+
+  // rim seam
+  ctx.beginPath();
+  ctx.ellipse(CX, bodyTop, LRX, LRY, 0, 0, Math.PI*2);
+  ctx.strokeStyle='rgba(0,0,0,0.50)';
+  ctx.lineWidth=3;
+  ctx.stroke();
+
+  // ── LID TOP FACE ──
+  ctx.beginPath();
+  ctx.ellipse(CX, lidTop, LRX, LRY, 0, 0, Math.PI*2);
+  const tg = ctx.createRadialGradient(CX-LRX*0.3, lidTop-LRY*0.35, 0, CX, lidTop, LRX);
+  tg.addColorStop(0,   c(lrgb, 42));
+  tg.addColorStop(0.3, c(lrgb, 22));
+  tg.addColorStop(0.7, c(lrgb, -5));
+  tg.addColorStop(1,   c(lrgb,-48));
+  ctx.fillStyle=tg; ctx.fill();
+
+  // lid top rim highlight
+  ctx.beginPath();
+  ctx.ellipse(CX, lidTop, LRX, LRY, 0, 0, Math.PI*2);
+  ctx.strokeStyle=c(lrgb, 55, 0.22);
+  ctx.lineWidth=1.5; ctx.stroke();
+}
+
+// ── CONFIGS ──────────────────────────────────────────────
+const products = [
+  {
+    id: 'c1',
+    color:    '#1B2A4A',
+    lidColor: '#0f1c30',
+    label: {
+      formula:'Formula 001', name:'Performance',
+      tagline:'Energy · Recovery · Focus',
+      ingredients:'NMN · CoQ10 · Alpha-GPC',
+      servings:'60 Capsules / 30 Servings'
+    }
+  },
+  {
+    id: 'c2',
+    color:    '#A0784A',
+    lidColor: '#7a5e38',
+    label: {
+      formula:'Formula 002', name:'Balance',
+      tagline:'Cortisol · Sleep · Hormones',
+      ingredients:'KSM-66 · L-Theanine · Magnesium',
+      servings:'60 Capsules / 30 Servings'
+    }
+  },
+  {
+    id: 'c3',
+    color:    '#C4682A',
+    lidColor: '#8c3e18',
+    label: {
+      formula:'Formula 003', name:'Gut Health',
+      tagline:'Microbiome · Digestion · Immunity',
+      ingredients:'50B CFU · L-Glutamine · Zinc',
+      servings:'30 Capsules / 30 Servings'
+    }
+  }
+];
+
+// ── RESPONSIVE SIZING ────────────────────────────────────
+function getCanSize() {
+  const vw = window.innerWidth;
+  if (vw >= 1200) return { w: 320, h: 520 };
+  if (vw >= 900)  return { w: 260, h: 430 };
+  if (vw >= 600)  return { w: 200, h: 340 };
+  return { w: 140, h: 240 };
+}
+
+function renderAll() {
+  const { w, h } = getCanSize();
+  products.forEach(p => renderCan(document.getElementById(p.id), p, w, h));
+}
+
+// ── BACKGROUND TOGGLE ────────────────────────────────────
+const BG = {
+  cream:  { scene:'#f0ede8', after:'rgba(0,0,0,0.07)', text:'#1a1a1a' },
+  white:  { scene:'#ffffff', after:'rgba(0,0,0,0.05)', text:'#1a1a1a' },
+  dark:   { scene:'#0d0d0d', after:'rgba(0,0,0,0.40)', text:'#ffffff' },
+  marble: { scene:'linear-gradient(135deg,#e8e4de 0%,#d4cfc8 100%)', after:'rgba(0,0,0,0.07)', text:'#1a1a1a' },
+};
+
+function setBg(key) {
+  const b = BG[key];
+  const scene = document.getElementById('scene');
+  scene.style.background = b.scene;
+  document.querySelectorAll('.bg-btn').forEach(el => el.classList.remove('active'));
+  document.querySelector('.bg-' + key) && document.querySelector('.bg-' + (key==='marble'?'marble':key)).classList.add('active');
+  // re-render so reflection colour adapts
+  renderAll();
+}
+
+window.addEventListener('load', renderAll);
+window.addEventListener('resize', renderAll);
+</script>
+</body>
+</html>

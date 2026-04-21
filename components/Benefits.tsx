@@ -67,7 +67,7 @@ export default function Benefits() {
           transition={{ duration: 0.75, ease: "easeOut" }}
           className="text-center mb-16 md:mb-20 max-w-2xl mx-auto"
         >
-          <p className="text-xs font-semibold tracking-[0.25em] uppercase text-[#E8920A] mb-4">
+          <p className="text-xs font-semibold tracking-[0.25em] uppercase text-[#C4682A] mb-4">
             Why knowing more.
           </p>
           <h2
@@ -99,8 +99,8 @@ export default function Benefits() {
                   whileHover={{ y: -4, transition: { duration: 0.25 } }}
                   className="bg-white rounded-2xl p-6 border border-[#E8DDD0]/60 shadow-sm hover:shadow-md transition-shadow duration-300"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[#1B2A4A]/6 flex items-center justify-center mb-4">
-                    <Icon size={20} strokeWidth={1.5} className="text-[#1B2A4A]" />
+                  <div className="w-10 h-10 rounded-xl bg-[#C4682A]/6 flex items-center justify-center mb-4">
+                    <Icon size={20} strokeWidth={1.5} className="text-[#C4682A]" />
                   </div>
                   <h3 className="text-base font-semibold text-[#1A1A1A] mb-2">
                     {b.title}

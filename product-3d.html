@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>knowing more. — 3D Product Render</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#f2f0ec; overflow:hidden; }
+#three { display:block; width:100vw; height:100vh; }
+
+.ui {
+  position:fixed; top:0; left:0; right:0;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px 28px; z-index:100; pointer-events:none;
+}
+
+.toggle {
+  pointer-events:all;
+  display:flex; border:1px solid rgba(0,0,0,0.1); border-radius:50px;
+  overflow:hidden; background:white;
+  box-shadow:0 2px 16px rgba(0,0,0,0.09);
+}
+.tbtn {
+  padding:9px 22px; cursor:pointer; border:none; background:transparent;
+  font-family:'Inter',sans-serif; font-size:10px; letter-spacing:0.18em;
+  text-transform:uppercase; font-weight:600; color:rgba(0,0,0,0.35);
+  transition:all 0.2s;
+}
+.tbtn.active { background:#111; color:#fff; }
+.tbtn:hover:not(.active) { background:rgba(0,0,0,0.04); color:rgba(0,0,0,0.7); }
+
+.scenes {
+  pointer-events:all;
+  display:flex; gap:8px; align-items:center;
+}
+.scene-label {
+  font-family:'Inter',sans-serif; font-size:8px; letter-spacing:0.3em;
+  text-transform:uppercase; color:rgba(0,0,0,0.28); margin-right:4px;
+}
+.sbtn {
+  width:22px; height:22px; border-radius:50%; cursor:pointer;
+  border:2px solid transparent; transition:all 0.2s;
+}
+.sbtn:hover { transform:scale(1.12); }
+.sbtn.active { border-color:#E8920A; box-shadow:0 0 0 3px rgba(232,146,10,0.18); }
+
+.products {
+  pointer-events:all;
+  display:flex; gap:6px;
+}
+.pbtn {
+  width:10px; height:10px; border-radius:50%; cursor:pointer;
+  border:2px solid rgba(0,0,0,0.15); background:transparent; transition:all 0.2s;
+}
+.pbtn.active { background:#E8920A; border-color:#E8920A; }
+
+.hint {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+  font-family:'Inter',sans-serif; font-size:9px; letter-spacing:0.25em;
+  text-transform:uppercase; color:rgba(0,0,0,0.22);
+  pointer-events:none; z-index:100;
+}
+</style>
+</head>
+<body>
+<canvas id="three"></canvas>
+
+<div class="ui">
+  <div class="toggle">
+    <button class="tbtn" id="btn-current" onclick="setVersion('current')">Current Label</button>
+    <button class="tbtn active" id="btn-new" onclick="setVersion('new')">New Design</button>
+  </div>
+  <div class="scenes">
+    <span class="scene-label">Scene</span>
+    <div class="sbtn active" style="background:#f2f0ec; border-color:rgba(0,0,0,0.12)" onclick="setScene('cream')"></div>
+    <div class="sbtn" style="background:#ffffff; border-color:rgba(0,0,0,0.08)" onclick="setScene('white')"></div>
+    <div class="sbtn" style="background:#111" onclick="setScene('dark')"></div>
+  </div>
+  <div class="products">
+    <div class="pbtn active" onclick="setProduct(0)" title="Performance" style="background:#1B2A4A; border-color:#1B2A4A;"></div>
+    <div class="pbtn" onclick="setProduct(1)" title="Balance" style="border-color:#A0784A;"></div>
+    <div class="pbtn" onclick="setProduct(2)" title="Gut Health" style="border-color:#C4682A;"></div>
+  </div>
+</div>
+
+<p class="hint">Drag to rotate · Scroll to zoom</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script>
+// ── PRODUCT DATA ─────────────────────────────────────────
+const PRODUCTS = [
+  {
+    name:        'Performance',
+    formula:     'Formula 001',
+    tagline:     'Energy  ·  Recovery  ·  Focus',
+    ingredients: 'NMN  ·  CoQ10  ·  Alpha-GPC',
+    servings:    '60 Capsules  /  30 Servings',
+    color:       0x1B2A4A,
+    colorHex:    '#1B2A4A',
+    lidColor:    0x0f1c30,
+    lidHex:      '#0f1c30',
+  },
+  {
+    name:        'Balance',
+    formula:     'Formula 002',
+    tagline:     'Cortisol  ·  Sleep  ·  Hormones',
+    ingredients: 'KSM-66  ·  L-Theanine  ·  Magnesium',
+    servings:    '60 Capsules  /  30 Servings',
+    color:       0xA0784A,
+    colorHex:    '#A0784A',
+    lidColor:    0x7a5e38,
+    lidHex:      '#7a5e38',
+  },
+  {
+    name:        'Gut Health',
+    formula:     'Formula 003',
+    tagline:     'Microbiome  ·  Digestion  ·  Immunity',
+    ingredients: '50B CFU  ·  L-Glutamine  ·  Zinc',
+    servings:    '30 Capsules  /  30 Servings',
+    color:       0xC4682A,
+    colorHex:    '#C4682A',
+    lidColor:    0x8c3e18,
+    lidHex:      '#8c3e18',
+  },
+];
+
+let currentProduct = 0;
+let currentVersion = 'new';
+let currentScene   = 'cream';
+
+// ── THREE.JS SETUP ───────────────────────────────────────
+const W = window.innerWidth;
+const H = window.innerHeight;
+
+const renderer = new THREE.WebGLRenderer({
+  canvas: document.getElementById('three'),
+  antialias: true,
+  alpha: false,
+});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(W, H);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.outputEncoding = THREE.sRGBEncoding;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf2f0ec);
+
+const camera = new THREE.PerspectiveCamera(30, W / H, 0.1, 100);
+camera.position.set(0, 1.35, 5.8);
+camera.lookAt(0, 1.0, 0);
+
+// ── LIGHTING ─────────────────────────────────────────────
+// Ambient (low — let the direct lights do the work)
+const ambient = new THREE.AmbientLight(0xfff8f0, 0.55);
+scene.add(ambient);
+
+// Key light — warm, upper-left, casts shadow
+const keyLight = new THREE.DirectionalLight(0xfff8ee, 2.2);
+keyLight.position.set(-3.5, 6, 4);
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.set(2048, 2048);
+keyLight.shadow.camera.near = 0.5;
+keyLight.shadow.camera.far  = 30;
+keyLight.shadow.camera.left = keyLight.shadow.camera.bottom = -4;
+keyLight.shadow.camera.right = keyLight.shadow.camera.top  =  4;
+keyLight.shadow.bias = -0.0005;
+keyLight.shadow.radius = 3;
+scene.add(keyLight);
+
+// Fill light — cool, right, no shadow
+const fillLight = new THREE.DirectionalLight(0xe8f0ff, 0.55);
+fillLight.position.set(4, 3, 2);
+scene.add(fillLight);
+
+// Rim / back light — separates can from background
+const rimLight = new THREE.DirectionalLight(0xffffff, 0.70);
+rimLight.position.set(0, 4, -5);
+scene.add(rimLight);
+
+// Under-fill — lifts shadow from base
+const underLight = new THREE.DirectionalLight(0xffffff, 0.20);
+underLight.position.set(0, -3, 2);
+scene.add(underLight);
+
+// ── FLOOR ────────────────────────────────────────────────
+const floorGeo = new THREE.PlaneGeometry(20, 20);
+const floorMat = new THREE.MeshStandardMaterial({
+  color: 0xf2f0ec,
+  roughness: 0.9,
+  metalness: 0.0,
+});
+const floor = new THREE.Mesh(floorGeo, floorMat);
+floor.rotation.x = -Math.PI / 2;
+floor.receiveShadow = true;
+scene.add(floor);
+
+// Back wall
+const wallGeo  = new THREE.PlaneGeometry(20, 14);
+const wallMat  = new THREE.MeshStandardMaterial({ color: 0xf2f0ec, roughness: 1, metalness: 0 });
+const wall = new THREE.Mesh(wallGeo, wallMat);
+wall.position.set(0, 5, -4);
+wall.receiveShadow = true;
+scene.add(wall);
+
+// ── CAN GROUP ────────────────────────────────────────────
+const canGroup = new THREE.Group();
+scene.add(canGroup);
+
+// Dimensions
+const BR = 0.60;   // body radius
+const BH = 1.80;   // body height
+const LR = 0.635;  // lid radius (slightly wider)
+const LH = 0.44;   // lid height
+const SEG = 128;
+
+// Body cylinder (open, textured)
+const bodyGeo = new THREE.CylinderGeometry(BR, BR, BH, SEG, 1, true);
+let bodyMesh;
+
+// Body bottom cap
+const botCapGeo = new THREE.CylinderGeometry(BR, BR, 0.02, SEG);
+const botCapMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.6, metalness: 0.3 });
+const botCap = new THREE.Mesh(botCapGeo, botCapMat);
+botCap.position.y = 0.01;
+botCap.castShadow = true;
+canGroup.add(botCap);
+
+// Lid body
+const lidBodyGeo = new THREE.CylinderGeometry(LR, LR * 0.97, LH, SEG);
+let lidBodyMesh;
+
+// Lid top face
+const lidTopGeo = new THREE.CircleGeometry(LR, SEG);
+let lidTopMesh;
+
+// Rim detail ring
+const rimGeo = new THREE.TorusGeometry(LR - 0.005, 0.018, 12, SEG);
+let rimMesh;
+
+// ── LABEL TEXTURE BUILDER ────────────────────────────────
+function buildLabel(product, version) {
+  const LW = 2048, LH_T = 2200;
+  const canvas = document.createElement('canvas');
+  canvas.width  = LW;
+  canvas.height = LH_T;
+  const ctx = canvas.getContext('2d');
+
+  // Base fill — can colour
+  ctx.fillStyle = product.colorHex;
+  ctx.fillRect(0, 0, LW, LH_T);
+
+  // Subtle left-edge darkening (simulate cylinder curvature on flat texture)
+  const edgeL = ctx.createLinearGradient(0, 0, LW * 0.12, 0);
+  edgeL.addColorStop(0, 'rgba(0,0,0,0.22)');
+  edgeL.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = edgeL; ctx.fillRect(0, 0, LW, LH_T);
+
+  const edgeR = ctx.createLinearGradient(LW, 0, LW * 0.88, 0);
+  edgeR.addColorStop(0, 'rgba(0,0,0,0.18)');
+  edgeR.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = edgeR; ctx.fillRect(0, 0, LW, LH_T);
+
+  // Subtle top/bottom fade
+  const fadeT = ctx.createLinearGradient(0, 0, 0, LH_T * 0.08);
+  fadeT.addColorStop(0, 'rgba(0,0,0,0.25)');
+  fadeT.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = fadeT; ctx.fillRect(0, 0, LW, LH_T);
+
+  const fadeB = ctx.createLinearGradient(0, LH_T, 0, LH_T * 0.9);
+  fadeB.addColorStop(0, 'rgba(0,0,0,0.25)');
+  fadeB.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = fadeB; ctx.fillRect(0, 0, LW, LH_T);
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  if (version === 'new') {
+    // ── NEW DESIGN ──────────────────────────────
+    const CX = LW / 2;
+
+    // Formula number
+    ctx.font = '500 52px Inter';
+    ctx.letterSpacing = '14px';
+    ctx.fillStyle = 'rgba(255,255,255,0.28)';
+    ctx.fillText(product.formula.toUpperCase(), CX, LH_T * 0.185);
+
+    // Amber rule
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(CX - 90, LH_T * 0.225);
+    ctx.lineTo(CX + 90, LH_T * 0.225);
+    ctx.strokeStyle = '#E8920A';
+    ctx.lineWidth = 7;
+    ctx.globalAlpha = 0.65;
+    ctx.stroke();
+    ctx.restore();
+
+    // knowing more.
+    ctx.font = '400 54px "Playfair Display"';
+    ctx.letterSpacing = '6px';
+    ctx.fillStyle = 'rgba(255,255,255,0.38)';
+    ctx.fillText('knowing more.', CX, LH_T * 0.27);
+
+    // Product name
+    ctx.letterSpacing = '-2px';
+    let nameSize = 195;
+    ctx.font = `500 ${nameSize}px "Playfair Display"`;
+    while (ctx.measureText(product.name).width > LW * 0.78 && nameSize > 90) {
+      nameSize -= 6;
+      ctx.font = `500 ${nameSize}px "Playfair Display"`;
+    }
+    const nameY = LH_T * 0.42;
+    ctx.fillStyle = 'rgba(255,255,255,0.93)';
+    ctx.fillText(product.name, CX, nameY);
+
+    // Amber dot after name
+    ctx.fillStyle = '#E8920A';
+    ctx.letterSpacing = '0px';
+    ctx.font = `500 ${nameSize}px "Playfair Display"`;
+    const nw = ctx.measureText(product.name).width;
+    ctx.fillText('.', CX + nw / 2 + 6, nameY);
+
+    // Tagline
+    ctx.font = '400 46px Inter';
+    ctx.letterSpacing = '8px';
+    ctx.fillStyle = 'rgba(255,255,255,0.26)';
+    ctx.fillText(product.tagline.toUpperCase(), CX, LH_T * 0.515);
+
+    // Mid rule
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(LW * 0.14, LH_T * 0.585);
+    ctx.lineTo(LW * 0.86, LH_T * 0.585);
+    ctx.strokeStyle = 'rgba(255,255,255,0.09)';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.restore();
+
+    // Ingredients
+    ctx.font = '600 46px Inter';
+    ctx.letterSpacing = '7px';
+    ctx.fillStyle = 'rgba(255,255,255,0.50)';
+    ctx.fillText(product.ingredients.toUpperCase(), CX, LH_T * 0.645);
+
+    ctx.font = '400 38px Inter';
+    ctx.letterSpacing = '5px';
+    ctx.fillStyle = 'rgba(255,255,255,0.22)';
+    ctx.fillText('CLINICALLY DOSED  ·  FULL LABEL', CX, LH_T * 0.70);
+
+    // Bottom rule
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(LW * 0.14, LH_T * 0.80);
+    ctx.lineTo(LW * 0.86, LH_T * 0.80);
+    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.restore();
+
+    // Certs
+    ctx.font = '500 36px Inter';
+    ctx.letterSpacing = '5px';
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+    ctx.fillText('GMP  ·  3RD PARTY TESTED  ·  VEGAN', CX, LH_T * 0.855);
+
+    ctx.font = '400 34px Inter';
+    ctx.letterSpacing = '4px';
+    ctx.fillStyle = 'rgba(255,255,255,0.13)';
+    ctx.fillText(product.servings.toUpperCase(), CX, LH_T * 0.905);
+
+  } else {
+    // ── CURRENT CANVA STYLE ─────────────────────
+    const CX = LW / 2;
+
+    // "Good things come"
+    ctx.font = '400 44px Inter';
+    ctx.letterSpacing = '3px';
+    ctx.fillStyle = '#E8920A';
+    ctx.fillText('Good things come', CX, LH_T * 0.20);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = 'italic 38px "Playfair Display"';
+    ctx.fillText('to those who are', CX, LH_T * 0.245);
+
+    // knowing — big, bold
+    ctx.letterSpacing = '-4px';
+    ctx.font = '700 240px "Playfair Display"';
+    ctx.fillStyle = 'rgba(255,255,255,0.92)';
+    ctx.fillText('kno', CX - 280, LH_T * 0.44);
+
+    // "win" in amber
+    ctx.fillStyle = '#E8920A';
+    ctx.fillText('win', CX + 58, LH_T * 0.44);
+
+    // "g" white
+    ctx.fillStyle = 'rgba(255,255,255,0.92)';
+    ctx.fillText('g', CX + 390, LH_T * 0.44);
+
+    // MORE.
+    ctx.font = '700 90px "Playfair Display"';
+    ctx.letterSpacing = '4px';
+    ctx.fillStyle = 'rgba(255,255,255,0.88)';
+    ctx.fillText('MORE.', CX, LH_T * 0.545);
+
+    // Product name
+    ctx.font = '600 90px "Playfair Display"';
+    ctx.letterSpacing = '2px';
+    ctx.fillStyle = '#E8920A';
+    ctx.fillText(product.name + '.', CX, LH_T * 0.68);
+
+    // Bottom info
+    ctx.font = '400 36px Inter';
+    ctx.letterSpacing = '4px';
+    ctx.fillStyle = 'rgba(255,255,255,0.22)';
+    ctx.fillText('60g  DIETARY SUPPLEMENT', CX, LH_T * 0.88);
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.encoding = THREE.sRGBEncoding;
+  return tex;
+}
+
+// ── BUILD CAN ────────────────────────────────────────────
+function buildCan(productIdx, version) {
+  const p = PRODUCTS[productIdx];
+
+  // Remove old meshes
+  canGroup.children.slice().forEach(c => {
+    if (c !== botCap) canGroup.remove(c);
+  });
+
+  // Label texture
+  const labelTex = buildLabel(p, version);
+
+  // Body
+  const bodyMat = new THREE.MeshStandardMaterial({
+    map:       labelTex,
+    roughness: 0.52,
+    metalness: 0.28,
+    envMapIntensity: 0.6,
+  });
+  bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
+  bodyMesh.position.y = BH / 2;
+  bodyMesh.castShadow  = true;
+  bodyMesh.receiveShadow = true;
+  canGroup.add(bodyMesh);
+
+  // Lid body
+  const lidMat = new THREE.MeshStandardMaterial({
+    color:     p.lidColor,
+    roughness: 0.42,
+    metalness: 0.45,
+  });
+  lidBodyMesh = new THREE.Mesh(lidBodyGeo, lidMat);
+  lidBodyMesh.position.y = BH + LH / 2;
+  lidBodyMesh.castShadow = true;
+  canGroup.add(lidBodyMesh);
+
+  // Lid top
+  const lidTopMat = new THREE.MeshStandardMaterial({
+    color:     p.lidColor,
+    roughness: 0.35,
+    metalness: 0.55,
+  });
+  lidTopMesh = new THREE.Mesh(lidTopGeo, lidTopMat);
+  lidTopMesh.rotation.x = -Math.PI / 2;
+  lidTopMesh.position.y  = BH + LH;
+  lidTopMesh.castShadow  = true;
+  canGroup.add(lidTopMesh);
+
+  // Rim ring
+  const rimMat = new THREE.MeshStandardMaterial({
+    color:     p.lidColor,
+    roughness: 0.30,
+    metalness: 0.60,
+  });
+  rimMesh = new THREE.Mesh(rimGeo, rimMat);
+  rimMesh.position.y = BH;
+  rimMesh.castShadow = true;
+  canGroup.add(rimMesh);
+
+  // Update floor/wall colour
+  const sc = SCENES[currentScene];
+  floorMat.color.set(sc.bg);
+  wallMat.color.set(sc.bg);
+}
+
+// ── SCENES ───────────────────────────────────────────────
+const SCENES = {
+  cream: { bg: 0xf2f0ec, sceneBg: 0xf2f0ec },
+  white: { bg: 0xfafafa, sceneBg: 0xfafafa },
+  dark:  { bg: 0x111009, sceneBg: 0x111009 },
+};
+
+function setScene(key) {
+  currentScene = key;
+  const sc = SCENES[key];
+  scene.background = new THREE.Color(sc.sceneBg);
+  floorMat.color.set(sc.bg);
+  wallMat.color.set(sc.bg);
+
+  // Adjust ambient for dark scene
+  ambient.intensity = key === 'dark' ? 0.35 : 0.55;
+  keyLight.intensity = key === 'dark' ? 2.8 : 2.2;
+
+  // Hint text color
+  document.querySelector('.hint').style.color =
+    key === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.22)';
+  document.querySelector('.scene-label').style.color =
+    key === 'dark' ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.28)';
+
+  document.querySelectorAll('.sbtn').forEach(b => b.classList.remove('active'));
+  const map = { cream: 0, white: 1, dark: 2 };
+  document.querySelectorAll('.sbtn')[map[key]].classList.add('active');
+}
+
+function setVersion(v) {
+  currentVersion = v;
+  document.getElementById('btn-current').classList.toggle('active', v === 'current');
+  document.getElementById('btn-new').classList.toggle('active', v === 'new');
+  buildCan(currentProduct, v);
+}
+
+function setProduct(idx) {
+  currentProduct = idx;
+  document.querySelectorAll('.pbtn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  buildCan(idx, currentVersion);
+}
+
+// ── MOUSE ORBIT ──────────────────────────────────────────
+let isDragging = false, lastX = 0, lastY = 0;
+let rotY = 0, rotX = 0;
+
+document.addEventListener('mousedown', e => { isDragging = true; lastX = e.clientX; lastY = e.clientY; });
+document.addEventListener('mouseup',   () => isDragging = false);
+document.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  const dx = (e.clientX - lastX) * 0.008;
+  const dy = (e.clientY - lastY) * 0.004;
+  rotY += dx;
+  rotX = Math.max(-0.35, Math.min(0.35, rotX + dy));
+  canGroup.rotation.y = rotY;
+  canGroup.rotation.x = rotX;
+  lastX = e.clientX; lastY = e.clientY;
+});
+
+// Touch support
+document.addEventListener('touchstart', e => { isDragging = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; });
+document.addEventListener('touchend',   () => isDragging = false);
+document.addEventListener('touchmove',  e => {
+  if (!isDragging) return;
+  const dx = (e.touches[0].clientX - lastX) * 0.008;
+  const dy = (e.touches[0].clientY - lastY) * 0.004;
+  rotY += dx; rotX = Math.max(-0.35, Math.min(0.35, rotX + dy));
+  canGroup.rotation.y = rotY; canGroup.rotation.x = rotX;
+  lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+});
+
+// Scroll to zoom
+document.addEventListener('wheel', e => {
+  camera.position.z = Math.max(3.0, Math.min(9.0, camera.position.z + e.deltaY * 0.005));
+}, { passive: true });
+
+// ── RESIZE ───────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ── AUTO-SPIN IDLE ───────────────────────────────────────
+let lastInteract = Date.now();
+document.addEventListener('mousedown', () => lastInteract = Date.now());
+document.addEventListener('touchstart', () => lastInteract = Date.now());
+
+// ── RENDER LOOP ──────────────────────────────────────────
+function animate() {
+  requestAnimationFrame(animate);
+  // Gentle auto-rotate when idle > 2s
+  if (!isDragging && Date.now() - lastInteract > 2000) {
+    rotY += 0.003;
+    canGroup.rotation.y = rotY;
+  }
+  renderer.render(scene, camera);
+}
+
+// ── INIT ─────────────────────────────────────────────────
+document.fonts.ready.then(() => {
+  buildCan(0, 'new');
+  animate();
+});
+</script>
+</body>
+</html>

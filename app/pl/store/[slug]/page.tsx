@@ -25,12 +25,12 @@ function NotifyForm({ color }: { color: string }) {
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full flex flex-col items-center gap-3 py-6 rounded-2xl border border-[#E8920A]/20 bg-[#E8920A]/5"
+        className="w-full flex flex-col items-center gap-3 py-6 rounded-2xl border border-[#C4682A]/20 bg-[#C4682A]/5"
       >
         <motion.div
           initial={{ scale: 0 }} animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
-          className="w-10 h-10 rounded-full bg-[#E8920A] flex items-center justify-center text-white text-lg"
+          className="w-10 h-10 rounded-full bg-[#C4682A] flex items-center justify-center text-white text-lg"
         >
           ✓
         </motion.div>
@@ -48,7 +48,7 @@ function NotifyForm({ color }: { color: string }) {
     <div className="w-full space-y-3">
 
       {/* Save 20 zł - dominant hero block */}
-      <div className="rounded-2xl overflow-hidden" style={{ background: "linear-gradient(135deg, #E8920A 0%, #d4780a 100%)" }}>
+      <div className="rounded-2xl overflow-hidden" style={{ background: "linear-gradient(135deg, #C4682A 0%, #d4780a 100%)" }}>
         <div className="px-5 pt-5 pb-4 flex items-center justify-between gap-4">
           <div>
             <p className="text-white/70 text-[10px] font-mono tracking-[0.22em] uppercase mb-1">Oferta wznowienia</p>
@@ -217,7 +217,7 @@ export default function ProductPage() {
                         width: i === activeImg ? "20px" : "6px",
                         height: "6px",
                         background: i === activeImg
-                          ? (p.color === "#111111" ? "#E8920A" : p.color)
+                          ? (p.color === "#111111" ? "#C4682A" : p.color)
                           : "rgba(17,17,17,0.15)",
                       }}
                       aria-label={`Zdjęcie ${i + 1}`}
@@ -241,13 +241,13 @@ export default function ProductPage() {
               animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
               transition={{ duration: 1.0, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             >
-              <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-4 text-[#E8920A]/70">
+              <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-4 text-[#C4682A]/70">
                 Formuła Longevity
               </p>
 
               <h1 className="leading-[0.88] tracking-[-0.03em] text-[#111111] mb-3"
                 style={{ fontFamily: "var(--font-playfair)", fontSize: "clamp(2.8rem, 5vw, 5rem)" }}>
-                {p.name}<span style={{ color: "#E8920A" }}>.</span>
+                {p.name}<span style={{ color: "#C4682A" }}>.</span>
               </h1>
 
               <p className="text-[9px] font-mono tracking-[0.28em] uppercase text-[#111111]/30 mb-6">{p.tagline}</p>
@@ -255,7 +255,7 @@ export default function ProductPage() {
               {/* Rating */}
               <div className="flex items-center gap-3 mb-8">
                 <div className="flex gap-0.5">
-                  {[1,2,3,4,5].map(s => <span key={s} className="text-[#E8920A] text-xs">★</span>)}
+                  {[1,2,3,4,5].map(s => <span key={s} className="text-[#C4682A] text-xs">★</span>)}
                 </div>
                 <span className="text-[9px] font-mono text-[#111111]/28 tracking-[0.15em]">
                   4,9 / 5,0 · ponad 1200 opinii
@@ -301,7 +301,7 @@ export default function ProductPage() {
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
                 {["Darmowa dostawa", "30-dniowa gwarancja zwrotu", "Certyfikat GMP"].map((t) => (
                   <div key={t} className="flex items-center gap-1.5">
-                    <span className="w-1 h-1 rounded-full bg-[#E8920A]" />
+                    <span className="w-1 h-1 rounded-full bg-[#C4682A]" />
                     <span className="text-[10px] text-[#111111]/30 tracking-wide">{t}</span>
                   </div>
                 ))}
@@ -320,7 +320,7 @@ export default function ProductPage() {
               style={{ color: p.color, opacity: 0.65 }}>Pełny skład bez tajemnic</p>
             <h2 className="text-3xl md:text-4xl font-bold tracking-[-0.03em] text-[#111111] mb-12"
               style={{ fontFamily: "var(--font-playfair)" }}>
-              Co zawiera<span style={{ color: "#E8920A" }}>.</span>
+              Co zawiera<span style={{ color: "#C4682A" }}>.</span>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0 border border-[#111111]/[0.07] rounded-2xl overflow-hidden">
               {p.ingredients.map((ing, i) => (
@@ -347,10 +347,10 @@ export default function ProductPage() {
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 xl:px-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
             <div>
-              <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-3 text-[#E8920A]/70">Jak stosować</p>
+              <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-3 text-[#C4682A]/70">Jak stosować</p>
               <h2 className="text-2xl font-bold text-[#111111] mb-4 tracking-[-0.02em]"
                 style={{ fontFamily: "var(--font-playfair)" }}>
-                Instrukcja stosowania<span style={{ color: "#E8920A" }}>.</span>
+                Instrukcja stosowania<span style={{ color: "#C4682A" }}>.</span>
               </h2>
               <p className="text-sm text-[#111111]/45 leading-[1.85]">{p.usage}</p>
             </div>
@@ -368,7 +368,7 @@ export default function ProductPage() {
           <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-3 text-[#111111]/30">Uzupełnij system</p>
           <h2 className="text-2xl font-bold text-[#111111] mb-10 tracking-[-0.02em]"
             style={{ fontFamily: "var(--font-playfair)" }}>
-            Może Cię też zainteresować<span style={{ color: "#E8920A" }}>.</span>
+            Może Cię też zainteresować<span style={{ color: "#C4682A" }}>.</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {others.map((other) => (
@@ -378,15 +378,15 @@ export default function ProductPage() {
                   <Image src={other.img} alt={other.name} fill className="object-contain" sizes="80px" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-[#111111] group-hover:text-[#E8920A] transition-colors tracking-[-0.02em]"
+                  <h3 className="text-lg font-bold text-[#111111] group-hover:text-[#C4682A] transition-colors tracking-[-0.02em]"
                     style={{ fontFamily: "var(--font-playfair)" }}>
-                    {other.name}<span style={{ color: "#E8920A" }}>.</span>
+                    {other.name}<span style={{ color: "#C4682A" }}>.</span>
                   </h3>
                   <p className="text-[9px] font-mono tracking-[0.18em] uppercase text-[#111111]/28 mt-1">{other.tagline}</p>
                 </div>
                 <div className="flex-shrink-0 text-right">
                   <p className="text-sm font-semibold text-[#111111]">{other.price}</p>
-                  <span className="text-[#111111]/25 group-hover:text-[#E8920A] inline-block transition-all duration-200 mt-2">→</span>
+                  <span className="text-[#111111]/25 group-hover:text-[#C4682A] inline-block transition-all duration-200 mt-2">→</span>
                 </div>
               </Link>
             ))}

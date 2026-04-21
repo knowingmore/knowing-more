@@ -10,12 +10,12 @@ const config: Config = {
     extend: {
       colors: {
         navy: {
-          DEFAULT: "#1B2A4A",
+          DEFAULT: "#C4682A",
           light: "#243560",
           dark: "#111C33",
         },
         amber: {
-          brand: "#E8920A",
+          brand: "#C4682A",
           light: "#F5A832",
           pale: "#FDF3E0",
         },

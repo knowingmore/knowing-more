@@ -50,7 +50,7 @@ export default function ContactPL() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#E8920A] mb-6"
+          className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#C4682A] mb-6"
         >
           Wsparcie
         </motion.p>
@@ -99,7 +99,7 @@ export default function ContactPL() {
                 <span
                   className="text-sm transition-all duration-300 flex-shrink-0"
                   style={{
-                    color: selected === topic.id ? "#E8920A" : "rgba(17,17,17,0.25)",
+                    color: selected === topic.id ? "#C4682A" : "rgba(17,17,17,0.25)",
                     transform: selected === topic.id ? "rotate(90deg)" : "rotate(0deg)",
                     display: "inline-block",
                   }}
@@ -126,7 +126,7 @@ export default function ContactPL() {
                 {active.href && active.cta && (
                   <Link
                     href={active.href}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-[#E8920A] hover:gap-3 transition-all duration-200"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-[#C4682A] hover:gap-3 transition-all duration-200"
                   >
                     {active.cta} <span>→</span>
                   </Link>

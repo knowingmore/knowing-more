@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>knowing more. — Product Design Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --amber: #E8920A;
+  --navy: #1B2A4A;
+  --stone: #A0784A;
+  --terra: #C4682A;
+  --dark: #111111;
+  --paper: #F7F5F1;
+  --border: rgba(17,17,17,0.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--paper);
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(247,245,241,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  height: 60px;
+}
+
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--dark);
+  opacity: 0.7;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dark);
+  opacity: 0.4;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.nav-links a:hover { opacity: 0.9; }
+
+.nav-badge {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: var(--amber);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ── LAYOUT ── */
+.page { padding-top: 60px; }
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+/* ── COVER ── */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 48px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.cover-label {
+  font-size: 9px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+.cover-h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin-bottom: 32px;
+}
+
+.cover-h1 .dim { color: rgba(17,17,17,0.2); font-style: italic; }
+.cover-h1 .accent { color: var(--amber); }
+
+.cover-desc {
+  font-size: 14px;
+  color: rgba(17,17,17,0.45);
+  max-width: 460px;
+  line-height: 1.85;
+  margin-bottom: 48px;
+}
+
+.cover-meta {
+  display: flex;
+  gap: 40px;
+  border-top: 1px solid var(--border);
+  padding-top: 28px;
+}
+
+.meta-item { display: flex; flex-direction: column; gap: 4px; }
+.meta-label { font-size: 8px; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(17,17,17,0.3); font-weight: 500; }
+.meta-value { font-size: 12px; color: rgba(17,17,17,0.65); font-weight: 500; }
+
+.cover-product-strip {
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  opacity: 0.25;
+}
+
+.cover-product-strip img { width: 180px; height: auto; filter: grayscale(40%); }
+
+/* ── DIVIDER ── */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* ── SECTION HEADER ── */
+.section {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-eyebrow {
+  font-size: 8px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--amber);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.section-h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin-bottom: 10px;
+}
+
+.section-h2 .dot { color: var(--amber); }
+
+.section-sub {
+  font-size: 13px;
+  color: rgba(17,17,17,0.4);
+  max-width: 520px;
+  line-height: 1.8;
+}
+
+/* ── PRODUCTS CURRENT ── */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.product-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.product-card-img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: contain;
+  padding: 24px;
+  background: #FAFAFA;
+}
+
+.product-card-body {
+  padding: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.product-card-tag {
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.product-card-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.product-card-note {
+  font-size: 11px;
+  color: rgba(17,17,17,0.35);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+/* ── INSPIRATION ── */
+.inspiration-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.inspo-card {
+  padding: 32px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: white;
+}
+
+.inspo-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+
+.inspo-url {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgba(17,17,17,0.3);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.inspo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inspo-list li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 12px;
+  color: rgba(17,17,17,0.6);
+  line-height: 1.6;
+}
+
+.inspo-list li::before {
+  content: '→';
+  color: var(--amber);
+  flex-shrink: 0;
+  font-size: 11px;
+  margin-top: 1px;
+}
+
+.inspo-qualities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.quality-pill {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  background: var(--paper);
+  color: rgba(17,17,17,0.5);
+  border: 1px solid var(--border);
+}
+
+/* ── DIRECTION WORDS ── */
+.direction-words {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 48px;
+}
+
+.direction-word {
+  background: white;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dw-word {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--dark);
+  font-style: italic;
+}
+
+.dw-desc {
+  font-size: 11px;
+  color: rgba(17,17,17,0.38);
+  line-height: 1.6;
+}
+
+/* ── CAN MOCKUPS ── */
+.mockups-row {
+  display: flex;
+  gap: 40px;
+  align-items: flex-end;
+  justify-content: center;
+  margin-top: 60px;
+  flex-wrap: wrap;
+}
+
+.can-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.can {
+  position: relative;
+  width: 190px;
+  height: 230px;
+  border-radius: 16px 16px 12px 12px;
+  overflow: hidden;
+  box-shadow:
+    0 32px 64px rgba(0,0,0,0.2),
+    0 8px 20px rgba(0,0,0,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.1),
+    inset -5px 0 15px rgba(0,0,0,0.12),
+    inset 5px 0 8px rgba(255,255,255,0.05);
+}
+
+.can::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 30px;
+  border-radius: 16px 16px 0 0;
+  z-index: 10;
+  filter: brightness(0.72);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3), inset 0 -1px 0 rgba(0,0,0,0.2);
+}
+
+.can::after {
+  content: '';
+  position: absolute;
+  top: 27px; left: 0; right: 0;
+  height: 5px;
+  background: rgba(0,0,0,0.22);
+  z-index: 11;
+}
+
+.can-navy { background: linear-gradient(140deg, #1e2f4e 0%, #1B2A4A 45%, #14203a 100%); }
+.can-navy::before { background: linear-gradient(135deg, #141f34, #1a2740); }
+
+.can-stone { background: linear-gradient(140deg, #b08a60 0%, #A0784A 45%, #7d6038 100%); }
+.can-stone::before { background: linear-gradient(135deg, #7a6248, #8e7055); }
+
+.can-terra { background: linear-gradient(140deg, #cc7235 0%, #C4682A 45%, #9e4e20 100%); }
+.can-terra::before { background: linear-gradient(135deg, #8c3e18, #ab5222); }
+
+.can-shine {
+  position: absolute;
+  top: 32px; left: 10px;
+  width: 26px;
+  bottom: 10px;
+  background: linear-gradient(to right, rgba(255,255,255,0.1), transparent);
+  border-radius: 4px;
+  z-index: 5;
+}
+
+.label {
+  position: absolute;
+  top: 42px; bottom: 12px;
+  left: 0; right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px 12px;
+  z-index: 6;
+}
+
+.label-top { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.formula-id { font-size: 7px; letter-spacing: 0.42em; text-transform: uppercase; color: rgba(255,255,255,0.32); font-weight: 500; margin-bottom: 8px; }
+.amber-rule { width: 22px; height: 1px; background: #E8920A; margin: 0 auto 8px; opacity: 0.65; }
+.brand-mark { font-family: 'Playfair Display', serif; font-size: 8px; letter-spacing: 0.18em; color: rgba(255,255,255,0.42); font-weight: 400; margin-bottom: 10px; }
+.product-name { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 500; color: #fff; line-height: 1; text-align: center; letter-spacing: -0.01em; }
+.product-name .dot { color: #E8920A; }
+.product-tagline { font-size: 6.5px; letter-spacing: 0.26em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 5px; }
+.label-mid { width: 100%; height: 1px; background: rgba(255,255,255,0.09); flex-shrink: 0; }
+.ingredients-line { font-size: 6px; letter-spacing: 0.26em; text-transform: uppercase; text-align: center; line-height: 1.9; }
+.ing-primary { color: rgba(255,255,255,0.52); font-weight: 600; display: block; }
+.ing-secondary { color: rgba(255,255,255,0.26); display: block; }
+.label-bottom { display: flex; flex-direction: column; align-items: center; gap: 3px; width: 100%; }
+.bottom-rule { width: 100%; height: 1px; background: rgba(255,255,255,0.07); }
+.cert-row { display: flex; gap: 8px; align-items: center; }
+.cert { font-size: 5px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.18); font-weight: 500; }
+.cert-sep { width: 2px; height: 2px; border-radius: 50%; background: rgba(255,255,255,0.12); }
+.serving-line { font-size: 5.5px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
+
+.can-label-name { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(17,17,17,0.3); font-weight: 500; }
+
+/* ── BEFORE / AFTER ── */
+.before-after {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.ba-card {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.ba-header {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  background: white;
+}
+
+.ba-badge {
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.badge-before { background: rgba(17,17,17,0.06); color: rgba(17,17,17,0.45); }
+.badge-after  { background: rgba(232,146,10,0.12); color: var(--amber); }
+
+.ba-title { font-size: 13px; color: var(--dark); font-weight: 600; }
+
+.ba-body {
+  padding: 24px;
+  background: #FAFAFA;
+  display: flex;
+  gap: 16px;
+}
+
+.ba-img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 8px;
+  flex-shrink: 0;
+}
+
+.ba-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ba-note {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 11px;
+  color: rgba(17,17,17,0.55);
+  line-height: 1.55;
+}
+
+.ba-note-icon { font-size: 10px; flex-shrink: 0; margin-top: 1px; }
+
+/* ── SPECS TABLE ── */
+.specs {
+  margin-top: 48px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.specs-row {
+  display: grid;
+  grid-template-columns: 220px 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+  min-height: 52px;
+  align-items: center;
+}
+
+.specs-row:last-child { border-bottom: none; }
+
+.specs-row.header { background: var(--paper); }
+
+.specs-cell {
+  padding: 14px 20px;
+  font-size: 12px;
+  border-right: 1px solid var(--border);
+}
+
+.specs-cell:last-child { border-right: none; }
+
+.specs-cell.label-cell {
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(17,17,17,0.4);
+  font-weight: 600;
+}
+
+.specs-cell.element {
+  font-weight: 600;
+  color: var(--dark);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+.specs-cell.current { color: rgba(17,17,17,0.4); text-decoration: line-through; }
+.specs-cell.new { color: var(--dark); font-weight: 500; }
+.accent-text { color: var(--amber); font-weight: 600; }
+
+/* ── COLORS ── */
+.colors-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.color-card {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: white;
+}
+
+.color-swatch {
+  height: 80px;
+}
+
+.color-info { padding: 12px; }
+.color-name { font-size: 10px; font-weight: 600; color: var(--dark); margin-bottom: 2px; }
+.color-hex { font-size: 9px; letter-spacing: 0.15em; color: rgba(17,17,17,0.4); font-weight: 500; }
+.color-usage { font-size: 9px; color: rgba(17,17,17,0.35); margin-top: 4px; line-height: 1.5; }
+
+/* ── TYPOGRAPHY SPEC ── */
+.type-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 48px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.type-row {
+  background: white;
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.type-meta { display: flex; flex-direction: column; gap: 4px; }
+.type-role { font-size: 8px; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(17,17,17,0.35); font-weight: 600; }
+.type-spec { font-size: 10px; color: rgba(17,17,17,0.5); line-height: 1.7; }
+
+.type-sample-1 { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 500; color: var(--dark); letter-spacing: -0.01em; line-height: 1; }
+.type-sample-2 { font-family: 'Playfair Display', serif; font-size: 24px; font-style: italic; color: rgba(17,17,17,0.35); line-height: 1; }
+.type-sample-3 { font-family: 'Playfair Display', serif; font-size: 14px; color: rgba(17,17,17,0.5); letter-spacing: 0.01em; }
+.type-sample-4 { font-family: 'Inter', sans-serif; font-size: 8px; letter-spacing: 0.42em; text-transform: uppercase; color: var(--amber); font-weight: 600; }
+.type-sample-5 { font-family: 'Inter', sans-serif; font-size: 12px; color: rgba(17,17,17,0.45); line-height: 1.85; max-width: 360px; }
+
+/* ── CANVA STEPS ── */
+.steps { display: flex; flex-direction: column; gap: 1px; margin-top: 48px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+
+.step { background: white; display: grid; grid-template-columns: 56px 1fr; min-height: 64px; }
+
+.step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper);
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  color: rgba(17,17,17,0.15);
+  font-weight: 700;
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.step-content { padding: 18px 24px; }
+.step-title { font-size: 12px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.step-desc { font-size: 11px; color: rgba(17,17,17,0.5); line-height: 1.65; }
+.step-desc strong { color: var(--dark); font-weight: 600; }
+.step-desc code {
+  font-family: 'Inter', monospace;
+  font-size: 10px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--amber);
+}
+
+/* ── PER PRODUCT SPECS ── */
+.product-specs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+
+.pspec { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+
+.pspec-header { padding: 20px 24px; }
+.pspec-header.navy { background: #1B2A4A; }
+.pspec-header.stone { background: #A0784A; }
+.pspec-header.terra { background: #C4682A; }
+
+.pspec-num { font-size: 8px; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(255,255,255,0.35); font-weight: 500; margin-bottom: 6px; }
+.pspec-name { font-family: 'Playfair Display', serif; font-size: 22px; color: white; font-weight: 500; }
+.pspec-name .dot { color: #E8920A; }
+
+.pspec-body { padding: 20px 24px; background: white; display: flex; flex-direction: column; gap: 14px; }
+
+.pspec-row { display: flex; flex-direction: column; gap: 3px; }
+.pspec-label { font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(17,17,17,0.3); font-weight: 600; }
+.pspec-val { font-size: 12px; color: var(--dark); font-weight: 500; }
+.pspec-val code { font-size: 11px; color: var(--amber); background: rgba(232,146,10,0.08); padding: 1px 6px; border-radius: 4px; }
+
+/* ── REMOVE / KEEP / ADD ── */
+.rka-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+
+.rka-card { border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+
+.rka-header { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.rka-header.remove { background: #FEF2F2; }
+.rka-header.keep   { background: #F0FDF4; }
+.rka-header.add    { background: #FFFBEB; }
+
+.rka-title { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; font-weight: 700; }
+.rka-title.remove { color: #DC2626; }
+.rka-title.keep   { color: #16A34A; }
+.rka-title.add    { color: #D97706; }
+
+.rka-list { list-style: none; padding: 16px 20px; background: white; display: flex; flex-direction: column; gap: 10px; }
+
+.rka-item { display: flex; gap: 8px; font-size: 11px; color: rgba(17,17,17,0.6); line-height: 1.55; align-items: flex-start; }
+.rka-icon { flex-shrink: 0; font-size: 11px; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.footer-brand { font-family: 'Playfair Display', serif; font-size: 14px; color: rgba(17,17,17,0.35); }
+.footer-note { font-size: 10px; color: rgba(17,17,17,0.25); letter-spacing: 0.1em; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .container { padding: 0 20px; }
+  .cover { padding: 100px 20px 60px; }
+  .products-grid, .before-after, .rka-grid, .product-specs-grid, .colors-grid { grid-template-columns: 1fr; }
+  .inspiration-grid { grid-template-columns: 1fr; }
+  .direction-words { grid-template-columns: 1fr 1fr; }
+  .specs-row { grid-template-columns: 1fr; }
+  .type-row { grid-template-columns: 1fr; }
+  .step { grid-template-columns: 44px 1fr; }
+  .mockups-row { gap: 24px; }
+  .cover-product-strip { display: none; }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-brand">knowing more.</span>
+  <ul class="nav-links">
+    <li><a href="#current">Current</a></li>
+    <li><a href="#direction">Direction</a></li>
+    <li><a href="#redesign">Redesign</a></li>
+    <li><a href="#specs">Specs</a></li>
+    <li><a href="#canva">Canva Guide</a></li>
+  </ul>
+  <span class="nav-badge">Design Brief v1</span>
+</nav>
+
+<div class="page">
+
+<!-- ── COVER ────────────────────────────────────────────── -->
+<section class="cover">
+  <div class="cover-product-strip">
+    <img src="public/images/products/performance.png" alt="" />
+    <img src="public/images/products/balance.png" alt="" />
+    <img src="public/images/products/gut-health.png" alt="" />
+  </div>
+  <p class="cover-label">knowing more. — Product Design Brief</p>
+  <h1 class="cover-h1">
+    Prestige.<br />
+    <span class="dim">Label Redesign<span class="accent">.</span></span>
+  </h1>
+  <p class="cover-desc">
+    A complete visual direction for upgrading the knowing more. product labels from
+    Version 1 (Canva) to a luxury, eye-catching standard — inspired by IM8 and Simple Nootropics.
+    Includes design rationale, before/after comparison, full Canva specifications, and
+    per-product colour & copy details.
+  </p>
+  <div class="cover-meta">
+    <div class="meta-item">
+      <span class="meta-label">Brand</span>
+      <span class="meta-value">knowing more.</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Products</span>
+      <span class="meta-value">Performance · Balance · Gut Health</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Direction</span>
+      <span class="meta-value">Prestigious · Luxurious · Clinical</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Inspiration</span>
+      <span class="meta-value">IM8 · Simple Nootropics</span>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+<!-- ── 01 CURRENT PRODUCTS ───────────────────────────────── -->
+<section class="section" id="current">
+  <p class="section-eyebrow">01 — Starting Point</p>
+  <h2 class="section-h2">Current Canva designs<span class="dot">.</span></h2>
+  <p class="section-sub">Version 1 created in Canva. The can shape and brand colour system are solid foundations — the label hierarchy and content need upgrading.</p>
+
+  <div class="products-grid">
+    <div class="product-card">
+      <img class="product-card-img" src="public/images/products/performance.png" alt="Performance" />
+      <div class="product-card-body">
+        <p class="product-card-tag">Formula 001</p>
+        <p class="product-card-name">Performance</p>
+        <p class="product-card-note">Deep navy · Energy · Recovery · Focus<br />60 capsules</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <img class="product-card-img" src="public/images/products/balance.png" alt="Balance" />
+      <div class="product-card-body">
+        <p class="product-card-tag">Formula 002</p>
+        <p class="product-card-name">Balance</p>
+        <p class="product-card-note">Warm stone · Cortisol · Sleep · Hormones<br />60 capsules</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <img class="product-card-img" src="public/images/products/gut-health.png" alt="Gut Health" />
+      <div class="product-card-body">
+        <p class="product-card-tag">Formula 003</p>
+        <p class="product-card-name">Gut Health</p>
+        <p class="product-card-note">Terracotta · Microbiome · Digestion · Immunity<br />30 capsules</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 02 DIRECTION ──────────────────────────────────────── -->
+<section class="section" id="direction">
+  <p class="section-eyebrow">02 — Brand Direction</p>
+  <h2 class="section-h2">Where we're going<span class="dot">.</span></h2>
+  <p class="section-sub">Four words that define every design decision. When in doubt, ask: does this choice serve all four?</p>
+
+  <div class="direction-words">
+    <div class="direction-word">
+      <span class="dw-word">Prestigious</span>
+      <span class="dw-desc">Commands attention without shouting. Quiet confidence in every detail.</span>
+    </div>
+    <div class="direction-word">
+      <span class="dw-word">Luxurious</span>
+      <span class="dw-desc">Sparse, unhurried. White space costs nothing but signals everything.</span>
+    </div>
+    <div class="direction-word">
+      <span class="dw-word">Clinical</span>
+      <span class="dw-desc">Ingredient transparency. Formula numbers. Precision over decoration.</span>
+    </div>
+    <div class="direction-word">
+      <span class="dw-word">Collectible</span>
+      <span class="dw-desc">A numbered series, like a perfume house. 001 / 002 / 003.</span>
+    </div>
+  </div>
+
+  <div class="inspiration-grid" style="margin-top:32px;">
+    <div class="inspo-card">
+      <p class="inspo-brand">IM8</p>
+      <p class="inspo-url">im8.com</p>
+      <ul class="inspo-list">
+        <li>Dark, near-black container — the product doesn't need to shout</li>
+        <li>Gold / metallic typography gives a premium, almost jewellery-like feel</li>
+        <li>Product name is the hero — huge, dominant, central</li>
+        <li>Brand mark is small and discreet above the name</li>
+        <li>Extremely minimal text — every word earns its place</li>
+      </ul>
+      <div class="inspo-qualities">
+        <span class="quality-pill">Dark background</span>
+        <span class="quality-pill">Gold accents</span>
+        <span class="quality-pill">Minimal text</span>
+        <span class="quality-pill">Large product name</span>
+      </div>
+    </div>
+    <div class="inspo-card">
+      <p class="inspo-brand">Simple Nootropics</p>
+      <p class="inspo-url">simplenootropics.com.au</p>
+      <ul class="inspo-list">
+        <li>Clean, scientific aesthetic — trusted by people who read the research</li>
+        <li>Elegant serif + mono type pairing creates authority</li>
+        <li>Formula / compound name leads — the hero is the product, not the brand</li>
+        <li>Ingredient callouts in small mono text signal transparency</li>
+        <li>No noise — no taglines, no lifestyle copy on the label itself</li>
+      </ul>
+      <div class="inspo-qualities">
+        <span class="quality-pill">Clean / minimal</span>
+        <span class="quality-pill">Serif + mono</span>
+        <span class="quality-pill">Ingredient callouts</span>
+        <span class="quality-pill">Scientific authority</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 03 REDESIGN ───────────────────────────────────────── -->
+<section class="section" id="redesign">
+  <p class="section-eyebrow">03 — Redesign Concept</p>
+  <h2 class="section-h2">The new label<span class="dot">.</span></h2>
+  <p class="section-sub">The product name becomes the hero. The brand mark steps back. Formula numbers add prestige. Everything unnecessary is removed.</p>
+
+  <div class="mockups-row">
+    <div class="can-wrap">
+      <div class="can can-navy">
+        <div class="can-shine"></div>
+        <div class="label">
+          <div class="label-top">
+            <span class="formula-id">Formula 001</span>
+            <div class="amber-rule"></div>
+            <span class="brand-mark">knowing more.</span>
+            <div class="product-name">Performance<span class="dot">.</span></div>
+            <div class="product-tagline">Energy · Recovery · Focus</div>
+          </div>
+          <div class="label-mid"></div>
+          <div class="ingredients-line">
+            <span class="ing-primary">NMN · CoQ10 · Alpha-GPC</span>
+            <span class="ing-secondary">Clinically dosed · Full label</span>
+          </div>
+          <div class="label-bottom">
+            <div class="bottom-rule"></div>
+            <div class="cert-row">
+              <span class="cert">GMP</span><span class="cert-sep"></span>
+              <span class="cert">3rd Party Tested</span><span class="cert-sep"></span>
+              <span class="cert">Vegan</span>
+            </div>
+            <span class="serving-line">60 Capsules · 30 Servings</span>
+          </div>
+        </div>
+      </div>
+      <span class="can-label-name">Performance</span>
+    </div>
+
+    <div class="can-wrap">
+      <div class="can can-stone">
+        <div class="can-shine"></div>
+        <div class="label">
+          <div class="label-top">
+            <span class="formula-id">Formula 002</span>
+            <div class="amber-rule"></div>
+            <span class="brand-mark">knowing more.</span>
+            <div class="product-name">Balance<span class="dot">.</span></div>
+            <div class="product-tagline">Cortisol · Sleep · Hormones</div>
+          </div>
+          <div class="label-mid"></div>
+          <div class="ingredients-line">
+            <span class="ing-primary">KSM-66 · L-Theanine · Magnesium</span>
+            <span class="ing-secondary">Clinically dosed · Full label</span>
+          </div>
+          <div class="label-bottom">
+            <div class="bottom-rule"></div>
+            <div class="cert-row">
+              <span class="cert">GMP</span><span class="cert-sep"></span>
+              <span class="cert">3rd Party Tested</span><span class="cert-sep"></span>
+              <span class="cert">Vegan</span>
+            </div>
+            <span class="serving-line">60 Capsules · 30 Servings</span>
+          </div>
+        </div>
+      </div>
+      <span class="can-label-name">Balance</span>
+    </div>
+
+    <div class="can-wrap">
+      <div class="can can-terra">
+        <div class="can-shine"></div>
+        <div class="label">
+          <div class="label-top">
+            <span class="formula-id">Formula 003</span>
+            <div class="amber-rule"></div>
+            <span class="brand-mark">knowing more.</span>
+            <div class="product-name">Gut Health<span class="dot">.</span></div>
+            <div class="product-tagline">Microbiome · Digestion · Immunity</div>
+          </div>
+          <div class="label-mid"></div>
+          <div class="ingredients-line">
+            <span class="ing-primary">50B CFU Probiotic · L-Glutamine</span>
+            <span class="ing-secondary">Clinically dosed · Full label</span>
+          </div>
+          <div class="label-bottom">
+            <div class="bottom-rule"></div>
+            <div class="cert-row">
+              <span class="cert">GMP</span><span class="cert-sep"></span>
+              <span class="cert">3rd Party Tested</span><span class="cert-sep"></span>
+              <span class="cert">Vegan</span>
+            </div>
+            <span class="serving-line">30 Capsules · 30 Servings</span>
+          </div>
+        </div>
+      </div>
+      <span class="can-label-name">Gut Health</span>
+    </div>
+  </div>
+
+  <!-- Before / After -->
+  <div class="before-after" style="margin-top:48px;">
+    <div class="ba-card">
+      <div class="ba-header">
+        <span class="ba-badge badge-before">Before</span>
+        <span class="ba-title">Current Canva label</span>
+      </div>
+      <div class="ba-body">
+        <img class="ba-img" src="public/images/products/performance.png" alt="Before" />
+        <div class="ba-notes">
+          <div class="ba-note"><span class="ba-note-icon">✗</span>"knowing" wordmark dominates — acts as the hero</div>
+          <div class="ba-note"><span class="ba-note-icon">✗</span>"Good things come to those who are" tagline on the can — clutters premium feel</div>
+          <div class="ba-note"><span class="ba-note-icon">✗</span>Product name ("Performance.") is small, below-the-fold</div>
+          <div class="ba-note"><span class="ba-note-icon">✗</span>No formula / series number</div>
+          <div class="ba-note"><span class="ba-note-icon">✗</span>No ingredient callouts or certifications</div>
+          <div class="ba-note"><span class="ba-note-icon">✗</span>Label feels crowded, no breathing room</div>
+        </div>
+      </div>
+    </div>
+    <div class="ba-card">
+      <div class="ba-header">
+        <span class="ba-badge badge-after">After</span>
+        <span class="ba-title">Redesigned label</span>
+      </div>
+      <div class="ba-body" style="background:#1B2A4A; border:none;">
+        <div style="width:120px;height:120px;flex-shrink:0;border-radius:10px;overflow:hidden;background:#152035;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;padding:8px;">
+          <span style="font-size:6px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.3);font-weight:500;">Formula 001</span>
+          <span style="width:18px;height:1px;background:#E8920A;opacity:0.6;margin:3px 0;"></span>
+          <span style="font-family:'Playfair Display',serif;font-size:7px;letter-spacing:0.15em;color:rgba(255,255,255,0.4);">knowing more.</span>
+          <span style="font-family:'Playfair Display',serif;font-size:20px;color:white;font-weight:500;line-height:1.1;">Performance<span style="color:#E8920A;">.</span></span>
+          <span style="font-size:5px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-top:3px;">Energy · Recovery · Focus</span>
+        </div>
+        <div class="ba-notes">
+          <div class="ba-note" style="color:rgba(255,255,255,0.55);"><span class="ba-note-icon" style="color:#E8920A;">✓</span>Product name is the visual hero — large serif, central</div>
+          <div class="ba-note" style="color:rgba(255,255,255,0.55);"><span class="ba-note-icon" style="color:#E8920A;">✓</span>"knowing more." demoted to quiet mark above product name</div>
+          <div class="ba-note" style="color:rgba(255,255,255,0.55);"><span class="ba-note-icon" style="color:#E8920A;">✓</span>Formula 001 / 002 / 003 — luxury series identity</div>
+          <div class="ba-note" style="color:rgba(255,255,255,0.55);"><span class="ba-note-icon" style="color:#E8920A;">✓</span>Thin amber rule — a refined signature detail</div>
+          <div class="ba-note" style="color:rgba(255,255,255,0.55);"><span class="ba-note-icon" style="color:#E8920A;">✓</span>3 key ingredient callouts + cert strip</div>
+          <div class="ba-note" style="color:rgba(255,255,255,0.55);"><span class="ba-note-icon" style="color:#E8920A;">✓</span>White space — the label breathes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Remove / Keep / Add -->
+  <div class="rka-grid">
+    <div class="rka-card">
+      <div class="rka-header remove">
+        <p class="rka-title remove">✗ Remove</p>
+      </div>
+      <ul class="rka-list">
+        <li class="rka-item"><span class="rka-icon">—</span>"Good things come to those who are" tagline on the label — save for marketing</li>
+        <li class="rka-item"><span class="rka-icon">—</span>Large "knowing" wordmark as the visual hero</li>
+        <li class="rka-item"><span class="rka-icon">—</span>Overcrowded label area with competing type sizes</li>
+        <li class="rka-item"><span class="rka-icon">—</span>Canva default template feeling</li>
+      </ul>
+    </div>
+    <div class="rka-card">
+      <div class="rka-header keep">
+        <p class="rka-title keep">✓ Keep</p>
+      </div>
+      <ul class="rka-list">
+        <li class="rka-item"><span class="rka-icon">+</span>The can shape — it works well, clean silhouette</li>
+        <li class="rka-item"><span class="rka-icon">+</span>The three colour identities (navy / stone / terracotta)</li>
+        <li class="rka-item"><span class="rka-icon">+</span>The amber #E8920A as accent — distinctive and warm</li>
+        <li class="rka-item"><span class="rka-icon">+</span>The product name series (Performance / Balance / Gut Health)</li>
+        <li class="rka-item"><span class="rka-icon">+</span>Playfair Display serif — premium and distinctive</li>
+      </ul>
+    </div>
+    <div class="rka-card">
+      <div class="rka-header add">
+        <p class="rka-title add">+ Add</p>
+      </div>
+      <ul class="rka-list">
+        <li class="rka-item"><span class="rka-icon">→</span>Formula 001 / 002 / 003 series numbers at top</li>
+        <li class="rka-item"><span class="rka-icon">→</span>Thin amber horizontal rule as signature divider</li>
+        <li class="rka-item"><span class="rka-icon">→</span>3 key ingredient callouts (mid label)</li>
+        <li class="rka-item"><span class="rka-icon">→</span>GMP · 3rd Party Tested · Vegan cert strip</li>
+        <li class="rka-item"><span class="rka-icon">→</span>Drop shadow on final PNG export</li>
+        <li class="rka-item"><span class="rka-icon">→</span>Canister render with specular highlight</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── 04 FULL SPECS ─────────────────────────────────────── -->
+<section class="section" id="specs">
+  <p class="section-eyebrow">04 — Design Specifications</p>
+  <h2 class="section-h2">Colours & typography<span class="dot">.</span></h2>
+  <p class="section-sub">Everything a designer or Canva user needs to reproduce the look exactly.</p>
+
+  <!-- Colors -->
+  <div class="colors-grid">
+    <div class="color-card">
+      <div class="color-swatch" style="background:#1B2A4A;"></div>
+      <div class="color-info">
+        <p class="color-name">Navy</p>
+        <p class="color-hex">#1B2A4A</p>
+        <p class="color-usage">Performance can body</p>
+      </div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#A0784A;"></div>
+      <div class="color-info">
+        <p class="color-name">Stone</p>
+        <p class="color-hex">#A0784A</p>
+        <p class="color-usage">Balance can body</p>
+      </div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#C4682A;"></div>
+      <div class="color-info">
+        <p class="color-name">Terracotta</p>
+        <p class="color-hex">#C4682A</p>
+        <p class="color-usage">Gut Health can body</p>
+      </div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#E8920A;"></div>
+      <div class="color-info">
+        <p class="color-name">Amber</p>
+        <p class="color-hex">#E8920A</p>
+        <p class="color-usage">Accent dot, rule, period</p>
+      </div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#FFFFFF; border-bottom: 1px solid rgba(0,0,0,0.06);"></div>
+      <div class="color-info">
+        <p class="color-name">White</p>
+        <p class="color-hex">#FFFFFF</p>
+        <p class="color-usage">All label text</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="type-rows">
+    <div class="type-row">
+      <div class="type-meta">
+        <span class="type-role">Product Name</span>
+        <span class="type-spec">Playfair Display Medium<br/>52–58pt · tracking −10<br/>White 100% · amber period</span>
+      </div>
+      <div class="type-sample-1">Performance<span style="color:var(--amber)">.</span></div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">
+        <span class="type-role">Brand Mark</span>
+        <span class="type-spec">Playfair Display Regular<br/>10pt · tracking +180<br/>Lowercase · white 45%</span>
+      </div>
+      <div class="type-sample-3" style="font-style:normal; font-size:18px; letter-spacing:0.18em; color:rgba(17,17,17,0.4);">knowing more.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">
+        <span class="type-role">Formula Number</span>
+        <span class="type-spec">Inter Medium<br/>7–8pt · tracking +420<br/>Uppercase · white 32%</span>
+      </div>
+      <div class="type-sample-4" style="color:rgba(17,17,17,0.35); font-size:11px;">Formula 001</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">
+        <span class="type-role">Tagline / Pillars</span>
+        <span class="type-spec">Inter Light<br/>7pt · tracking +280<br/>Uppercase · white 28%</span>
+      </div>
+      <div class="type-sample-4" style="color:rgba(17,17,17,0.3);">Energy · Recovery · Focus</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">
+        <span class="type-role">Ingredient Callout</span>
+        <span class="type-spec">Inter SemiBold<br/>6pt · tracking +300<br/>Uppercase · white 52%</span>
+      </div>
+      <div class="type-sample-4" style="color:rgba(17,17,17,0.4); letter-spacing:0.3em;">NMN · CoQ10 · Alpha-GPC</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">
+        <span class="type-role">Cert Strip</span>
+        <span class="type-spec">Inter Medium<br/>5.5pt · tracking +220<br/>Uppercase · white 20%</span>
+      </div>
+      <div class="type-sample-4" style="color:rgba(17,17,17,0.25); font-size:9px;">GMP · 3rd Party Tested · Vegan</div>
+    </div>
+  </div>
+
+  <!-- Per product specs -->
+  <div style="margin-top:48px;">
+    <p style="font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(17,17,17,0.3);font-weight:600;margin-bottom:24px;">Per-product details</p>
+  </div>
+  <div class="product-specs-grid">
+    <div class="pspec">
+      <div class="pspec-header navy">
+        <p class="pspec-num">Formula 001</p>
+        <p class="pspec-name">Performance<span class="dot">.</span></p>
+      </div>
+      <div class="pspec-body">
+        <div class="pspec-row">
+          <span class="pspec-label">Can body</span>
+          <span class="pspec-val"><code>#1B2A4A</code> Deep navy</span>
+        </div>
+        <div class="pspec-row">
+          <span class="pspec-label">Lid</span>
+          <span class="pspec-val"><code>#141F34</code> Darker navy</span>
+        </div>
+        <div class="pspec-row">
+          <span class="pspec-label">Tagline</span>
+          <span class="pspec-val">Energy · Recovery · Focus</span>
+        </div>
+        <div class="pspec-row">
+          <span class="pspec-label">Key ingredients</span>
+          <span class="pspec-val">NMN · CoQ10 · Alpha-GPC</span>
+        </div>
+        <div class="pspec-row">
+          <span class="pspec-label">Servings</span>
+          <span class="pspec-val">60 Capsules · 30 Servings</span>
+        </div>
+      </div>
+    </div>
+    <div class="pspec">
+      <div class="pspec-header stone">
+        <p class="pspec-num">Formula 002</p>
+        <p class="pspec-name">Balance<span class="dot">.</span></p>
+      </div>
+      <div class="pspec-body">
+        <div class="pspec-row">
+          <span class="pspec-label">Can body</span>
+          <span class="pspec-val"><code>#A0784A</code> Warm stone</span>
+        </div>
+        <div class="pspec-row">
+          <span class="pspec-label">Lid</span>
+          <span class="pspec-val"><code>#7A6248</code> Darker stone</span>
+        </div>
+        <div class="pspec-row">
+          <span class="pspec-label">Tagline</span>
+          <span class="pspec-val">Cortisol · Sleep · Hormones</span>
+        </div>
+        <div class="pspec-row">
+          <span class="pspec-label">Key ingredients</span>
+          <span class="pspec-val">KSM-66 · L-Theanine · Magnesium</span>
+        </div>
+        <div class="pspec-row">
+          <span class="pspec-label">Servings</span>
+          <span class="pspec-val">60 Capsules · 30 Servings</span>
+        </div>
+      </div>
+    </div>
+    <div class="pspec">
+      <div class="pspec-header terra">
+        <p class="pspec-num">Formula 003</p>
+        <p class="pspec-name">Gut Health<span class="dot">.</span></p>
+      </div>
+      <div class="pspec-body">
+        <div class="pspec-row">
+          <span class="pspec-label">Can body</span>
+          <span class="pspec-val"><code>#C4682A</code> Terracotta</span>
+        </div>
+        <div class="pspec-row">
+          <span class="pspec-label">Lid</span>
+          <span class="pspec-val"><code>#8C3E18</code> Darker terra</span>
+        </div>
+        <div class="pspec-row">
+          <span class="pspec-label">Tagline</span>
+          <span class="pspec-val">Microbiome · Digestion · Immunity</span>
+        </div>
+        <div class="pspec-row">
+          <span class="pspec-label">Key ingredients</span>
+          <span class="pspec-val">50B CFU Probiotic · L-Glutamine</span>
+        </div>
+        <div class="pspec-row">
+          <span class="pspec-label">Servings</span>
+          <span class="pspec-val">30 Capsules · 30 Servings</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 05 CANVA GUIDE ────────────────────────────────────── -->
+<section class="section" id="canva">
+  <p class="section-eyebrow">05 — Canva Step-by-Step</p>
+  <h2 class="section-h2">How to build this in Canva<span class="dot">.</span></h2>
+  <p class="section-sub">Follow these steps in order for each of the three products. Repeat with the correct colours per product.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <p class="step-title">Create the canvas</p>
+        <p class="step-desc">New design → Custom size → <strong>1200 × 1800 px</strong> (portrait). This is a label wrap for a standard supplement canister. Set background to the product colour (<code>#1B2A4A</code> / <code>#A0784A</code> / <code>#C4682A</code>).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <p class="step-title">Add the lid area</p>
+        <p class="step-desc">Draw a rectangle at the top, <strong>full width × 240px tall</strong>. Fill with the darker lid colour. Add a thin drop shadow beneath it (offset Y: 10px, blur: 20px, opacity: 30%). This simulates the lid-to-body join.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <p class="step-title">Formula number — top element</p>
+        <p class="step-desc">Text: <strong>"Formula 001"</strong> — Inter Medium, <strong>28px</strong>, letter-spacing <code>+40</code>, UPPERCASE. Colour: white, <strong>32% opacity</strong>. Centre-align, position 60px below the lid edge.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <p class="step-title">Amber rule</p>
+        <p class="step-desc">Draw a horizontal line: <strong>120px wide × 2px tall</strong>. Colour: <code>#E8920A</code>, opacity <strong>65%</strong>. Centre it below the formula number, 20px gap.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <p class="step-title">Brand mark</p>
+        <p class="step-desc">Text: <strong>"knowing more."</strong> — Playfair Display Regular, <strong>36px</strong>, letter-spacing <code>+18</code>, lowercase. Colour: white, <strong>45% opacity</strong>. Centre it 16px below the amber rule.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <p class="step-title">Product name — the hero</p>
+        <p class="step-desc">Text: <strong>"Performance"</strong> (or Balance / Gut Health) — Playfair Display Medium, <strong>160–180px</strong>, letter-spacing <code>−5</code>. White 100%. Then type a separate <strong>"."</strong> in <code>#E8920A</code> immediately after, same size. Centre both. This is the biggest, most dominant element on the label.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <p class="step-title">Pillar tagline</p>
+        <p class="step-desc">Text: <strong>"Energy · Recovery · Focus"</strong> — Inter Light, <strong>24px</strong>, letter-spacing <code>+28</code>, UPPERCASE. White, <strong>28% opacity</strong>. Centre, 20px below product name.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">8</div>
+      <div class="step-content">
+        <p class="step-title">Mid divider line</p>
+        <p class="step-desc">Full-width horizontal line, <strong>1px</strong>, white <strong>10% opacity</strong>. This separates the name zone from the ingredient zone. Place it centred vertically on the label.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">9</div>
+      <div class="step-content">
+        <p class="step-title">Ingredient callout</p>
+        <p class="step-desc">Line 1: <strong>"NMN · CoQ10 · Alpha-GPC"</strong> — Inter SemiBold, <strong>20px</strong>, letter-spacing <code>+30</code>, UPPERCASE, white <strong>52% opacity</strong>.<br/>Line 2: <strong>"Clinically dosed · Full label"</strong> — Inter Regular, same size, white <strong>26% opacity</strong>.<br/>Both centred, 40px below the mid divider.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">10</div>
+      <div class="step-content">
+        <p class="step-title">Certifications strip</p>
+        <p class="step-desc">Text: <strong>"GMP · 3rd Party Tested · Vegan"</strong> — Inter Medium, <strong>18px</strong>, letter-spacing <code>+22</code>, UPPERCASE. White, <strong>20% opacity</strong>. Anchor to 80px from the bottom edge.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">11</div>
+      <div class="step-content">
+        <p class="step-title">Serving count</p>
+        <p class="step-desc">Text: <strong>"60 Capsules · 30 Servings"</strong> — Inter Regular, <strong>18px</strong>, letter-spacing <code>+15</code>, UPPERCASE. White, <strong>22% opacity</strong>. Place 20px below certs strip, at the very bottom.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">12</div>
+      <div class="step-content">
+        <p class="step-title">Specular highlight (optional but recommended)</p>
+        <p class="step-desc">Draw a tall narrow rectangle: <strong>60px wide</strong>, from lid bottom to base. Left-align it (approx. 80px from left edge). Fill: white, use a <strong>left-to-right gradient fade</strong> from 8% to 0% opacity. This simulates the cylindrical light catch — immediately makes the can look more 3D and premium.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">13</div>
+      <div class="step-content">
+        <p class="step-title">Export & apply to can mockup</p>
+        <p class="step-desc">Export label as <strong>PNG, transparent background</strong>. Use a <strong>Canva canister mockup</strong> (search "supplement bottle mockup" in Canva elements) or upload to <strong>Smartmockups</strong> / <strong>Placeit</strong> to wrap the label onto the 3D can. Save as <code>performance.png</code>, <code>balance.png</code>, <code>gut-health.png</code> and replace in <code>/public/images/products/</code>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  <span class="footer-brand">knowing more. — Product Design Brief</span>
+  <span class="footer-note">Confidential · Internal Use Only · v1.0</span>
+</footer>
+
+</div><!-- /page -->
+</body>
+</html>

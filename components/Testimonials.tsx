@@ -16,7 +16,7 @@ const TR = {
         initials: "SM",
         rating: 5,
         product: "Performance.",
-        productColor: "#E8920A",
+        productColor: "#C4682A",
         quote:
           "I've tried countless pre-workout and recovery supplements. knowing more. Performance is the first where I noticed a measurable difference in recovery time. No jitters, no crash - just sustained energy and noticeably less DOMS.",
       },
@@ -46,7 +46,7 @@ const TR = {
         initials: "ML",
         rating: 5,
         product: "Performance.",
-        productColor: "#E8920A",
+        productColor: "#C4682A",
         quote:
           "The transparency is what sold me. Every ingredient, every dose, backed by a citation. In an industry full of marketing fluff, knowing more. actually delivers on what it promises.",
       },
@@ -69,7 +69,7 @@ const TR = {
         initials: "AK",
         rating: 5,
         product: "Performance.",
-        productColor: "#E8920A",
+        productColor: "#C4682A",
         quote:
           "Testowałam wiele suplementów na regenerację. Performance to pierwszy, przy którym poczułam realną różnicę — mniej zakwasów, stabilna energia przez cały dzień. Żadnej nerwowości, żadnego zjazdu.",
       },
@@ -99,7 +99,7 @@ const TR = {
         initials: "PL",
         rating: 5,
         product: "Performance.",
-        productColor: "#E8920A",
+        productColor: "#C4682A",
         quote:
           "Przekonała mnie przejrzystość — każdy składnik, każda dawka, poparte źródłem. W branży pełnej marketingowego szumu knowing more. faktycznie dostarcza to, co obiecuje.",
       },
@@ -145,7 +145,7 @@ export default function Testimonials({ locale = "en" }: { locale?: "en" | "pl" }
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="mb-14 md:mb-20"
         >
-          <p className="text-[9px] font-mono text-[#E8920A] tracking-[0.38em] uppercase mb-5">
+          <p className="text-[9px] font-mono text-[#C4682A] tracking-[0.38em] uppercase mb-5">
             {tr.sectionLabel}
           </p>
           <h2
@@ -222,7 +222,7 @@ export default function Testimonials({ locale = "en" }: { locale?: "en" | "pl" }
                   </div>
                   <div className="ml-auto flex gap-0.5">
                     {Array.from({ length: t.rating }).map((_, i) => (
-                      <span key={i} style={{ color: "#E8920A" }} className="text-xs">★</span>
+                      <span key={i} style={{ color: "#C4682A" }} className="text-xs">★</span>
                     ))}
                   </div>
                 </div>
@@ -280,7 +280,7 @@ export default function Testimonials({ locale = "en" }: { locale?: "en" | "pl" }
                 style={{
                   width: i === active ? "20px" : "6px",
                   height: "6px",
-                  background: i === active ? "#E8920A" : "rgba(17,17,17,0.15)",
+                  background: i === active ? "#C4682A" : "rgba(17,17,17,0.15)",
                 }}
               />
             ))}
