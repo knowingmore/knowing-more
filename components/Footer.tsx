@@ -33,6 +33,7 @@ const footerData = {
     },
     copyright: "© 2026 knowing more. All rights reserved.",
     made: "Made with precision. Backed by science.",
+    operator: "knowing more. · contact: privacy@knowingmore.life",
     disclaimer:
       "Dietary supplements. Not intended to diagnose, treat, cure, or prevent any disease. Dietary supplements cannot replace a balanced diet. Consult a healthcare professional before use, especially if pregnant, nursing, or taking medication. Products and pricing shown on this site are subject to availability and may change before official release.",
   },
@@ -64,6 +65,7 @@ const footerData = {
     },
     copyright: "© 2026 knowing more. Wszelkie prawa zastrzeżone.",
     made: "Stworzone z precyzją. Poparte nauką.",
+    operator: "knowing more. · kontakt: privacy@knowingmore.life",
     disclaimer:
       "Suplement diety nie może być stosowany jako substytut zróżnicowanej diety. Zrównoważony sposób żywienia i zdrowy tryb życia są podstawą prawidłowego funkcjonowania organizmu. Suplementy nie służą leczeniu ani zapobieganiu chorobom. Skonsultuj się z lekarzem przed użyciem, zwłaszcza w ciąży, podczas karmienia piersią lub przyjmowania leków. Produkty i ceny prezentowane na stronie są przedmiotem dostępności i mogą ulec zmianie przed oficjalnym uruchomieniem sprzedaży.",
   },
@@ -126,8 +128,11 @@ export default function Footer({ locale = "en" }: { locale?: "en" | "pl" }) {
           ))}
         </div>
 
-        {/* Disclaimer */}
-        <p className="pt-10 max-w-[1100px] text-[10px] text-white/30 leading-[1.7] tracking-wide">
+        {/* Operator + Disclaimer */}
+        <p className="pt-10 text-[10px] text-white/35 tracking-wide">
+          {d.operator}
+        </p>
+        <p className="pt-3 max-w-[1100px] text-[10px] text-white/30 leading-[1.7] tracking-wide">
           {d.disclaimer}
         </p>
 

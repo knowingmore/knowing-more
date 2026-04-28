@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
             { title: "6. Data sharing", body: "We do not sell your personal data. We share data only with service providers necessary to operate our business (email platforms, hosting providers, analytics tools, and in the future payment processors and shipping carriers), all under data processing agreements." },
             { title: "7. Your rights", body: "Under GDPR you have the right to access, correct, delete, and export your personal data, and to object to or restrict processing. You may also withdraw your consent at any time and lodge a complaint with the President of the Personal Data Protection Office (UODO). To exercise any of these rights, contact us at privacy@knowingmore.life." },
             { title: "8. Data retention", body: "Pre-launch interest registrations are retained until product launch and for up to 24 months thereafter, or until you unsubscribe — whichever comes first. Once orders begin, order data will be retained for 7 years to comply with Polish accounting law. Analytics data is retained for 26 months." },
-            { title: "9. Contact", body: "For any privacy-related queries, contact our Data Controller at privacy@knowingmore.life." },
+            { title: "9. Data Controller and contact", body: "Data Controller (during pre-market validation phase): knowing more. — operating knowingmore.life. Contact for all privacy-related queries: privacy@knowingmore.life. A legal entity will be registered before sales begin; registered users will be informed of the change." },
           ].map((s) => (
             <div key={s.title}>
               <h2 className="text-base font-bold text-[#111111] mb-3" style={{ fontFamily: "var(--font-playfair)" }}>{s.title}</h2>
