@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import NewsletterPopup from "@/components/NewsletterPopup";
 import DiscountPopup from "@/components/DiscountPopup";
+import CookieBanner from "@/components/CookieBanner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -40,6 +41,7 @@ export default function RootLayout({
         {children}
         <NewsletterPopup />
         <DiscountPopup />
+        <CookieBanner />
       </body>
     </html>
   );
