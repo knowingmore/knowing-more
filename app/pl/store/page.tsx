@@ -10,13 +10,16 @@ import { productsPL } from "@/lib/productsPL";
 
 function PurchaseButton({ color, slug }: { color: string; slug: string }) {
   return (
-    <Link href={`/pl/store/${slug}`}
-      className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-full text-white text-xs font-semibold tracking-wide transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
-      style={{ background: color === "#111111" ? "#111111" : color }}
-    >
-      Powiadom mnie
-      <span>→</span>
-    </Link>
+    <div className="w-full flex flex-col items-center gap-1.5">
+      <Link href={`/pl/store/${slug}`}
+        className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-full text-white text-xs font-semibold tracking-wide transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
+        style={{ background: color === "#111111" ? "#111111" : color }}
+      >
+        Powiadom mnie
+        <span>→</span>
+      </Link>
+      <span className="text-[8px] font-mono text-[#111111]/25 tracking-[0.18em] uppercase">Wkrótce dostępne</span>
+    </div>
   );
 }
 

@@ -15,6 +15,7 @@ const TR = {
     placeholder: "your@email.com",
     cta: "Reserve my 20 zł",
     skip: "No thanks",
+    legal: "By signing up, I understand products are not yet available and consent to receive notifications.",
     successTitle: "You're on the list.",
     successBody: "We'll send your 20 zł code when available.",
     successClose: "Continue →",
@@ -29,6 +30,7 @@ const TR = {
     placeholder: "twój@email.com",
     cta: "Zarezerwuj 20 zł",
     skip: "Nie, dziękuję",
+    legal: "Zapisując się, rozumiem, że produkty nie są jeszcze dostępne, i wyrażam zgodę na otrzymywanie powiadomień.",
     successTitle: "Jesteś na liście.",
     successBody: "Twój kod -20 zł jest zarezerwowany. Wyślemy go, gdy tylko będzie gotowe.",
     successClose: "Przejdź dalej →",
@@ -202,11 +204,14 @@ export default function DiscountPopup() {
                           {tr.cta}
                           <span>→</span>
                         </button>
+                        <p className="pt-1 text-[9px] text-[#111111]/25 leading-snug">
+                          {tr.legal}
+                        </p>
                       </form>
 
                       <button
                         onClick={dismiss}
-                        className="mt-5 w-full text-center text-[10px] text-[#111111]/25 hover:text-[#111111]/45 transition-colors"
+                        className="mt-4 w-full text-center text-[10px] text-[#111111]/25 hover:text-[#111111]/45 transition-colors"
                       >
                         {tr.skip}
                       </button>

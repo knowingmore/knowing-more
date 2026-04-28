@@ -67,7 +67,7 @@ function NotifyForm({ color }: { color: string }) {
         </div>
 
         {/* Form inside the banner */}
-        <form onSubmit={submit} className="px-4 pb-4 flex gap-2">
+        <form onSubmit={submit} className="px-4 pb-3 flex gap-2">
           <input
             type="email"
             placeholder="Wpisz swój email"
@@ -83,6 +83,9 @@ function NotifyForm({ color }: { color: string }) {
             Dołącz do listy
           </button>
         </form>
+        <p className="px-4 pb-4 text-[9px] text-white/55 leading-snug">
+          Zapisując się, rozumiem, że produkty nie są jeszcze dostępne, i wyrażam zgodę na otrzymywanie powiadomień.
+        </p>
       </div>
 
       {/* Social proof */}

@@ -63,7 +63,7 @@ function BundleNotifyForm() {
             −15%
           </div>
         </div>
-        <form onSubmit={submit} className="px-4 pb-4 flex gap-2">
+        <form onSubmit={submit} className="px-4 pb-3 flex gap-2">
           <input
             type="email"
             placeholder="Enter your email"
@@ -78,6 +78,9 @@ function BundleNotifyForm() {
             Join waitlist
           </button>
         </form>
+        <p className="px-4 pb-4 text-[9px] text-white/55 leading-snug">
+          By signing up, I understand products are not yet available and consent to receive notifications.
+        </p>
       </div>
 
       {/* Social proof */}
