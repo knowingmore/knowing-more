@@ -22,8 +22,8 @@ const navLinksData = {
 };
 
 const ctaData = {
-  en: { label: "Shop →", href: "/store", mobile: "Discover the collection" },
-  pl: { label: "Kup →", href: "/pl/store", mobile: "Odkryj kolekcję" },
+  en: { label: "See products →", href: "/store", mobile: "See products" },
+  pl: { label: "Produkty →", href: "/pl/store", mobile: "Produkty" },
 };
 
 export default function Navbar({ locale = "en" }: { locale?: "en" | "pl" }) {

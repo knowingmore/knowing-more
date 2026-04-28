@@ -162,7 +162,7 @@ export default function Carousel() {
               onMouseEnter={(e) => (e.currentTarget.style.borderColor = p.color)}
               onMouseLeave={(e) => (e.currentTarget.style.borderColor = `${p.color}30`)}
             >
-              Shop now
+              See products
               <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
             </a>
           </div>

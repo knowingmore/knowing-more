@@ -38,7 +38,7 @@ function NotifyForm({ color }: { color: string }) {
           Jesteś na liście.
         </p>
         <p className="text-xs text-[#111111]/38 text-center max-w-[220px]">
-          Powiadomimy Cię, gdy formuła wróci do sprzedaży.
+          Powiadomimy Cię, gdy formuła będzie dostępna.
         </p>
       </motion.div>
     );
@@ -57,7 +57,7 @@ function NotifyForm({ color }: { color: string }) {
               Save 20 zł
             </p>
             <p className="text-white/75 text-xs mt-1.5 leading-snug max-w-[200px]">
-              Bądź pierwszą osobą, gdy wróci — i kup taniej.
+              Bądź pierwszą osobą po premierze — i odbierz zniżkę startową.
             </p>
           </div>
           <div className="text-white/20 font-bold tracking-tight flex-shrink-0 hidden sm:block"
@@ -94,7 +94,7 @@ function NotifyForm({ color }: { color: string }) {
           ))}
         </div>
         <span className="text-[9px] text-[#111111]/30 tracking-wide">
-          847 osób czeka na wznowienie
+          847 osób na liście
         </span>
       </div>
     </div>

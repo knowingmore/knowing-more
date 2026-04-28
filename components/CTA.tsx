@@ -4,7 +4,6 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
 const trustSignals = [
-  "Free shipping on first order",
   "30-day money-back guarantee",
   "No subscription required",
 ];

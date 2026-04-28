@@ -38,7 +38,7 @@ function NotifyForm({ color }: { color: string }) {
           You&apos;re on the list.
         </p>
         <p className="text-xs text-[#111111]/38 text-center max-w-[220px]">
-          We&apos;ll notify you the moment this formula is back in stock.
+          We&apos;ll notify you the moment this formula is available.
         </p>
       </motion.div>
     );
@@ -57,7 +57,7 @@ function NotifyForm({ color }: { color: string }) {
               Save 20 zł
             </p>
             <p className="text-white/75 text-xs mt-1.5 leading-snug max-w-[200px]">
-              Be first to know when it&apos;s back - and get it cheaper.
+              Be first to know at launch — and get a launch discount.
             </p>
           </div>
           <div className="text-white/20 font-bold tracking-tight flex-shrink-0 hidden sm:block"
@@ -94,7 +94,7 @@ function NotifyForm({ color }: { color: string }) {
           ))}
         </div>
         <span className="text-[9px] text-[#111111]/30 tracking-wide">
-          847 people waiting for restock
+          847 people on the list
         </span>
       </div>
     </div>

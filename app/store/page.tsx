@@ -15,7 +15,7 @@ function PurchaseButton({ color, slug }: { color: string; slug: string }) {
       className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-full text-white text-xs font-semibold tracking-wide transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
       style={{ background: color === "#111111" ? "#111111" : color }}
     >
-      Purchase
+      Notify me
       <span>→</span>
     </Link>
   );

@@ -49,13 +49,13 @@ function BundleNotifyForm() {
       <div className="rounded-2xl overflow-hidden" style={{ background: "linear-gradient(135deg, #C4682A 0%, #d4780a 100%)" }}>
         <div className="px-6 pt-6 pb-4 flex items-center justify-between gap-4">
           <div>
-            <p className="text-white/70 text-[10px] font-mono tracking-[0.22em] uppercase mb-1">Restock offer</p>
+            <p className="text-white/70 text-[10px] font-mono tracking-[0.22em] uppercase mb-1">Bundle offer</p>
             <p className="text-white font-bold tracking-[-0.02em] leading-none"
               style={{ fontFamily: "var(--font-playfair)", fontSize: "2rem" }}>
               Save 58 zł
             </p>
             <p className="text-white/75 text-xs mt-1.5 leading-snug max-w-[220px]">
-              Join the restock list and secure the bundle price when it&apos;s available again.
+              Join the list — be first to know when the bundle is available.
             </p>
           </div>
           <div className="text-white/15 font-bold flex-shrink-0 hidden sm:block"
@@ -88,7 +88,7 @@ function BundleNotifyForm() {
               style={{ opacity: 0.7 }}>{i[0]}</div>
           ))}
         </div>
-        <span className="text-[9px] text-[#111111]/30 tracking-wide">847 people waiting for restock</span>
+        <span className="text-[9px] text-[#111111]/30 tracking-wide">847 people on the list</span>
       </div>
     </div>
   );

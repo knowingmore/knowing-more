@@ -6,110 +6,98 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const TR = {
   en: {
-    sectionLabel: "05 \u2014 Voices",
-    headline: "They started ",
-    headlineItalic: "knowing more.",
+    sectionLabel: "05 — Who this is for",
+    headline: "Built for those who want to ",
+    headlineItalic: "know more.",
     testimonials: [
       {
-        name: "Sarah M.",
-        role: "Fitness Coach",
-        initials: "SM",
-        rating: 5,
+        profile: "For active lives",
+        role: "Fitness, training, recovery",
         product: "Performance.",
         productColor: "#C4682A",
         quote:
           "I've tried countless pre-workout and recovery supplements. knowing more. Performance is the first where I noticed a measurable difference in recovery time. No jitters, no crash - just sustained energy and noticeably less DOMS.",
       },
       {
-        name: "James T.",
-        role: "Entrepreneur",
-        initials: "JT",
-        rating: 5,
+        profile: "For leaders",
+        role: "Founders, executives, decision-makers",
         product: "Balance.",
         productColor: "#A0784A",
         quote:
           "Running a company means constant cortisol spikes. Balance has genuinely changed how I respond to stress. Two months in, sleep quality has improved dramatically and I feel less reactive in high-pressure situations.",
       },
       {
-        name: "Priya K.",
-        role: "Nutritionist",
-        initials: "PK",
-        rating: 5,
+        profile: "For practitioners",
+        role: "Health professionals, dietitians, doctors",
         product: "Gut Health.",
         productColor: "#C4682A",
         quote:
           "As a nutritionist, I was skeptical of another gut health product. But the formulation is genuinely impressive - no proprietary blends, clinical doses, the right strains. I now recommend it to clients alongside dietary changes.",
       },
       {
-        name: "Marcus L.",
-        role: "Longevity Enthusiast",
-        initials: "ML",
-        rating: 5,
+        profile: "For the conscious",
+        role: "Longevity, biohacking, prevention",
         product: "Performance.",
         productColor: "#C4682A",
         quote:
           "The transparency is what sold me. Every ingredient, every dose, backed by a citation. In an industry full of marketing fluff, knowing more. actually delivers on what it promises.",
       },
     ],
+    statsLabel: "What we measure",
     stats: [
-      { metric: "↑ 87%", label: "Energy & Focus" },
-      { metric: "↑ 73%", label: "Sleep Quality" },
-      { metric: "↑ 91%", label: "Overall Wellbeing" },
+      { label: "Energy & Focus" },
+      { label: "Sleep Quality" },
+      { label: "Overall Wellbeing" },
     ],
-    reviewCount: "from 1,200+ verified reviews",
+    disclaimer:
+      "Profile examples are illustrative and represent the customer types these formulas are designed for. Verified customer opinions will appear once our products are available.",
   },
   pl: {
-    sectionLabel: "05 \u2014 Opinie",
-    headline: "Oni zaczęli ",
+    sectionLabel: "05 — Dla kogo to jest",
+    headline: "Dla tych, którzy chcą ",
     headlineItalic: "wiedzieć więcej.",
     testimonials: [
       {
-        name: "Anna K.",
-        role: "Trenerka fitness",
-        initials: "AK",
-        rating: 5,
+        profile: "Dla aktywnych",
+        role: "Trening, sport, regeneracja",
         product: "Performance.",
         productColor: "#C4682A",
         quote:
           "Testowałam wiele suplementów na regenerację. Performance to pierwszy, przy którym poczułam realną różnicę — mniej zakwasów, stabilna energia przez cały dzień. Żadnej nerwowości, żadnego zjazdu.",
       },
       {
-        name: "Marek T.",
-        role: "Przedsiębiorca",
-        initials: "MT",
-        rating: 5,
+        profile: "Dla liderów",
+        role: "Założyciele, kadra zarządzająca, decyzyjni",
         product: "Balance.",
         productColor: "#A0784A",
         quote:
           "Zarządzanie firmą to ciągłe skoki kortyzolu. Balance naprawdę zmieniło to, jak reaguję na stres. Po dwóch miesiącach sypiam głębiej i jestem spokojniejszy w trudnych sytuacjach.",
       },
       {
-        name: "Agnieszka W.",
-        role: "Dietetyczka",
-        initials: "AW",
-        rating: 5,
+        profile: "Dla specjalistów",
+        role: "Specjaliści zdrowia, dietetycy, lekarze",
         product: "Gut Health.",
         productColor: "#C4682A",
         quote:
           "Jako dietetyczka podchodzę sceptycznie do kolejnych probiotyków. Ale tutaj skład naprawdę robi wrażenie — brak zastrzeżonych mieszanek, kliniczne dawki, odpowiednie szczepy. Polecam swoim klientom.",
       },
       {
-        name: "Piotr L.",
-        role: "Entuzjasta longevity",
-        initials: "PL",
-        rating: 5,
+        profile: "Dla świadomych",
+        role: "Longevity, biohacking, profilaktyka",
         product: "Performance.",
         productColor: "#C4682A",
         quote:
           "Przekonała mnie przejrzystość — każdy składnik, każda dawka, poparte źródłem. W branży pełnej marketingowego szumu knowing more. faktycznie dostarcza to, co obiecuje.",
       },
     ],
+    statsLabel: "Co mierzymy",
     stats: [
-      { metric: "↑ 87%", label: "Energia i skupienie" },
-      { metric: "↑ 73%", label: "Jakość snu" },
-      { metric: "↑ 91%", label: "Ogólne samopoczucie" },
+      { label: "Energia i skupienie" },
+      { label: "Jakość snu" },
+      { label: "Ogólne samopoczucie" },
     ],
-    reviewCount: "z ponad 1200 zweryfikowanych opinii",
+    disclaimer:
+      "Przykłady profili są ilustracyjne i przedstawiają typy klientów, dla których projektowane są nasze formuły. Zweryfikowane opinie klientów pojawią się po udostępnieniu produktów.",
   },
 };
 
@@ -160,7 +148,7 @@ export default function Testimonials({ locale = "en" }: { locale?: "en" | "pl" }
           </h2>
         </motion.div>
 
-        {/* Testimonial block */}
+        {/* Profile block */}
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -200,58 +188,39 @@ export default function Testimonials({ locale = "en" }: { locale?: "en" | "pl" }
                   &ldquo;{t.quote}&rdquo;
                 </p>
 
-                {/* Attribution */}
+                {/* Attribution — profile label + role + product */}
                 <div className="mt-8 flex items-center gap-4">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                    style={{
-                      background: `${t.productColor}15`,
-                      border: `1px solid ${t.productColor}30`,
-                      color: t.productColor,
-                    }}
-                  >
-                    {t.initials}
-                  </div>
+                  <span
+                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                    style={{ background: t.productColor }}
+                    aria-hidden
+                  />
                   <div>
-                    <p className="text-sm font-semibold text-[#111111]">{t.name}</p>
+                    <p className="text-sm font-semibold text-[#111111]">{t.profile}</p>
                     <p className="text-xs text-[#111111]/30 mt-0.5">
                       {t.role}
                       <span className="mx-2 text-[#111111]/15">·</span>
                       <span style={{ color: t.productColor }}>{t.product}</span>
                     </p>
                   </div>
-                  <div className="ml-auto flex gap-0.5">
-                    {Array.from({ length: t.rating }).map((_, i) => (
-                      <span key={i} style={{ color: "#C4682A" }} className="text-xs">★</span>
-                    ))}
-                  </div>
                 </div>
               </div>
 
-              {/* Aggregate stats */}
+              {/* What we measure (no fake percentages) */}
               <div className="col-span-12 md:col-span-3 md:col-start-10 mt-0 md:mt-8">
+                <p className="text-[9px] font-mono text-[#111111]/40 tracking-[0.22em] uppercase mb-4">
+                  {tr.statsLabel}
+                </p>
                 {tr.stats.map((s) => (
                   <div
                     key={s.label}
-                    className="py-4 border-b border-[#111111]/[0.07] last:border-0"
+                    className="py-3 border-b border-[#111111]/[0.07] last:border-0"
                   >
-                    <p
-                      className="text-[#111111] font-bold"
-                      style={{
-                        fontFamily: "var(--font-playfair)",
-                        fontSize: "clamp(1.4rem, 2.5vw, 1.8rem)",
-                      }}
-                    >
-                      {s.metric}
-                    </p>
-                    <p className="text-[10px] text-[#111111]/30 tracking-[0.15em] uppercase mt-0.5">
+                    <p className="text-sm text-[#111111]/70 font-medium">
                       {s.label}
                     </p>
                   </div>
                 ))}
-                <p className="mt-3 text-[9px] font-mono text-[#111111]/22 tracking-[0.15em]">
-                  {tr.reviewCount}
-                </p>
               </div>
             </motion.div>
           </AnimatePresence>
@@ -297,6 +266,11 @@ export default function Testimonials({ locale = "en" }: { locale?: "en" | "pl" }
             {String(active + 1).padStart(2, "0")} / {String(tr.testimonials.length).padStart(2, "0")}
           </span>
         </motion.div>
+
+        {/* Disclaimer */}
+        <p className="mt-10 max-w-[640px] text-[10px] font-mono text-[#111111]/35 tracking-[0.04em] leading-[1.7]">
+          {tr.disclaimer}
+        </p>
       </div>
     </section>
   );

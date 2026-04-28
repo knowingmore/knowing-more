@@ -33,6 +33,8 @@ const footerData = {
     },
     copyright: "© 2026 knowing more. All rights reserved.",
     made: "Made with precision. Backed by science.",
+    disclaimer:
+      "Dietary supplements. Not intended to diagnose, treat, cure, or prevent any disease. Dietary supplements cannot replace a balanced diet. Consult a healthcare professional before use, especially if pregnant, nursing, or taking medication.",
   },
   pl: {
     tagline: "Suplementy longevity oparte na nauce — dla tych, którzy wymagają więcej.",
@@ -62,6 +64,8 @@ const footerData = {
     },
     copyright: "© 2026 knowing more. Wszelkie prawa zastrzeżone.",
     made: "Stworzone z precyzją. Poparte nauką.",
+    disclaimer:
+      "Suplement diety nie może być stosowany jako substytut zróżnicowanej diety. Zrównoważony sposób żywienia i zdrowy tryb życia są podstawą prawidłowego funkcjonowania organizmu. Suplementy nie służą leczeniu ani zapobieganiu chorobom. Skonsultuj się z lekarzem przed użyciem, zwłaszcza w ciąży, podczas karmienia piersią lub przyjmowania leków.",
   },
 };
 
@@ -122,8 +126,13 @@ export default function Footer({ locale = "en" }: { locale?: "en" | "pl" }) {
           ))}
         </div>
 
+        {/* Disclaimer */}
+        <p className="pt-10 max-w-[1100px] text-[10px] text-white/30 leading-[1.7] tracking-wide">
+          {d.disclaimer}
+        </p>
+
         {/* Bottom row */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="pt-8 mt-2 border-t border-white/[0.05] flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-[9px] font-mono text-white/20 tracking-[0.25em] uppercase">
             {d.copyright}
           </p>
