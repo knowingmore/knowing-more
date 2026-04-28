@@ -364,7 +364,7 @@ export default function Signature({ locale = "en" }: { locale?: "en" | "pl" }) {
         transition={{ duration: 1, delay: 1.5 }}
         className="absolute right-6 md:right-10 top-1/2 text-[9px] font-mono text-[#111111]/15 tracking-[0.32em] uppercase pointer-events-none select-none"
         style={{ writingMode: "vertical-lr", transform: "translateY(-50%)" }} aria-hidden>
-        Est. 2024
+        Est. 2025
       </motion.p>
 
       {/* ── Main content ── */}

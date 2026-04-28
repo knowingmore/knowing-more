@@ -792,7 +792,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
                 className="w-1 h-1 rounded-full bg-[#C4682A]" />
               <span className="text-[9px] font-mono text-[#FAFAF7]/45 tracking-[0.2em] uppercase">{tr.meta}</span>
             </div>
-            <span className="text-[9px] font-mono text-[#FAFAF7]/45 tracking-[0.25em] uppercase">Est. 2024</span>
+            <span className="text-[9px] font-mono text-[#FAFAF7]/45 tracking-[0.25em] uppercase">Est. 2025</span>
           </motion.div>
 
         </motion.div>
