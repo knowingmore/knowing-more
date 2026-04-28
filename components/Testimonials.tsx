@@ -16,7 +16,7 @@ const TR = {
         initials: "SM",
         rating: 5,
         product: "Performance.",
-        productColor: "#1B2A4A",
+        productColor: "#C4682A",
         quote:
           "I've tried countless pre-workout and recovery supplements. knowing more. Performance is the first where I noticed a measurable difference in recovery time. No jitters, no crash - just sustained energy and noticeably less DOMS.",
       },
@@ -36,7 +36,7 @@ const TR = {
         initials: "PK",
         rating: 5,
         product: "Gut Health.",
-        productColor: "#1B2A4A",
+        productColor: "#C4682A",
         quote:
           "As a nutritionist, I was skeptical of another gut health product. But the formulation is genuinely impressive - no proprietary blends, clinical doses, the right strains. I now recommend it to clients alongside dietary changes.",
       },
@@ -46,7 +46,7 @@ const TR = {
         initials: "ML",
         rating: 5,
         product: "Performance.",
-        productColor: "#1B2A4A",
+        productColor: "#C4682A",
         quote:
           "The transparency is what sold me. Every ingredient, every dose, backed by a citation. In an industry full of marketing fluff, knowing more. actually delivers on what it promises.",
       },
@@ -69,7 +69,7 @@ const TR = {
         initials: "AK",
         rating: 5,
         product: "Performance.",
-        productColor: "#1B2A4A",
+        productColor: "#C4682A",
         quote:
           "Testowałam wiele suplementów na regenerację. Performance to pierwszy, przy którym poczułam realną różnicę — mniej zakwasów, stabilna energia przez cały dzień. Żadnej nerwowości, żadnego zjazdu.",
       },
@@ -89,7 +89,7 @@ const TR = {
         initials: "AW",
         rating: 5,
         product: "Gut Health.",
-        productColor: "#1B2A4A",
+        productColor: "#C4682A",
         quote:
           "Jako dietetyczka podchodzę sceptycznie do kolejnych probiotyków. Ale tutaj skład naprawdę robi wrażenie — brak zastrzeżonych mieszanek, kliniczne dawki, odpowiednie szczepy. Polecam swoim klientom.",
       },
@@ -99,7 +99,7 @@ const TR = {
         initials: "PL",
         rating: 5,
         product: "Performance.",
-        productColor: "#1B2A4A",
+        productColor: "#C4682A",
         quote:
           "Przekonała mnie przejrzystość — każdy składnik, każda dawka, poparte źródłem. W branży pełnej marketingowego szumu knowing more. faktycznie dostarcza to, co obiecuje.",
       },
@@ -145,7 +145,7 @@ export default function Testimonials({ locale = "en" }: { locale?: "en" | "pl" }
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="mb-14 md:mb-20"
         >
-          <p className="text-[9px] font-mono text-[#1B2A4A] tracking-[0.38em] uppercase mb-5">
+          <p className="text-[9px] font-mono text-[#C4682A] tracking-[0.38em] uppercase mb-5">
             {tr.sectionLabel}
           </p>
           <h2
@@ -222,7 +222,7 @@ export default function Testimonials({ locale = "en" }: { locale?: "en" | "pl" }
                   </div>
                   <div className="ml-auto flex gap-0.5">
                     {Array.from({ length: t.rating }).map((_, i) => (
-                      <span key={i} style={{ color: "#1B2A4A" }} className="text-xs">★</span>
+                      <span key={i} style={{ color: "#C4682A" }} className="text-xs">★</span>
                     ))}
                   </div>
                 </div>
@@ -280,7 +280,7 @@ export default function Testimonials({ locale = "en" }: { locale?: "en" | "pl" }
                 style={{
                   width: i === active ? "20px" : "6px",
                   height: "6px",
-                  background: i === active ? "#1B2A4A" : "rgba(17,17,17,0.15)",
+                  background: i === active ? "#C4682A" : "rgba(17,17,17,0.15)",
                 }}
               />
             ))}

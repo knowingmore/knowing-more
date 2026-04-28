@@ -41,7 +41,7 @@ export default function FAQPage() {
     <main className="min-h-screen bg-white">
       <Navbar />
       <section className="pt-36 pb-24 px-6 md:px-12 xl:px-16 max-w-[1440px] mx-auto">
-        <p className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#1B2A4A] mb-6">Support</p>
+        <p className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#C4682A] mb-6">Support</p>
         <h1 className="text-[clamp(3rem,6vw,6rem)] font-bold leading-[0.9] tracking-[-0.03em] text-[#111111] mb-16"
           style={{ fontFamily: "var(--font-playfair)" }}>
           Frequently asked<br />
@@ -59,7 +59,7 @@ export default function FAQPage() {
         </div>
         <p className="mt-12 text-sm text-[#111111]/40">
           Can&apos;t find what you&apos;re looking for?{" "}
-          <a href="/contact" className="text-[#1B2A4A] hover:underline">Contact us →</a>
+          <a href="/contact" className="text-[#C4682A] hover:underline">Contact us →</a>
         </p>
       </section>
       <Footer />
