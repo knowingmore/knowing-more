@@ -5,6 +5,7 @@ import NewsletterPopup from "@/components/NewsletterPopup";
 import DiscountPopup from "@/components/DiscountPopup";
 import CookieBanner from "@/components/CookieBanner";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import MicrosoftClarity from "@/components/MicrosoftClarity";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -44,6 +45,7 @@ export default function RootLayout({
         <DiscountPopup />
         <CookieBanner />
         <GoogleAnalytics />
+        <MicrosoftClarity />
       </body>
     </html>
   );
