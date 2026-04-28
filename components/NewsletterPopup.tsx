@@ -44,11 +44,24 @@ export default function NewsletterPopup() {
     setVisible(false);
   };
 
-  const submit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || submitting) return;
+    setSubmitting(true);
+    try {
+      await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email, source: "newsletter" }),
+      });
+    } catch {
+      // Silent fail; surface in server logs.
+    }
     sessionStorage.setItem(STORAGE_KEY, "1");
     setDone(true);
+    setSubmitting(false);
   };
 
   return (

@@ -12,11 +12,27 @@ import { products } from "@/lib/products";
 function BundleNotifyForm() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || submitting) return;
+    setSubmitting(true);
+    try {
+      await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email,
+          source: "bundle",
+          attributes: { LOCALE: "EN" },
+        }),
+      });
+    } catch {
+      // Silent fail.
+    }
     setDone(true);
+    setSubmitting(false);
   };
 
   if (done) {

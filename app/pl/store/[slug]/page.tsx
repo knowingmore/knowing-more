@@ -10,14 +10,30 @@ import Footer from "@/components/Footer";
 import { getProductPL, productsPL } from "@/lib/productsPL";
 
 /* ─── Notify Me form ─────────────────────────────────────────────── */
-function NotifyForm({ color }: { color: string }) {
+function NotifyForm({ color, slug }: { color: string; slug: string }) {
   const [email, setEmail]   = useState("");
   const [done, setDone]     = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || submitting) return;
+    setSubmitting(true);
+    try {
+      await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email,
+          source: `product-${slug}`,
+          attributes: { LOCALE: "PL", PRODUCT: slug.toUpperCase() },
+        }),
+      });
+    } catch {
+      // Silent fail.
+    }
     setDone(true);
+    setSubmitting(false);
   };
 
   if (done) {
@@ -278,7 +294,7 @@ export default function ProductPage() {
 
               {/* Notify Me — right below price */}
               <div className="mb-8">
-                <NotifyForm color={p.color} />
+                <NotifyForm color={p.color} slug={p.slug} />
               </div>
 
               <p className="text-[9px] font-mono text-[#111111]/25 tracking-[0.15em] mb-8">{p.servings}</p>

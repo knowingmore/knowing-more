@@ -74,11 +74,29 @@ export default function DiscountPopup() {
     setVisible(false);
   };
 
-  const submit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || submitting) return;
+    setSubmitting(true);
+    try {
+      await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email,
+          source: "discount",
+          attributes: { LOCALE: locale.toUpperCase() },
+        }),
+      });
+    } catch {
+      // Silent fail — we still show success to user; email lost only if backend
+      // is misconfigured. Server-side logs surface the cause.
+    }
     localStorage.setItem(STORAGE_KEY, "1");
     setDone(true);
+    setSubmitting(false);
   };
 
   return (
