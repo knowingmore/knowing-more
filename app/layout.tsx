@@ -4,6 +4,7 @@ import "./globals.css";
 import NewsletterPopup from "@/components/NewsletterPopup";
 import DiscountPopup from "@/components/DiscountPopup";
 import CookieBanner from "@/components/CookieBanner";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -42,6 +43,7 @@ export default function RootLayout({
         <NewsletterPopup />
         <DiscountPopup />
         <CookieBanner />
+        <GoogleAnalytics />
       </body>
     </html>
   );

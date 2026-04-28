@@ -43,6 +43,8 @@ export default function CookieBanner() {
   const decide = (choice: "accept" | "reject") => {
     if (typeof window !== "undefined") {
       localStorage.setItem(STORAGE_KEY, choice);
+      // Notify scripts (GA4, etc.) listening for consent changes.
+      window.dispatchEvent(new Event("km-cookie-consent-changed"));
     }
     setVisible(false);
   };
