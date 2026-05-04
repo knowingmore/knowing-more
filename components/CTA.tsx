@@ -79,7 +79,7 @@ export default function CTA() {
               href="#products"
               className="group flex items-center justify-center gap-3 px-7 py-4 rounded-full bg-[#111111] text-white text-sm font-semibold tracking-wide hover:bg-[#333] transition-colors duration-200"
             >
-              Shop the Collection
+              See the collection
               <span className="group-hover:translate-x-1.5 transition-transform duration-200 text-base">
                 →
               </span>

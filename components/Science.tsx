@@ -18,7 +18,7 @@ const TR = {
       "Third-party tested for purity and potency",
       "Free from fillers, artificial colours, and excipients",
     ],
-    sectionLabel: "03 \u2014 Our Science",
+    sectionLabel: "03 \u2014 Our science",
     headlineLine1: "Not just knowing",
     headlineLine2: "the ingredients -",
     headlineLine3: "knowing ",

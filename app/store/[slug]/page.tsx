@@ -206,7 +206,13 @@ export default function ProductPage() {
                         alt={p.name}
                         fill
                         className="object-cover"
-                        style={{ objectPosition: ["authentic-3", "gut-dynamic-13", "gut-dynamic-10"].some(s => imgs[activeImg].includes(s)) ? "right center" : "center" }}
+                        style={{
+                          objectPosition: /bal-editorial-4|gut-dynamic-13|gut-dynamic-10/.test(imgs[activeImg])
+                            ? "right center"
+                            : /perf-authentic|gut-editorial-3|gut-dynamic-8|gut-a-dynamic|gut-a-artistic/.test(imgs[activeImg])
+                            ? "left center"
+                            : "center",
+                        }}
                         sizes="600px"
                       />
                     </motion.div>
@@ -271,17 +277,7 @@ export default function ProductPage() {
 
               <p className="text-[9px] font-mono tracking-[0.28em] uppercase text-[#111111]/30 mb-6">{p.tagline}</p>
 
-              {/* Rating */}
-              <div className="flex items-center gap-3 mb-8">
-                <div className="flex gap-0.5">
-                  {[1,2,3,4,5].map(s => <span key={s} className="text-[#C4682A] text-xs">★</span>)}
-                </div>
-                <span className="text-[9px] font-mono text-[#111111]/28 tracking-[0.15em]">
-                  4.9 / 5.0 · 1,200+ reviews
-                </span>
-              </div>
-
-              <div className="h-px bg-[#111111]/[0.07] mb-8" />
+              <div className="h-px bg-[#111111]/[0.07] mb-8 mt-2" />
 
               {/* Price */}
               <div className="flex items-center gap-3 mb-4 flex-wrap">
@@ -366,7 +362,7 @@ export default function ProductPage() {
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 xl:px-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
             <div>
-              <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-3 text-[#C4682A]/70">How to Use</p>
+              <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-3 text-[#C4682A]/70">How to use</p>
               <h2 className="text-2xl font-bold text-[#111111] mb-4 tracking-[-0.02em]"
                 style={{ fontFamily: "var(--font-playfair)" }}>
                 Usage guidelines<span style={{ color: "#C4682A" }}>.</span>

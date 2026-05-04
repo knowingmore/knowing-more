@@ -33,7 +33,7 @@ const productsData: Record<Locale, Product[]> = {
       description:
         "A formula for those who place high demands on their bodies. Adaptogens, B vitamins and key minerals — composed in clinical doses, made in GMP-certified facilities.",
       can: "/images/products/performance.png",
-      lifestyle: "/images/website/lifestyle-man-product.jpg",
+      lifestyle: "/images/website/perf-dynamic-fashion-3.png",
       accent: "#111111",
       glowColor: "rgba(17,17,17,0.08)",
       tags: ["Energy", "Recovery", "Focus"],
@@ -49,7 +49,7 @@ const productsData: Record<Locale, Product[]> = {
       description:
         "A formula composed of adaptogenic herbs and minerals selected from peer-reviewed literature — for those who value composure on demanding days.",
       can: "/images/products/balance.png",
-      lifestyle: "/images/website/model-balance-beige.jpg",
+      lifestyle: "/images/website/bal-editorial-lifestyle-4.jpeg",
       accent: "#A0784A",
       glowColor: "rgba(197,164,126,0.35)",
       tags: ["Calm", "Adaptogens", "Equilibrium"],
@@ -65,7 +65,7 @@ const productsData: Record<Locale, Product[]> = {
       description:
         "The gut is your foundation. Targeted prebiotics, digestive enzymes, and mucosal support nutrients to restore and protect the microbiome - the ecosystem your entire health depends on.",
       can: "/images/products/gut-health.png",
-      lifestyle: "/images/website/model-gut-health-orange.jpg",
+      lifestyle: "/images/website/lifestyle-editorial-3.jpeg",
       accent: "#C4682A",
       glowColor: "rgba(196,104,42,0.3)",
       tags: ["Digestion", "Microbiome", "Fibre"],
@@ -83,7 +83,7 @@ const productsData: Record<Locale, Product[]> = {
       description:
         "Formuła dla tych, którzy stawiają sobie wysoką poprzeczkę. Adaptogeny, witaminy z grupy B i wybrane minerały — w klinicznych dawkach, produkowane w certyfikowanych zakładach GMP.",
       can: "/images/products/performance.png",
-      lifestyle: "/images/website/lifestyle-man-product.jpg",
+      lifestyle: "/images/website/perf-dynamic-fashion-3.png",
       accent: "#111111",
       glowColor: "rgba(17,17,17,0.08)",
       tags: ["Energia", "Regeneracja", "Skupienie"],
@@ -99,7 +99,7 @@ const productsData: Record<Locale, Product[]> = {
       description:
         "Formuła oparta na adaptogenach i wybranych minerałach z literatury naukowej — dla tych, którzy w wymagających dniach cenią sobie wewnętrzny spokój.",
       can: "/images/products/balance.png",
-      lifestyle: "/images/website/model-balance-beige.jpg",
+      lifestyle: "/images/website/bal-editorial-lifestyle-4.jpeg",
       accent: "#A0784A",
       glowColor: "rgba(197,164,126,0.35)",
       tags: ["Spokój", "Adaptogeny", "Równowaga"],
@@ -115,7 +115,7 @@ const productsData: Record<Locale, Product[]> = {
       description:
         "Jelita to centrum dowodzenia Twojego ciała. Prebiotyki, enzymy trawienne i wsparcie dla mikrobioty jelitowej — żeby Twój układ pokarmowy pracował tak, jak powinien.",
       can: "/images/products/gut-health.png",
-      lifestyle: "/images/website/model-gut-health-orange.jpg",
+      lifestyle: "/images/website/lifestyle-editorial-3.jpeg",
       accent: "#C4682A",
       glowColor: "rgba(196,104,42,0.3)",
       tags: ["Trawienie", "Mikrobiom", "Błonnik"],

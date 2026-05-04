@@ -197,17 +197,7 @@ export default function BundlePage() {
                 Performance · Balance · Gut Health
               </p>
 
-              {/* Rating */}
-              <div className="flex items-center gap-3 mb-8">
-                <div className="flex gap-0.5">
-                  {[1,2,3,4,5].map(s => <span key={s} className="text-[#C4682A] text-xs">★</span>)}
-                </div>
-                <span className="text-[9px] font-mono text-[#111111]/28 tracking-[0.15em]">
-                  4.9 / 5.0 · 1,200+ reviews
-                </span>
-              </div>
-
-              <div className="h-px bg-[#111111]/[0.07] mb-8" />
+              <div className="h-px bg-[#111111]/[0.07] mb-8 mt-2" />
 
               {/* Price */}
               <div className="flex items-center gap-3 mb-2 flex-wrap">
