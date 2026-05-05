@@ -128,7 +128,7 @@ export default function ProductPage() {
 
   const [imgHovered, setImgHovered] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
-  const imgs = [p.img, ...p.gallery];
+  const imgs = p.gallery;
   const others = products.filter((x) => x.slug !== p.slug);
 
   const prevImg = () => setActiveImg((i) => (i - 1 + imgs.length) % imgs.length);
@@ -207,9 +207,9 @@ export default function ProductPage() {
                         fill
                         className="object-cover"
                         style={{
-                          objectPosition: /bal-editorial-4|gut-dynamic-13|gut-dynamic-10/.test(imgs[activeImg])
+                          objectPosition: /perf-authentic|bal-editorial-4|gut-dynamic-13|gut-dynamic-10/.test(imgs[activeImg])
                             ? "right center"
-                            : /perf-authentic|gut-editorial-3|gut-dynamic-8|gut-a-dynamic|gut-a-artistic/.test(imgs[activeImg])
+                            : /gut-editorial-3|gut-dynamic-8|gut-a-dynamic|gut-a-artistic/.test(imgs[activeImg])
                             ? "left center"
                             : "center",
                         }}
