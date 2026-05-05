@@ -10,12 +10,12 @@ const config: Config = {
     extend: {
       colors: {
         navy: {
-          DEFAULT: "#1B2A4A",
+          DEFAULT: "#C4682A",
           light: "#243560",
           dark: "#111C33",
         },
         amber: {
-          brand: "#1B2A4A",
+          brand: "#C4682A",
           light: "#F5A832",
           pale: "#FDF3E0",
         },
@@ -25,7 +25,7 @@ const config: Config = {
           pale: "#F5EEE4",
         },
         terracotta: {
-          DEFAULT: "#1B2A4A",
+          DEFAULT: "#C4682A",
           light: "#D4803E",
           pale: "#F5E8DC",
         },

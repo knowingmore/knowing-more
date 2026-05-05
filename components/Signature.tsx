@@ -249,7 +249,7 @@ function Letter({ char, delay, amber = false, inView }: LetterProps) {
         initial={{ y: "110%", opacity: 0, filter: "blur(18px)" }}
         animate={inView ? { y: 0, opacity: 1, filter: "blur(0px)" } : {}}
         transition={{ duration: 0.95, delay, ease: [0.16, 1, 0.3, 1] }}
-        style={amber ? { color: "#1B2A4A" } : undefined}
+        style={amber ? { color: "#C4682A" } : undefined}
       >
         {char === " " ? "\u00A0" : char}
       </motion.span>
@@ -292,12 +292,12 @@ const TR = {
     metrics: [
       { value: "47+",   label: "Active Compounds"      },
       { value: "12",    label: "Peer-Reviewed Studies"  },
-      { value: "100%",  label: "Third-Party Tested"     },
-      { value: "0",     label: "Unnecessary Fillers"    },
+      { value: "100%",  label: "Third-party tested"     },
+      { value: "0",     label: "Unnecessary fillers"    },
     ],
     tagline: "Good things come to those who are knowing more.",
-    cta1: { label: "Shop the Collection", href: "/store" },
-    cta2: { label: "Read the Science",    href: "/methods" },
+    cta1: { label: "See the collection", href: "/store" },
+    cta2: { label: "Read the science",    href: "/methods" },
     verticalLabel: "Biotech \u00B7 Longevity \u00B7 Precision",
   },
   pl: {
@@ -309,7 +309,7 @@ const TR = {
       { value: "0",     label: "Zbędnych wypełniaczy"     },
     ],
     tagline: "Bo warto wiedzieć więcej.",
-    cta1: { label: "Odkryj kolekcję", href: "/pl/store"   },
+    cta1: { label: "Zobacz kolekcję", href: "/pl/store"   },
     cta2: { label: "Poznaj nasze badania", href: "/pl/methods" },
     verticalLabel: "Biotechnologia \u00B7 Longevity \u00B7 Precyzja",
   },
@@ -364,7 +364,7 @@ export default function Signature({ locale = "en" }: { locale?: "en" | "pl" }) {
         transition={{ duration: 1, delay: 1.5 }}
         className="absolute right-6 md:right-10 top-1/2 text-[9px] font-mono text-[#111111]/15 tracking-[0.32em] uppercase pointer-events-none select-none"
         style={{ writingMode: "vertical-lr", transform: "translateY(-50%)" }} aria-hidden>
-        Est. 2024
+        Est. 2025
       </motion.p>
 
       {/* ── Main content ── */}
@@ -374,7 +374,7 @@ export default function Signature({ locale = "en" }: { locale?: "en" | "pl" }) {
         <motion.p
           initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          className="text-[9px] font-mono text-[#1B2A4A]/65 tracking-[0.5em] uppercase mb-10">
+          className="text-[9px] font-mono text-[#C4682A]/65 tracking-[0.5em] uppercase mb-10">
           {tr.sectionLabel}
         </motion.p>
 
@@ -382,13 +382,13 @@ export default function Signature({ locale = "en" }: { locale?: "en" | "pl" }) {
         <div className="relative w-full max-w-[600px] mb-12 flex items-center gap-3">
           <motion.div initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
             transition={{ duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 h-px bg-[#1B2A4A]/22 origin-right" />
+            className="flex-1 h-px bg-[#C4682A]/22 origin-right" />
           <motion.div animate={{ opacity: [0.4, 1, 0.4], scale: [0.8, 1.3, 0.8] }}
             transition={{ duration: 2.6, repeat: Infinity }}
-            className="w-1.5 h-1.5 rounded-full bg-[#1B2A4A] flex-shrink-0" />
+            className="w-1.5 h-1.5 rounded-full bg-[#C4682A] flex-shrink-0" />
           <motion.div initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
             transition={{ duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 h-px bg-[#1B2A4A]/22 origin-left" />
+            className="flex-1 h-px bg-[#C4682A]/22 origin-left" />
         </div>
 
         {/* ── Brand name - cinematic per-letter ── */}
@@ -434,7 +434,7 @@ export default function Signature({ locale = "en" }: { locale?: "en" | "pl" }) {
           {/* Primary */}
           <a
             href={tr.cta1.href}
-            className="group inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-[#111111] text-white text-sm font-medium tracking-wide hover:bg-[#1B2A4A] transition-colors duration-300"
+            className="group inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-[#111111] text-white text-sm font-medium tracking-wide hover:bg-[#C4682A] transition-colors duration-300"
           >
             {tr.cta1.label}
             <motion.span
@@ -447,7 +447,7 @@ export default function Signature({ locale = "en" }: { locale?: "en" | "pl" }) {
           {/* Secondary */}
           <a
             href={tr.cta2.href}
-            className="group inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full border border-[#111111]/15 text-[#111111]/55 text-sm font-medium tracking-wide hover:border-[#1B2A4A]/40 hover:text-[#1B2A4A] transition-colors duration-300"
+            className="group inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full border border-[#111111]/15 text-[#111111]/55 text-sm font-medium tracking-wide hover:border-[#C4682A]/40 hover:text-[#C4682A] transition-colors duration-300"
           >
             {tr.cta2.label}
             <span className="group-hover:translate-x-1 transition-transform duration-200 text-base leading-none">→</span>

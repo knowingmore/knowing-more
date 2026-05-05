@@ -82,10 +82,10 @@ const posts = [
 const categories = ["All", "Science", "Ingredients", "Performance", "Industry", "Standards"];
 
 const categoryColor: Record<string, string> = {
-  Science: "#1B2A4A",
+  Science: "#C4682A",
   Ingredients: "#A0784A",
   Performance: "#111111",
-  Industry: "#1B2A4A",
+  Industry: "#C4682A",
   Standards: "#888",
 };
 
@@ -111,9 +111,9 @@ function FeaturedPost({ post }: { post: typeof posts[0] }) {
             Featured
           </span>
         </div>
-        <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.02em] text-[#111111] mb-4 leading-tight group-hover:text-[#1B2A4A] transition-colors duration-300"
+        <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.02em] text-[#111111] mb-4 leading-tight group-hover:text-[#C4682A] transition-colors duration-300"
           style={{ fontFamily: "var(--font-playfair)" }}>
-          {post.title}<span style={{ color: "#1B2A4A" }}>.</span>
+          {post.title}<span style={{ color: "#C4682A" }}>.</span>
         </h2>
         <p className="text-sm text-[#111111]/42 leading-[1.85] mb-8">{post.excerpt}</p>
         <div className="flex items-center justify-between">
@@ -122,7 +122,7 @@ function FeaturedPost({ post }: { post: typeof posts[0] }) {
             <span className="w-1 h-1 rounded-full bg-[#111111]/15" />
             <span className="text-[9px] font-mono tracking-[0.18em] uppercase text-[#111111]/28">{post.readTime}</span>
           </div>
-          <span className="text-sm text-[#1B2A4A] group-hover:translate-x-1 transition-transform duration-200 inline-block">→</span>
+          <span className="text-sm text-[#C4682A] group-hover:translate-x-1 transition-transform duration-200 inline-block">→</span>
         </div>
       </div>
     </motion.div>
@@ -154,12 +154,12 @@ function PostCard({ post, i }: { post: typeof posts[0]; i: number }) {
         <span className="w-1 h-1 rounded-full bg-[#111111]/15" />
         <span className="text-[9px] font-mono tracking-[0.18em] uppercase text-[#111111]/28">{post.readTime}</span>
       </div>
-      <h3 className="text-base md:text-lg font-bold tracking-[-0.02em] text-[#111111] mb-2 leading-snug group-hover:text-[#1B2A4A] transition-colors duration-300"
+      <h3 className="text-base md:text-lg font-bold tracking-[-0.02em] text-[#111111] mb-2 leading-snug group-hover:text-[#C4682A] transition-colors duration-300"
         style={{ fontFamily: "var(--font-playfair)" }}>
         {post.title}
       </h3>
       <p className="text-sm text-[#111111]/38 leading-[1.8] line-clamp-3">{post.excerpt}</p>
-      <div className="mt-4 flex items-center gap-1.5 text-xs text-[#1B2A4A] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <div className="mt-4 flex items-center gap-1.5 text-xs text-[#C4682A] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         Read more <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">→</span>
       </div>
     </motion.article>
@@ -182,7 +182,7 @@ export default function BlogPage() {
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 xl:px-16">
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#1B2A4A] mb-6">
+            className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#C4682A] mb-6">
             Journal - Longevity Intelligence
           </motion.p>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
@@ -254,10 +254,10 @@ export default function BlogPage() {
             transition={{ duration: 0.8 }}
             className="max-w-[640px] mx-auto text-center"
           >
-            <p className="text-[9px] font-mono tracking-[0.4em] uppercase text-[#1B2A4A]/70 mb-4">Newsletter</p>
+            <p className="text-[9px] font-mono tracking-[0.4em] uppercase text-[#C4682A]/70 mb-4">Newsletter</p>
             <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.02em] text-[#111111] mb-4"
               style={{ fontFamily: "var(--font-playfair)" }}>
-              Longevity intelligence, delivered<span style={{ color: "#1B2A4A" }}>.</span>
+              Longevity intelligence, delivered<span style={{ color: "#C4682A" }}>.</span>
             </h2>
             <p className="text-sm text-[#111111]/38 leading-relaxed mb-8">
               New articles, ingredient deep-dives, and early access - once a fortnight. No noise, no filler.
@@ -266,7 +266,7 @@ export default function BlogPage() {
               <input
                 type="email"
                 placeholder="your@email.com"
-                className="flex-1 px-4 py-3.5 rounded-full text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#1B2A4A]/40 transition-colors"
+                className="flex-1 px-4 py-3.5 rounded-full text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#C4682A]/40 transition-colors"
               />
               <button type="submit"
                 className="flex-shrink-0 px-6 py-3.5 rounded-full bg-[#111111] text-white text-sm font-semibold tracking-wide hover:bg-[#333] transition-colors duration-200">

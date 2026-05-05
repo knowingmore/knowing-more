@@ -675,104 +675,121 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
       {/* ═══════════════════════════════════════════
           MOBILE LAYOUT
       ════════════════════════════════════════════ */}
-      <div className="md:hidden h-full flex flex-col overflow-hidden">
+      <div className="md:hidden relative h-full overflow-hidden">
 
-        {/* Animation + headline — top portion */}
-        <div className="relative h-[54%] flex items-center justify-center flex-shrink-0">
-          <motion.div style={{ opacity: canvasOpacity }} className="absolute inset-0">
-            <MolecularCanvas />
-          </motion.div>
+        {/* Background canvas + vignette — full hero */}
+        <motion.div style={{ opacity: canvasOpacity }} className="absolute inset-0">
+          <MolecularCanvas />
+        </motion.div>
+        <motion.div
+          style={{ opacity: canvasOpacity }}
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden
+        >
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 90% 70% at 50% 45%, rgba(18,20,26,0.95) 0%, rgba(18,20,26,0.85) 40%, rgba(18,20,26,0.55) 70%, rgba(18,20,26,0.20) 100%)",
+            }}
+          />
+        </motion.div>
+
+        {/* Content column — eyebrow → lead → headline → tagline → CTAs → meta */}
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 pt-[88px] pb-10">
+
+          {/* Eyebrow chip (LONGEVITY SUPPLEMENTS) */}
           <motion.div
-            style={{ opacity: canvasOpacity }}
-            className="absolute inset-0 pointer-events-none"
-            aria-hidden
-          >
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(ellipse 70% 62% at 50% 50%, rgba(18,20,26,0.96) 0%, rgba(18,20,26,0.88) 35%, rgba(18,20,26,0.55) 60%, rgba(18,20,26,0) 100%)",
-              }}
-            />
-          </motion.div>
-
-          {/* Centered headline (colour inverts with scroll) */}
-          <div className="relative z-10 text-center px-6">
-            {/* Top rule */}
-            <motion.div style={{ opacity: fadeOut }}
-              className="flex items-center gap-3 mb-4 max-w-[280px] mx-auto">
-              <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-                transition={{ duration: 1.3, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="flex-1 h-px bg-[#1B2A4A]/22 origin-right" />
-              <motion.div animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.3, 0.8] }}
-                transition={{ duration: 2.8, repeat: Infinity, delay: 1.8 }}
-                className="w-1.5 h-1.5 rounded-full bg-[#1B2A4A] flex-shrink-0" />
-              <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-                transition={{ duration: 1.3, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="flex-1 h-px bg-[#1B2A4A]/22 origin-left" />
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, filter: "blur(36px)", scale: 1.04 }}
-              animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-              transition={{ duration: 2.2, delay: 0.65, ease: [0.25, 0.1, 0.25, 1] }}
-              className="leading-[0.88] tracking-[-0.03em]"
-              style={{
-                color: headlineColor as unknown as string,
-                fontFamily: "var(--font-playfair)",
-                fontSize: "clamp(3.8rem, 20vw, 6rem)",
-              }}
-            >
-              <span className="block">kno<span style={{ color: "#1B2A4A" }}>win</span>g</span>
-              <span className="block">more<span style={{ color: "#1B2A4A" }}>.</span></span>
-            </motion.h1>
-          </div>
-        </div>
-
-        {/* Text content — fades out before bg transition */}
-        <motion.div style={{ opacity: fadeOut }}
-          className="flex-1 px-6 pt-2 pb-10 flex flex-col items-center text-center justify-center">
-          <motion.div
+            style={{ opacity: fadeOut }}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              background: "#1B2A4A",
-              boxShadow: "0 8px 28px rgba(52,81,200,0.35), inset 0 1px 0 rgba(255,255,255,0.10)",
-            }}
-            className="mb-5 inline-flex items-center gap-2.5 rounded-full px-4 py-2 font-mono uppercase font-bold tracking-[0.28em] text-white"
+            transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            <motion.span
-              animate={{ opacity: [0.5, 1, 0.5], scale: [0.85, 1.25, 0.85] }}
-              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-              className="w-1 h-1 rounded-full bg-white"
-              style={{ boxShadow: "0 0 8px rgba(255,255,255,0.9)" }}
-            />
-            <span style={{ fontSize: "clamp(0.78rem, 3.2vw, 1rem)" }}>
-              {tr.eyebrow}
-            </span>
+            <div
+              style={{
+                background: "#C4682A",
+                boxShadow: "0 8px 28px rgba(196,104,42,0.35), inset 0 1px 0 rgba(255,255,255,0.10)",
+              }}
+              className="mb-5 inline-flex items-center gap-2.5 rounded-full px-4 py-2 font-mono uppercase font-bold tracking-[0.28em] text-white"
+            >
+              <motion.span
+                animate={{ opacity: [0.5, 1, 0.5], scale: [0.85, 1.25, 0.85] }}
+                transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                className="w-1 h-1 rounded-full bg-white"
+                style={{ boxShadow: "0 0 8px rgba(255,255,255,0.9)" }}
+              />
+              <span style={{ fontSize: "clamp(0.72rem, 2.9vw, 0.95rem)" }}>
+                {tr.eyebrow}
+              </span>
+            </div>
           </motion.div>
 
+          {/* Lead — italic line above headline */}
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, delay: 2.7 }}
-            className="text-sm text-[#FAFAF7]/70 leading-[1.85] tracking-wide max-w-[320px] mb-6"
+            transition={{ duration: 1.0, delay: 0.7 }}
+            className="mb-5 text-[#FAFAF7]/80 italic leading-[1.4] tracking-wide max-w-[320px]"
+            style={{
+              opacity: fadeOut as unknown as number,
+              fontFamily: "var(--font-playfair)",
+              fontSize: "clamp(0.95rem, 4.2vw, 1.15rem)",
+            }}
           >
-            <span className="block italic mb-2" style={{ fontFamily: "var(--font-playfair)" }}>
-              {tr.lead}
-            </span>
-            <span className="block opacity-75">{tr.tagline}</span>
+            {tr.lead}
           </motion.p>
 
+          {/* Top rule */}
+          <motion.div style={{ opacity: fadeOut }}
+            className="flex items-center gap-3 mb-4 max-w-[260px] w-full">
+            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+              transition={{ duration: 1.3, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="flex-1 h-px bg-[#C4682A]/22 origin-right" />
+            <motion.div animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.3, 0.8] }}
+              transition={{ duration: 2.8, repeat: Infinity, delay: 1.8 }}
+              className="w-1.5 h-1.5 rounded-full bg-[#C4682A] flex-shrink-0" />
+            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+              transition={{ duration: 1.3, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="flex-1 h-px bg-[#C4682A]/22 origin-left" />
+          </motion.div>
+
+          {/* Headline */}
+          <motion.h1
+            initial={{ opacity: 0, filter: "blur(36px)", scale: 1.04 }}
+            animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+            transition={{ duration: 2.2, delay: 0.95, ease: [0.25, 0.1, 0.25, 1] }}
+            className="leading-[0.88] tracking-[-0.03em]"
+            style={{
+              color: headlineColor as unknown as string,
+              fontFamily: "var(--font-playfair)",
+              fontSize: "clamp(3.4rem, 18vw, 5.4rem)",
+            }}
+          >
+            <span className="block">kno<span style={{ color: "#C4682A" }}>win</span>g</span>
+            <span className="block">more<span style={{ color: "#C4682A" }}>.</span></span>
+          </motion.h1>
+
+          {/* Tagline below headline */}
+          <motion.p
+            style={{ opacity: fadeOut }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, delay: 2.6 }}
+            className="mt-6 text-sm text-[#FAFAF7]/70 leading-[1.7] tracking-wide max-w-[320px]"
+          >
+            {tr.tagline}
+          </motion.p>
+
+          {/* CTAs */}
           <motion.div
+            style={{ opacity: fadeOut }}
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.0, delay: 2.9 }}
-            className="flex items-center gap-8 mb-6"
+            className="mt-7 flex items-center gap-8"
           >
             <a href="#products"
-              className="group flex items-center gap-2 text-[#FAFAF7] text-sm font-medium tracking-wide border-b border-[#FAFAF7]/25 pb-0.5 hover:border-[#1B2A4A] hover:text-[#1B2A4A] transition-colors duration-300">
+              className="group flex items-center gap-2 text-[#FAFAF7] text-sm font-medium tracking-wide border-b border-[#FAFAF7]/25 pb-0.5 hover:border-[#C4682A] hover:text-[#C4682A] transition-colors duration-300">
               {tr.cta1}
               <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
             </a>
@@ -782,20 +799,21 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             </a>
           </motion.div>
 
+          {/* Meta footer */}
           <motion.div
+            style={{ opacity: fadeOut }}
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ delay: 3.1, duration: 0.9 }}
-            className="w-full max-w-[340px] pt-4 flex items-center justify-between border-t border-[#FAFAF7]/10"
+            className="w-full max-w-[340px] mt-8 pt-4 flex items-center justify-between border-t border-[#FAFAF7]/10"
           >
             <div className="flex items-center gap-2">
               <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}
-                className="w-1 h-1 rounded-full bg-[#1B2A4A]" />
+                className="w-1 h-1 rounded-full bg-[#C4682A]" />
               <span className="text-[9px] font-mono text-[#FAFAF7]/45 tracking-[0.2em] uppercase">{tr.meta}</span>
             </div>
-            <span className="text-[9px] font-mono text-[#FAFAF7]/45 tracking-[0.25em] uppercase">Est. 2024</span>
+            <span className="text-[9px] font-mono text-[#FAFAF7]/45 tracking-[0.25em] uppercase">Est. 2025</span>
           </motion.div>
-
-        </motion.div>
+        </div>
       </div>
 
       {/* ═══════════════════════════════════════════
@@ -839,7 +857,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             variants={item}
             style={{
               opacity: fadeOut,
-              background: "#1B2A4A",
+              background: "#C4682A",
               boxShadow: "0 10px 40px rgba(52,81,200,0.40), inset 0 1px 0 rgba(255,255,255,0.10)",
             }}
             className="mb-12 inline-flex items-center gap-3 rounded-full px-6 py-2.5 font-mono uppercase font-bold tracking-[0.32em] text-white"
@@ -873,14 +891,14 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           {/* Top rule with staggered pieces */}
           <motion.div variants={item} style={{ opacity: fadeOut }}
             className="w-full max-w-[560px] flex items-center gap-3 mb-10">
-            <motion.div variants={rule} className="flex-1 h-px bg-[#1B2A4A]/22 origin-right" />
+            <motion.div variants={rule} className="flex-1 h-px bg-[#C4682A]/22 origin-right" />
             <motion.div
               animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.35, 0.8] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-              className="w-1.5 h-1.5 rounded-full bg-[#1B2A4A] flex-shrink-0"
+              className="w-1.5 h-1.5 rounded-full bg-[#C4682A] flex-shrink-0"
               style={{ boxShadow: "0 0 12px rgba(52,81,200,0.8)" }}
             />
-            <motion.div variants={rule} className="flex-1 h-px bg-[#1B2A4A]/22 origin-left" />
+            <motion.div variants={rule} className="flex-1 h-px bg-[#C4682A]/22 origin-left" />
           </motion.div>
 
           {/* Headline — word-by-word variants reveal (with room for descenders) */}
@@ -896,12 +914,12 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           >
             <span className="block overflow-hidden" style={{ paddingBottom: "0.18em" }}>
               <motion.span variants={word} className="inline-block">
-                kno<span style={{ color: "#1B2A4A" }}>win</span>g
+                kno<span style={{ color: "#C4682A" }}>win</span>g
               </motion.span>
             </span>
             <span className="block overflow-hidden" style={{ paddingBottom: "0.18em" }}>
               <motion.span variants={word} className="inline-block">
-                more<span style={{ color: "#1B2A4A" }}>.</span>
+                more<span style={{ color: "#C4682A" }}>.</span>
               </motion.span>
             </span>
           </motion.h1>
@@ -933,7 +951,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: "spring", stiffness: 380, damping: 22 }}
-              className="group flex items-center gap-2.5 text-[#FAFAF7] text-sm font-medium tracking-wide border-b border-[#FAFAF7]/25 pb-0.5 hover:border-[#1B2A4A] hover:text-[#1B2A4A] transition-colors duration-300">
+              className="group flex items-center gap-2.5 text-[#FAFAF7] text-sm font-medium tracking-wide border-b border-[#FAFAF7]/25 pb-0.5 hover:border-[#C4682A] hover:text-[#C4682A] transition-colors duration-300">
               {tr.cta1}
               <span className="group-hover:translate-x-1.5 transition-transform duration-200 text-base leading-none">→</span>
             </motion.a>
@@ -950,7 +968,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             <div className="flex items-center gap-3">
               <motion.div animate={{ opacity: [0.4, 1, 0.4], scale: [1, 1.25, 1] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="w-1 h-1 rounded-full bg-[#1B2A4A]"
+                className="w-1 h-1 rounded-full bg-[#C4682A]"
                 style={{ boxShadow: "0 0 8px rgba(52,81,200,0.6)" }} />
               <span className="text-[9px] font-mono text-[#FAFAF7]/55 tracking-[0.22em] uppercase hidden sm:inline">{tr.meta}</span>
             </div>

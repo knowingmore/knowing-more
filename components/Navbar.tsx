@@ -22,8 +22,8 @@ const navLinksData = {
 };
 
 const ctaData = {
-  en: { label: "Shop →", href: "/store", mobile: "Discover the collection" },
-  pl: { label: "Kup →", href: "/pl/store", mobile: "Odkryj kolekcję" },
+  en: { label: "See products →", href: "/store", mobile: "See products" },
+  pl: { label: "Produkty →", href: "/pl/store", mobile: "Produkty" },
 };
 
 export default function Navbar({ locale = "en" }: { locale?: "en" | "pl" }) {
@@ -102,7 +102,7 @@ export default function Navbar({ locale = "en" }: { locale?: "en" | "pl" }) {
             <a
               href={cta.href}
               className="px-5 py-2 rounded-full text-white text-[13px] font-semibold flex items-center gap-1.5 transition-all duration-200 hover:opacity-90 hover:scale-[1.02]"
-              style={{ background: "#1B2A4A" }}
+              style={{ background: "#C4682A" }}
             >
               {cta.label}
             </a>

@@ -10,28 +10,30 @@ const STORAGE_KEY = "km_discount_dismissed";
 const TR = {
   en: {
     eyebrow: "Welcome offer",
-    headline: <>Get <span style={{ color: "#1B2A4A" }}>20 zł off</span><br />your first order.</>,
-    body: "Sign up and we'll send your discount code straight to your inbox. One email — no noise.",
+    headline: <>Reserve your <span style={{ color: "#C4682A" }}>20 zł discount</span>.</>,
+    body: "Leave your email and we'll hold your 20 zł discount for you. One email — no noise.",
     placeholder: "your@email.com",
-    cta: "Claim my 20 zł",
+    cta: "Reserve my 20 zł",
     skip: "No thanks",
-    successTitle: "Check your inbox.",
-    successBody: "Your 20 zł discount code is on its way. Use it on any order.",
-    successClose: "Start shopping →",
+    legal: "By signing up, I understand products are not yet available and consent to receive notifications.",
+    successTitle: "You're on the list.",
+    successBody: "We'll send your 20 zł code when available.",
+    successClose: "Continue →",
     imageAlt: "knowing more. supplements",
     imageLine1: "knowing more.",
     imageLine2: <>Science-backed<br />longevity.</>,
   },
   pl: {
     eyebrow: "Oferta powitalna",
-    headline: <>Odbierz <span style={{ color: "#1B2A4A" }}>20 zł</span><br />na pierwszy zakup.</>,
-    body: "Zapisz się do newslettera — wyślemy Ci kod rabatowy prosto na maila. Jeden mail, żadnego spamu.",
+    headline: <>Zarezerwuj <span style={{ color: "#C4682A" }}>20 zł zniżki</span>.</>,
+    body: "Zostaw email — przytrzymamy dla Ciebie 20 zł zniżki. Jeden mail, żadnego spamu.",
     placeholder: "twój@email.com",
-    cta: "Odbierz 20 zł",
+    cta: "Zarezerwuj 20 zł",
     skip: "Nie, dziękuję",
-    successTitle: "Sprawdź skrzynkę.",
-    successBody: "Twój kod rabatowy -20 zł już jedzie do Ciebie. Możesz go użyć na dowolne zamówienie.",
-    successClose: "Przejdź do sklepu →",
+    legal: "Zapisując się, rozumiem, że produkty nie są jeszcze dostępne, i wyrażam zgodę na otrzymywanie powiadomień.",
+    successTitle: "Jesteś na liście.",
+    successBody: "Twój kod -20 zł jest zarezerwowany. Wyślemy go, gdy tylko będzie gotowe.",
+    successClose: "Przejdź dalej →",
     imageAlt: "knowing more. suplementy",
     imageLine1: "knowing more.",
     imageLine2: <>Suplementy oparte<br />na nauce.</>,
@@ -72,11 +74,29 @@ export default function DiscountPopup() {
     setVisible(false);
   };
 
-  const submit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || submitting) return;
+    setSubmitting(true);
+    try {
+      await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email,
+          source: "discount",
+          attributes: { LOCALE: locale.toUpperCase() },
+        }),
+      });
+    } catch {
+      // Silent fail — we still show success to user; email lost only if backend
+      // is misconfigured. Server-side logs surface the cause.
+    }
     localStorage.setItem(STORAGE_KEY, "1");
     setDone(true);
+    setSubmitting(false);
   };
 
   return (
@@ -151,7 +171,7 @@ export default function DiscountPopup() {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
-                        className="w-14 h-14 rounded-full bg-[#1B2A4A] flex items-center justify-center text-white text-2xl"
+                        className="w-14 h-14 rounded-full bg-[#C4682A] flex items-center justify-center text-white text-2xl"
                       >
                         ✓
                       </motion.div>
@@ -164,7 +184,7 @@ export default function DiscountPopup() {
                       <button
                         onClick={dismiss}
                         className="mt-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:opacity-90"
-                        style={{ background: "#1B2A4A" }}
+                        style={{ background: "#C4682A" }}
                       >
                         {tr.successClose}
                       </button>
@@ -172,7 +192,7 @@ export default function DiscountPopup() {
                   ) : (
                     <motion.div key="form" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
 
-                      <p className="text-[9px] font-mono tracking-[0.32em] uppercase text-[#1B2A4A]/80 mb-5">
+                      <p className="text-[9px] font-mono tracking-[0.32em] uppercase text-[#C4682A]/80 mb-5">
                         {tr.eyebrow}
                       </p>
 
@@ -192,21 +212,24 @@ export default function DiscountPopup() {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           required
-                          className="w-full px-4 py-3.5 rounded-full text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#1B2A4A]/50 transition-colors"
+                          className="w-full px-4 py-3.5 rounded-full text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#C4682A]/50 transition-colors"
                         />
                         <button
                           type="submit"
                           className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-white text-sm font-semibold tracking-wide transition-all duration-200 hover:opacity-90 hover:scale-[1.01]"
-                          style={{ background: "linear-gradient(135deg, #1B2A4A 0%, #d4780a 100%)" }}
+                          style={{ background: "linear-gradient(135deg, #C4682A 0%, #d4780a 100%)" }}
                         >
                           {tr.cta}
                           <span>→</span>
                         </button>
+                        <p className="pt-1 text-[9px] text-[#111111]/25 leading-snug">
+                          {tr.legal}
+                        </p>
                       </form>
 
                       <button
                         onClick={dismiss}
-                        className="mt-5 w-full text-center text-[10px] text-[#111111]/25 hover:text-[#111111]/45 transition-colors"
+                        className="mt-4 w-full text-center text-[10px] text-[#111111]/25 hover:text-[#111111]/45 transition-colors"
                       >
                         {tr.skip}
                       </button>

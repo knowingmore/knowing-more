@@ -4,7 +4,6 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
 const trustSignals = [
-  "Free shipping on first order",
   "30-day money-back guarantee",
   "No subscription required",
 ];
@@ -53,7 +52,7 @@ export default function CTA() {
             transition={{ duration: 1.05, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="col-span-12 md:col-span-8"
           >
-            <p className="text-[9px] font-mono text-[#1B2A4A] tracking-[0.38em] uppercase mb-7">
+            <p className="text-[9px] font-mono text-[#C4682A] tracking-[0.38em] uppercase mb-7">
               07 &mdash; Start Today
             </p>
             <h2
@@ -80,7 +79,7 @@ export default function CTA() {
               href="#products"
               className="group flex items-center justify-center gap-3 px-7 py-4 rounded-full bg-[#111111] text-white text-sm font-semibold tracking-wide hover:bg-[#333] transition-colors duration-200"
             >
-              Shop the Collection
+              See the collection
               <span className="group-hover:translate-x-1.5 transition-transform duration-200 text-base">
                 →
               </span>
@@ -103,7 +102,7 @@ export default function CTA() {
         >
           {trustSignals.map((signal) => (
             <div key={signal} className="flex items-center gap-2.5">
-              <span className="w-1 h-1 rounded-full bg-[#1B2A4A]" aria-hidden />
+              <span className="w-1 h-1 rounded-full bg-[#C4682A]" aria-hidden />
               <span className="text-xs text-[#111111]/30 tracking-wide">{signal}</span>
             </div>
           ))}

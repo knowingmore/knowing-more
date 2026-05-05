@@ -12,11 +12,27 @@ import { products } from "@/lib/products";
 function BundleNotifyForm() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || submitting) return;
+    setSubmitting(true);
+    try {
+      await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email,
+          source: "bundle",
+          attributes: { LOCALE: "EN" },
+        }),
+      });
+    } catch {
+      // Silent fail.
+    }
     setDone(true);
+    setSubmitting(false);
   };
 
   if (done) {
@@ -24,12 +40,12 @@ function BundleNotifyForm() {
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="flex flex-col items-center gap-3 py-8 rounded-2xl border border-[#1B2A4A]/20 bg-[#1B2A4A]/5"
+        className="flex flex-col items-center gap-3 py-8 rounded-2xl border border-[#C4682A]/20 bg-[#C4682A]/5"
       >
         <motion.div
           initial={{ scale: 0 }} animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
-          className="w-12 h-12 rounded-full bg-[#1B2A4A] flex items-center justify-center text-white text-xl"
+          className="w-12 h-12 rounded-full bg-[#C4682A] flex items-center justify-center text-white text-xl"
         >
           ✓
         </motion.div>
@@ -46,16 +62,16 @@ function BundleNotifyForm() {
   return (
     <div className="w-full space-y-3">
       {/* Save block */}
-      <div className="rounded-2xl overflow-hidden" style={{ background: "linear-gradient(135deg, #1B2A4A 0%, #d4780a 100%)" }}>
+      <div className="rounded-2xl overflow-hidden" style={{ background: "linear-gradient(135deg, #C4682A 0%, #d4780a 100%)" }}>
         <div className="px-6 pt-6 pb-4 flex items-center justify-between gap-4">
           <div>
-            <p className="text-white/70 text-[10px] font-mono tracking-[0.22em] uppercase mb-1">Restock offer</p>
+            <p className="text-white/70 text-[10px] font-mono tracking-[0.22em] uppercase mb-1">Bundle offer</p>
             <p className="text-white font-bold tracking-[-0.02em] leading-none"
               style={{ fontFamily: "var(--font-playfair)", fontSize: "2rem" }}>
               Save 58 zł
             </p>
             <p className="text-white/75 text-xs mt-1.5 leading-snug max-w-[220px]">
-              Join the restock list and secure the bundle price when it&apos;s available again.
+              Join the list — be first to know when the bundle is available.
             </p>
           </div>
           <div className="text-white/15 font-bold flex-shrink-0 hidden sm:block"
@@ -63,7 +79,7 @@ function BundleNotifyForm() {
             −15%
           </div>
         </div>
-        <form onSubmit={submit} className="px-4 pb-4 flex gap-2">
+        <form onSubmit={submit} className="px-4 pb-3 flex gap-2">
           <input
             type="email"
             placeholder="Enter your email"
@@ -78,6 +94,9 @@ function BundleNotifyForm() {
             Join waitlist
           </button>
         </form>
+        <p className="px-4 pb-4 text-[9px] text-white/55 leading-snug">
+          By signing up, I understand products are not yet available and consent to receive notifications.
+        </p>
       </div>
 
       {/* Social proof */}
@@ -88,7 +107,7 @@ function BundleNotifyForm() {
               style={{ opacity: 0.7 }}>{i[0]}</div>
           ))}
         </div>
-        <span className="text-[9px] text-[#111111]/30 tracking-wide">847 people waiting for restock</span>
+        <span className="text-[9px] text-[#111111]/30 tracking-wide">847 people on the list</span>
       </div>
     </div>
   );
@@ -116,7 +135,7 @@ export default function BundlePage() {
             <span>/</span>
             <Link href="/store" className="hover:text-[#111111]/60 transition-colors">Store</Link>
             <span>/</span>
-            <span className="text-[#1B2A4A]/70">Complete System</span>
+            <span className="text-[#C4682A]/70">Complete System</span>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 items-start">
@@ -165,37 +184,27 @@ export default function BundlePage() {
               animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
               transition={{ duration: 1.0, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             >
-              <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-4 text-[#1B2A4A]/70">
+              <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-4 text-[#C4682A]/70">
                 Complete System
               </p>
 
               <h1 className="leading-[0.88] tracking-[-0.03em] text-[#111111] mb-3"
                 style={{ fontFamily: "var(--font-playfair)", fontSize: "clamp(2.8rem, 5vw, 5rem)" }}>
-                All three formulas<span style={{ color: "#1B2A4A" }}>.</span>
+                All three formulas<span style={{ color: "#C4682A" }}>.</span>
               </h1>
 
               <p className="text-[9px] font-mono tracking-[0.28em] uppercase text-[#111111]/30 mb-6">
                 Performance · Balance · Gut Health
               </p>
 
-              {/* Rating */}
-              <div className="flex items-center gap-3 mb-8">
-                <div className="flex gap-0.5">
-                  {[1,2,3,4,5].map(s => <span key={s} className="text-[#1B2A4A] text-xs">★</span>)}
-                </div>
-                <span className="text-[9px] font-mono text-[#111111]/28 tracking-[0.15em]">
-                  4.9 / 5.0 · 1,200+ reviews
-                </span>
-              </div>
-
-              <div className="h-px bg-[#111111]/[0.07] mb-8" />
+              <div className="h-px bg-[#111111]/[0.07] mb-8 mt-2" />
 
               {/* Price */}
               <div className="flex items-center gap-3 mb-2 flex-wrap">
                 <span className="text-3xl font-bold text-[#111111] tracking-[-0.02em]"
                   style={{ fontFamily: "var(--font-playfair)" }}>329,00 zł</span>
                 <span className="text-xs text-[#111111]/30 line-through">387,00 zł</span>
-                <span className="text-[9px] font-mono bg-[#1B2A4A]/10 text-[#1B2A4A] px-2.5 py-1 rounded-full tracking-[0.15em] uppercase">
+                <span className="text-[9px] font-mono bg-[#C4682A]/10 text-[#C4682A] px-2.5 py-1 rounded-full tracking-[0.15em] uppercase">
                   Save 15%
                 </span>
               </div>
@@ -226,7 +235,7 @@ export default function BundlePage() {
                     <div>
                       <h3 className="text-sm font-bold text-[#111111] tracking-[-0.01em]"
                         style={{ fontFamily: "var(--font-playfair)" }}>
-                        {p.name}<span style={{ color: "#1B2A4A" }}>.</span>
+                        {p.name}<span style={{ color: "#C4682A" }}>.</span>
                       </h3>
                       <p className="text-[9px] font-mono tracking-[0.18em] uppercase mt-0.5 mb-1"
                         style={{ color: p.color, opacity: 0.7 }}>{p.tagline}</p>
@@ -244,7 +253,7 @@ export default function BundlePage() {
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
                 {["Free shipping", "30-day money-back guarantee", "GMP certified"].map((t) => (
                   <div key={t} className="flex items-center gap-1.5">
-                    <span className="w-1 h-1 rounded-full bg-[#1B2A4A]" />
+                    <span className="w-1 h-1 rounded-full bg-[#C4682A]" />
                     <span className="text-[10px] text-[#111111]/30 tracking-wide">{t}</span>
                   </div>
                 ))}

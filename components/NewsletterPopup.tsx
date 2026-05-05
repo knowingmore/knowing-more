@@ -44,11 +44,24 @@ export default function NewsletterPopup() {
     setVisible(false);
   };
 
-  const submit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || submitting) return;
+    setSubmitting(true);
+    try {
+      await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email, source: "newsletter" }),
+      });
+    } catch {
+      // Silent fail; surface in server logs.
+    }
     sessionStorage.setItem(STORAGE_KEY, "1");
     setDone(true);
+    setSubmitting(false);
   };
 
   return (
@@ -120,7 +133,7 @@ export default function NewsletterPopup() {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
-                        className="w-14 h-14 rounded-full bg-[#1B2A4A] flex items-center justify-center text-white text-2xl"
+                        className="w-14 h-14 rounded-full bg-[#C4682A] flex items-center justify-center text-white text-2xl"
                       >
                         ✓
                       </motion.div>
@@ -140,7 +153,7 @@ export default function NewsletterPopup() {
                   ) : (
                     <motion.div key="form" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
 
-                      <p className="text-[9px] font-mono tracking-[0.32em] uppercase text-[#1B2A4A]/80 mb-5">
+                      <p className="text-[9px] font-mono tracking-[0.32em] uppercase text-[#C4682A]/80 mb-5">
                         Longevity Intelligence
                       </p>
 
@@ -161,12 +174,12 @@ export default function NewsletterPopup() {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           required
-                          className="w-full px-4 py-3.5 rounded-full text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#1B2A4A]/50 transition-colors"
+                          className="w-full px-4 py-3.5 rounded-full text-sm border border-[#111111]/12 text-[#111111] placeholder-[#111111]/25 outline-none focus:border-[#C4682A]/50 transition-colors"
                         />
                         <button
                           type="submit"
                           className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-white text-sm font-semibold tracking-wide transition-all duration-200 hover:opacity-90 hover:scale-[1.01]"
-                          style={{ background: "linear-gradient(135deg, #1B2A4A 0%, #d4780a 100%)" }}
+                          style={{ background: "linear-gradient(135deg, #C4682A 0%, #d4780a 100%)" }}
                         >
                           Subscribe
                           <span>→</span>

@@ -10,14 +10,30 @@ import Footer from "@/components/Footer";
 import { getProductPL, productsPL } from "@/lib/productsPL";
 
 /* ─── Notify Me form ─────────────────────────────────────────────── */
-function NotifyForm({ color }: { color: string }) {
+function NotifyForm({ color, slug }: { color: string; slug: string }) {
   const [email, setEmail]   = useState("");
   const [done, setDone]     = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || submitting) return;
+    setSubmitting(true);
+    try {
+      await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email,
+          source: `product-${slug}`,
+          attributes: { LOCALE: "PL", PRODUCT: slug.toUpperCase() },
+        }),
+      });
+    } catch {
+      // Silent fail.
+    }
     setDone(true);
+    setSubmitting(false);
   };
 
   if (done) {
@@ -25,12 +41,12 @@ function NotifyForm({ color }: { color: string }) {
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full flex flex-col items-center gap-3 py-6 rounded-2xl border border-[#1B2A4A]/20 bg-[#1B2A4A]/5"
+        className="w-full flex flex-col items-center gap-3 py-6 rounded-2xl border border-[#C4682A]/20 bg-[#C4682A]/5"
       >
         <motion.div
           initial={{ scale: 0 }} animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
-          className="w-10 h-10 rounded-full bg-[#1B2A4A] flex items-center justify-center text-white text-lg"
+          className="w-10 h-10 rounded-full bg-[#C4682A] flex items-center justify-center text-white text-lg"
         >
           ✓
         </motion.div>
@@ -38,7 +54,7 @@ function NotifyForm({ color }: { color: string }) {
           Jesteś na liście.
         </p>
         <p className="text-xs text-[#111111]/38 text-center max-w-[220px]">
-          Powiadomimy Cię, gdy formuła wróci do sprzedaży.
+          Powiadomimy Cię, gdy formuła będzie dostępna.
         </p>
       </motion.div>
     );
@@ -48,7 +64,7 @@ function NotifyForm({ color }: { color: string }) {
     <div className="w-full space-y-3">
 
       {/* Save 20 zł - dominant hero block */}
-      <div className="rounded-2xl overflow-hidden" style={{ background: "linear-gradient(135deg, #1B2A4A 0%, #d4780a 100%)" }}>
+      <div className="rounded-2xl overflow-hidden" style={{ background: "linear-gradient(135deg, #C4682A 0%, #d4780a 100%)" }}>
         <div className="px-5 pt-5 pb-4 flex items-center justify-between gap-4">
           <div>
             <p className="text-white/70 text-[10px] font-mono tracking-[0.22em] uppercase mb-1">Oferta wznowienia</p>
@@ -57,7 +73,7 @@ function NotifyForm({ color }: { color: string }) {
               Save 20 zł
             </p>
             <p className="text-white/75 text-xs mt-1.5 leading-snug max-w-[200px]">
-              Bądź pierwszą osobą, gdy wróci — i kup taniej.
+              Bądź pierwszą osobą po premierze — i odbierz zniżkę startową.
             </p>
           </div>
           <div className="text-white/20 font-bold tracking-tight flex-shrink-0 hidden sm:block"
@@ -67,7 +83,7 @@ function NotifyForm({ color }: { color: string }) {
         </div>
 
         {/* Form inside the banner */}
-        <form onSubmit={submit} className="px-4 pb-4 flex gap-2">
+        <form onSubmit={submit} className="px-4 pb-3 flex gap-2">
           <input
             type="email"
             placeholder="Wpisz swój email"
@@ -83,6 +99,9 @@ function NotifyForm({ color }: { color: string }) {
             Dołącz do listy
           </button>
         </form>
+        <p className="px-4 pb-4 text-[9px] text-white/55 leading-snug">
+          Zapisując się, rozumiem, że produkty nie są jeszcze dostępne, i wyrażam zgodę na otrzymywanie powiadomień.
+        </p>
       </div>
 
       {/* Social proof */}
@@ -94,7 +113,7 @@ function NotifyForm({ color }: { color: string }) {
           ))}
         </div>
         <span className="text-[9px] text-[#111111]/30 tracking-wide">
-          847 osób czeka na wznowienie
+          847 osób na liście
         </span>
       </div>
     </div>
@@ -109,7 +128,7 @@ export default function ProductPage() {
 
   const [imgHovered, setImgHovered] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
-  const imgs = [p.img, ...p.gallery];
+  const imgs = p.gallery;
   const others = productsPL.filter((x) => x.slug !== p.slug);
 
   const prevImg = () => setActiveImg((i) => (i - 1 + imgs.length) % imgs.length);
@@ -187,7 +206,13 @@ export default function ProductPage() {
                         alt={p.name}
                         fill
                         className="object-cover"
-                        style={{ objectPosition: ["authentic-3", "gut-dynamic-13", "gut-dynamic-10"].some(s => imgs[activeImg].includes(s)) ? "right center" : "center" }}
+                        style={{
+                          objectPosition: /perf-authentic|bal-editorial-4|gut-dynamic-13|gut-dynamic-10/.test(imgs[activeImg])
+                            ? "right center"
+                            : /gut-editorial-3|gut-dynamic-8|gut-a-dynamic|gut-a-artistic/.test(imgs[activeImg])
+                            ? "left center"
+                            : "center",
+                        }}
                         sizes="600px"
                       />
                     </motion.div>
@@ -217,7 +242,7 @@ export default function ProductPage() {
                         width: i === activeImg ? "20px" : "6px",
                         height: "6px",
                         background: i === activeImg
-                          ? (p.color === "#111111" ? "#1B2A4A" : p.color)
+                          ? (p.color === "#111111" ? "#C4682A" : p.color)
                           : "rgba(17,17,17,0.15)",
                       }}
                       aria-label={`Zdjęcie ${i + 1}`}
@@ -241,28 +266,18 @@ export default function ProductPage() {
               animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
               transition={{ duration: 1.0, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             >
-              <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-4 text-[#1B2A4A]/70">
+              <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-4 text-[#C4682A]/70">
                 Formuła Longevity
               </p>
 
               <h1 className="leading-[0.88] tracking-[-0.03em] text-[#111111] mb-3"
                 style={{ fontFamily: "var(--font-playfair)", fontSize: "clamp(2.8rem, 5vw, 5rem)" }}>
-                {p.name}<span style={{ color: "#1B2A4A" }}>.</span>
+                {p.name}<span style={{ color: "#C4682A" }}>.</span>
               </h1>
 
               <p className="text-[9px] font-mono tracking-[0.28em] uppercase text-[#111111]/30 mb-6">{p.tagline}</p>
 
-              {/* Rating */}
-              <div className="flex items-center gap-3 mb-8">
-                <div className="flex gap-0.5">
-                  {[1,2,3,4,5].map(s => <span key={s} className="text-[#1B2A4A] text-xs">★</span>)}
-                </div>
-                <span className="text-[9px] font-mono text-[#111111]/28 tracking-[0.15em]">
-                  4,9 / 5,0 · ponad 1200 opinii
-                </span>
-              </div>
-
-              <div className="h-px bg-[#111111]/[0.07] mb-8" />
+              <div className="h-px bg-[#111111]/[0.07] mb-8 mt-2" />
 
               {/* Price */}
               <div className="flex items-center gap-3 mb-4 flex-wrap">
@@ -275,7 +290,7 @@ export default function ProductPage() {
 
               {/* Notify Me — right below price */}
               <div className="mb-8">
-                <NotifyForm color={p.color} />
+                <NotifyForm color={p.color} slug={p.slug} />
               </div>
 
               <p className="text-[9px] font-mono text-[#111111]/25 tracking-[0.15em] mb-8">{p.servings}</p>
@@ -301,7 +316,7 @@ export default function ProductPage() {
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
                 {["Darmowa dostawa", "30-dniowa gwarancja zwrotu", "Certyfikat GMP"].map((t) => (
                   <div key={t} className="flex items-center gap-1.5">
-                    <span className="w-1 h-1 rounded-full bg-[#1B2A4A]" />
+                    <span className="w-1 h-1 rounded-full bg-[#C4682A]" />
                     <span className="text-[10px] text-[#111111]/30 tracking-wide">{t}</span>
                   </div>
                 ))}
@@ -320,7 +335,7 @@ export default function ProductPage() {
               style={{ color: p.color, opacity: 0.65 }}>Pełny skład bez tajemnic</p>
             <h2 className="text-3xl md:text-4xl font-bold tracking-[-0.03em] text-[#111111] mb-12"
               style={{ fontFamily: "var(--font-playfair)" }}>
-              Co zawiera<span style={{ color: "#1B2A4A" }}>.</span>
+              Co zawiera<span style={{ color: "#C4682A" }}>.</span>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0 border border-[#111111]/[0.07] rounded-2xl overflow-hidden">
               {p.ingredients.map((ing, i) => (
@@ -347,10 +362,10 @@ export default function ProductPage() {
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 xl:px-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
             <div>
-              <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-3 text-[#1B2A4A]/70">Jak stosować</p>
+              <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-3 text-[#C4682A]/70">Jak stosować</p>
               <h2 className="text-2xl font-bold text-[#111111] mb-4 tracking-[-0.02em]"
                 style={{ fontFamily: "var(--font-playfair)" }}>
-                Instrukcja stosowania<span style={{ color: "#1B2A4A" }}>.</span>
+                Instrukcja stosowania<span style={{ color: "#C4682A" }}>.</span>
               </h2>
               <p className="text-sm text-[#111111]/45 leading-[1.85]">{p.usage}</p>
             </div>
@@ -368,7 +383,7 @@ export default function ProductPage() {
           <p className="text-[9px] font-mono tracking-[0.4em] uppercase mb-3 text-[#111111]/30">Uzupełnij system</p>
           <h2 className="text-2xl font-bold text-[#111111] mb-10 tracking-[-0.02em]"
             style={{ fontFamily: "var(--font-playfair)" }}>
-            Może Cię też zainteresować<span style={{ color: "#1B2A4A" }}>.</span>
+            Może Cię też zainteresować<span style={{ color: "#C4682A" }}>.</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {others.map((other) => (
@@ -378,15 +393,15 @@ export default function ProductPage() {
                   <Image src={other.img} alt={other.name} fill className="object-contain" sizes="80px" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-[#111111] group-hover:text-[#1B2A4A] transition-colors tracking-[-0.02em]"
+                  <h3 className="text-lg font-bold text-[#111111] group-hover:text-[#C4682A] transition-colors tracking-[-0.02em]"
                     style={{ fontFamily: "var(--font-playfair)" }}>
-                    {other.name}<span style={{ color: "#1B2A4A" }}>.</span>
+                    {other.name}<span style={{ color: "#C4682A" }}>.</span>
                   </h3>
                   <p className="text-[9px] font-mono tracking-[0.18em] uppercase text-[#111111]/28 mt-1">{other.tagline}</p>
                 </div>
                 <div className="flex-shrink-0 text-right">
                   <p className="text-sm font-semibold text-[#111111]">{other.price}</p>
-                  <span className="text-[#111111]/25 group-hover:text-[#1B2A4A] inline-block transition-all duration-200 mt-2">→</span>
+                  <span className="text-[#111111]/25 group-hover:text-[#C4682A] inline-block transition-all duration-200 mt-2">→</span>
                 </div>
               </Link>
             ))}

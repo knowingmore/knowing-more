@@ -11,13 +11,16 @@ import { products } from "@/lib/products";
 /* ─── Purchase button ────────────────────────────────────────────── */
 function PurchaseButton({ color, slug }: { color: string; slug: string }) {
   return (
-    <Link href={`/store/${slug}`}
-      className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-full text-white text-xs font-semibold tracking-wide transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
-      style={{ background: color === "#111111" ? "#111111" : color }}
-    >
-      Purchase
-      <span>→</span>
-    </Link>
+    <div className="w-full flex flex-col items-center gap-1.5">
+      <Link href={`/store/${slug}`}
+        className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-full text-white text-xs font-semibold tracking-wide transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
+        style={{ background: color === "#111111" ? "#111111" : color }}
+      >
+        See details
+        <span>→</span>
+      </Link>
+      <span className="text-[8px] font-mono text-[#111111]/25 tracking-[0.18em] uppercase">Available soon</span>
+    </div>
   );
 }
 
@@ -89,9 +92,9 @@ function ProductCard({ p, index }: { p: typeof products[0]; index: number }) {
       {/* Card footer */}
       <div className="mb-4">
         <Link href={`/store/${p.slug}`}>
-          <h3 className="text-xl font-bold tracking-[-0.02em] text-[#111111] hover:text-[#1B2A4A] transition-colors duration-300"
+          <h3 className="text-xl font-bold tracking-[-0.02em] text-[#111111] hover:text-[#C4682A] transition-colors duration-300"
             style={{ fontFamily: "var(--font-playfair)" }}>
-            {p.name}<span style={{ color: "#1B2A4A" }}>.</span>
+            {p.name}<span style={{ color: "#C4682A" }}>.</span>
           </h3>
         </Link>
         <p className="mt-1 text-[9px] font-mono tracking-[0.22em] uppercase text-[#111111]/30">{p.tagline}</p>
@@ -117,7 +120,7 @@ export default function StorePage() {
         <div className="max-w-[1440px] mx-auto">
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#1B2A4A] mb-6">
+            className="text-[9px] font-mono tracking-[0.45em] uppercase text-[#C4682A] mb-6">
             The Collection
           </motion.p>
 
@@ -162,7 +165,7 @@ export default function StorePage() {
                 <Image src="/images/products/all-three.png" alt="All three" fill className="object-contain" />
               </div>
               <div>
-                <p className="text-[9px] font-mono tracking-[0.28em] uppercase text-[#1B2A4A] mb-1">Complete System</p>
+                <p className="text-[9px] font-mono tracking-[0.28em] uppercase text-[#C4682A] mb-1">Complete System</p>
                 <h3 className="text-lg font-bold text-[#111111] tracking-[-0.02em]"
                   style={{ fontFamily: "var(--font-playfair)" }}>
                   All three formulas. <span className="text-[#111111]/30 font-normal italic">Built for the long game.</span>
@@ -170,7 +173,7 @@ export default function StorePage() {
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-xs text-[#111111]/28 line-through">387,00 zł</span>
                   <span className="text-sm font-semibold text-[#111111]">329,00 zł</span>
-                  <span className="text-[8px] font-mono text-[#1B2A4A] bg-[#1B2A4A]/10 px-2 py-0.5 rounded-full">Save 15%</span>
+                  <span className="text-[8px] font-mono text-[#C4682A] bg-[#C4682A]/10 px-2 py-0.5 rounded-full">Save 15%</span>
                 </div>
               </div>
             </div>
