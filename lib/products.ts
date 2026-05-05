@@ -91,6 +91,8 @@ export const products: Product[] = [
       "/images/website/bal-real-product-3.jpeg",
       "/images/website/bal-minimalist-5.jpeg",
       "/images/website/bal-editorial-4.jpeg",
+      "/images/website/store-balance-hover2.png",
+      "/images/website/store-balance-accent.jpg",
     ],
     color: "#A0784A",
     colorLight: "rgba(160,120,74,0.07)",
