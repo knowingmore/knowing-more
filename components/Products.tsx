@@ -196,9 +196,9 @@ function ProductPanel({
             }`}
           >
             <motion.div
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="relative overflow-hidden rounded-2xl"
+              whileHover={{ scale: 1.015 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="relative overflow-hidden rounded-[20px] shadow-[0_18px_60px_-20px_rgba(17,17,17,0.18)]"
               style={{ height: "clamp(420px, 55vw, 660px)" }}
             >
               <Image
@@ -208,28 +208,14 @@ function ProductPanel({
                 className="object-cover object-center"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-              {/* Fade edges into white background */}
-              {/* Top */}
-              <div className="absolute top-0 inset-x-0 h-28 pointer-events-none"
-                style={{ background: "linear-gradient(to bottom, white 0%, transparent 100%)" }} aria-hidden />
-              {/* Bottom */}
-              <div className="absolute bottom-0 inset-x-0 h-32 pointer-events-none"
-                style={{ background: "linear-gradient(to top, white 0%, transparent 100%)" }} aria-hidden />
-              {/* Inner edge - left or right depending on flip */}
+              {/* Soft inner-edge gradient only — bridges photo and text column without
+                  fully fading every side (which made the image feel pasted on). */}
               {product.flip ? (
-                <div className="absolute left-0 inset-y-0 w-32 pointer-events-none"
-                  style={{ background: "linear-gradient(to right, white 0%, transparent 100%)" }} aria-hidden />
+                <div className="absolute left-0 inset-y-0 w-20 pointer-events-none"
+                  style={{ background: "linear-gradient(to right, rgba(255,255,255,0.45) 0%, transparent 100%)" }} aria-hidden />
               ) : (
-                <div className="absolute right-0 inset-y-0 w-32 pointer-events-none"
-                  style={{ background: "linear-gradient(to left, white 0%, transparent 100%)" }} aria-hidden />
-              )}
-              {/* Outer edge */}
-              {product.flip ? (
-                <div className="absolute right-0 inset-y-0 w-16 pointer-events-none"
-                  style={{ background: "linear-gradient(to left, white 0%, transparent 100%)" }} aria-hidden />
-              ) : (
-                <div className="absolute left-0 inset-y-0 w-16 pointer-events-none"
-                  style={{ background: "linear-gradient(to right, white 0%, transparent 100%)" }} aria-hidden />
+                <div className="absolute right-0 inset-y-0 w-20 pointer-events-none"
+                  style={{ background: "linear-gradient(to left, rgba(255,255,255,0.45) 0%, transparent 100%)" }} aria-hidden />
               )}
             </motion.div>
           </motion.div>

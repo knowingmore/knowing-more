@@ -696,7 +696,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
         </motion.div>
 
         {/* Content column — eyebrow → lead → headline → tagline → CTAs → meta */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 py-10">
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 pt-[88px] pb-10">
 
           {/* Eyebrow chip (LONGEVITY SUPPLEMENTS) */}
           <motion.div
