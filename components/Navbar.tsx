@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
@@ -10,6 +11,14 @@ const ctaData = {
 
 export default function Navbar({ locale = "en" }: { locale?: "en" | "pl" }) {
   const cta = ctaData[locale];
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <motion.header
@@ -20,7 +29,12 @@ export default function Navbar({ locale = "en" }: { locale?: "en" | "pl" }) {
     >
       <div className="max-w-[1440px] mx-auto px-6 md:px-12 xl:px-16 h-[68px] flex items-center justify-end gap-5">
 
-        <LanguageSwitcher locale={locale} />
+        <motion.div
+          animate={{ opacity: scrolled ? 0 : 1, y: scrolled ? -6 : 0, pointerEvents: scrolled ? "none" : "auto" }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+        >
+          <LanguageSwitcher locale={locale} />
+        </motion.div>
 
         <a
           href={cta.href}

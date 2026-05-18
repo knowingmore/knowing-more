@@ -6,7 +6,7 @@ import { motion, useScroll, useTransform, useSpring, type Variants } from "frame
 /* ─── Copy ───────────────────────────────────────────────────────────────── */
 const HERO_TR = {
   en: {
-    badge:    "Longevity Supplements",
+    badge:    "Longevity and performance supplements",
     lead:     "Good things come to those who are",
     tagline:  "Longevity and performance supplements,\nbuilt for healthspan, not just lifespan.",
     cta1:     "Explore the system",
@@ -15,7 +15,7 @@ const HERO_TR = {
     bottomR:  "Est. 2024",
   },
   pl: {
-    badge:    "Suplementy Longevity",
+    badge:    "Suplementy longevity i performance",
     lead:     "Dla tych, którzy traktują zdrowie poważnie",
     tagline:  "Suplementy longevity i performance,\nstworzone na healthspan — nie tylko lifespan.",
     cta1:     "Odkryj system",
@@ -47,9 +47,8 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
 
   // Scroll transforms
   const textY       = useTransform(smoothProg, [0, 0.6], [0, -90]);
-  const textOpacity = useTransform(smoothProg, [0, 0.38], [1, 0.75]);
-  const textScale   = useTransform(smoothProg, [0, 0.6],  [1, 0.95]);
-  const blurOut     = useTransform(smoothProg, [0.06, 0.32], [0, 16]);
+  const textOpacity = useTransform(smoothProg, [0, 0.5], [1, 0]);
+  const textScale   = useTransform(smoothProg, [0, 0.6], [1, 0.95]);
 
   const chromeOpacity   = useTransform(smoothProg, [0, 0.22], [1, 0]);
   const backdropOpacity = useTransform(smoothProg, [0.14, 0.46], [1, 0]);
@@ -149,26 +148,26 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             y:       textY,
             opacity: textOpacity,
             scale:   textScale,
-            filter:  `blur(${blurOut}px)` as unknown as string,
             transformPerspective: 1400,
           }}
           className="relative z-10 h-full w-full flex flex-col items-center justify-center text-center px-6 md:px-10 pt-[68px]"
         >
 
           {/* Orange pill badge */}
-          <motion.div variants={item} className="mb-10 md:mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-10 md:mb-12"
+          >
             <span
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full font-mono text-[10px] md:text-[11px] tracking-[0.30em] uppercase"
+              className="inline-flex items-center px-5 py-[9px] rounded-full font-mono font-bold text-[10px] md:text-[11px] tracking-[0.30em] uppercase"
               style={{
                 background: "rgba(196, 104, 42, 0.92)",
                 color: "#FAFAF7",
                 letterSpacing: "0.28em",
               }}
             >
-              <span
-                className="w-[6px] h-[6px] rounded-full bg-[#FAFAF7]"
-                style={{ flexShrink: 0 }}
-              />
               {tr.badge}
             </span>
           </motion.div>
@@ -220,7 +219,8 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
           {/* Tagline */}
           <motion.p
             variants={item}
-            className="mt-8 md:mt-10 max-w-[620px] text-[#FAFAF7]/68 leading-[1.6] tracking-wide"
+            className="mt-8 md:mt-10 max-w-[620px] text-[#FAFAF7] leading-[1.6] tracking-wide"
+            style={{ textAlign: "justify" }}
           >
             <span style={{ fontSize: "clamp(0.88rem, 1.08vw, 1.05rem)", whiteSpace: "pre-line" }}>
               {tr.tagline}
@@ -229,29 +229,27 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
 
           {/* CTAs */}
           <motion.div variants={item} className="mt-11 md:mt-13 flex items-center gap-10">
-            <motion.a
+            <a
               href="#products"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 400, damping: 24 }}
               className="group relative inline-flex items-center gap-3 text-[#FAFAF7] font-medium tracking-wide"
               style={{ fontSize: "clamp(0.84rem, 0.98vw, 0.98rem)" }}
             >
-              <span className="relative pb-[3px]">
+              <span className="relative pb-[4px]">
                 {tr.cta1}
-                <span className="absolute bottom-0 left-0 right-0 h-px bg-[#FAFAF7]/36 group-hover:bg-[#C4682A] transition-colors duration-300" />
+                <span className="absolute bottom-0 left-0 right-0 h-px bg-[#FAFAF7] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-out" />
               </span>
-              <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
-            </motion.a>
+            </a>
 
-            <motion.a
+            <a
               href="#science"
-              whileHover={{ y: -1 }}
-              className="text-[#FAFAF7]/40 hover:text-[#FAFAF7]/80 transition-colors duration-200 tracking-wide"
+              className="group relative inline-flex items-center text-[#FAFAF7] tracking-wide"
               style={{ fontSize: "clamp(0.84rem, 0.98vw, 0.98rem)" }}
             >
-              {tr.cta2}
-            </motion.a>
+              <span className="relative pb-[4px]">
+                {tr.cta2}
+                <span className="absolute bottom-0 left-0 right-0 h-px bg-[#FAFAF7] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-out" />
+              </span>
+            </a>
           </motion.div>
 
         </motion.div>
