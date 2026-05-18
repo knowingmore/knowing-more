@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { motion, useScroll, useTransform, useSpring, type Variants } from "framer-motion";
 
 /* ─── Copy ───────────────────────────────────────────────────────────────── */
@@ -32,6 +32,15 @@ const GRAIN_URL =
 export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
   const tr            = HERO_TR[locale];
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef    = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.playbackRate = 1.5;
+    v.play().catch(() => {/* autoplay blocked — silent fallback */});
+  }, []);
 
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
   const smoothProg = useSpring(scrollYProgress, { stiffness: 80, damping: 22, mass: 0.6, restDelta: 0.0005 });
@@ -87,11 +96,13 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
         {/* Change the number to test: v1.mp4, v2.mp4 ... v15.mp4 */}
         <motion.div style={{ opacity: backdropOpacity }} className="absolute inset-0">
           <video
+            ref={videoRef}
             src="/videos/v9-4k-loop.mp4"
             autoPlay
             muted
             loop
             playsInline
+            preload="auto"
             className="absolute inset-0 w-full h-full object-cover opacity-85"
           />
         </motion.div>
@@ -99,7 +110,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
         {/* ── Overlays ──────────────────────────────────────────── */}
         <motion.div style={{ opacity: overlayOpacity }} aria-hidden className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0" style={{
-            background: "radial-gradient(ellipse 70% 65% at 50% 50%, rgba(6,8,15,0.60) 0%, rgba(6,8,15,0.25) 55%, rgba(6,8,15,0) 100%)",
+            background: "radial-gradient(ellipse 80% 72% at 50% 50%, rgba(6,8,15,0.82) 0%, rgba(6,8,15,0.52) 45%, rgba(6,8,15,0.18) 72%, rgba(6,8,15,0) 100%)",
           }} />
           <div className="absolute inset-0" style={{
             background: "linear-gradient(180deg, rgba(6,8,15,0.65) 0%, rgba(6,8,15,0) 20%, rgba(6,8,15,0) 78%, rgba(6,8,15,0.65) 100%)",
@@ -141,7 +152,7 @@ export default function Hero({ locale = "en" }: { locale?: "en" | "pl" }) {
             filter:  `blur(${blurOut}px)` as unknown as string,
             transformPerspective: 1400,
           }}
-          className="relative z-10 h-full w-full flex flex-col items-center justify-center text-center px-6 md:px-10"
+          className="relative z-10 h-full w-full flex flex-col items-center justify-center text-center px-6 md:px-10 pt-[68px]"
         >
 
           {/* Orange pill badge */}
